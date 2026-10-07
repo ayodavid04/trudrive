@@ -27,10 +27,11 @@ git commit -q -m "TruDrive website"
 echo "Made $DEST: $(git ls-files | wc -l) files, one commit by $NAME <$EMAIL>"
 # Every committed file, read in full (grep can crash on the large editor file
 # and would then look like a pass). Exits non-zero on a hit or on any error.
-git ls-files -z | node -e '
+node -e '
   const fs = require("fs");
   const names = /travinyx|oduola|ayodavid/i;
-  const files = require("fs").readFileSync(0, "utf8").split("\0").filter(Boolean);
+  const files = require("child_process").execSync("git ls-files", { encoding: "utf8" }).split(/\r?\n/).filter(Boolean);
+  if (files.length < 50) { console.log("WARNING: only " + files.length + " files listed, the copy looks wrong"); process.exit(1); }
   const hits = files.filter((f) => names.test(fs.readFileSync(f, "latin1")));
   if (hits.length) { console.log("WARNING: these mention a name that should not be there:\n" + hits.join("\n")); process.exit(1); }
   console.log("Checked all " + files.length + " files: no other names.");
