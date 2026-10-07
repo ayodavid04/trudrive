@@ -1,0 +1,15 @@
+# Cloudflare Pages, connected to Gaz's GitHub repo. Every commit, including
+# every save in /admin, builds and publishes the site. A failed build leaves
+# the live site exactly as it was.
+#
+# Free plan: unlimited bandwidth and visits for a static site, 500 builds a
+# month. Nothing on this site can run out and take it offline.
+#
+# Set in the Pages dashboard (Settings > Build):
+#   Build command:           npm run build
+#   Build output directory:  site
+#   Environment variable:    SITE_URL = https://his-domain   (share links and Google use it)
+# Node 22 comes from .node-version.
+name = "trudrive"
+pages_build_output_dir = "site"
+compatibility_date = "2026-10-01"

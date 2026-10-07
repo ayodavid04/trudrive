@@ -8,10 +8,12 @@
 <link rel="icon" type="image/png" href="/img/favicon.png">
 </head>
 <body>
-<!-- Sveltia CMS, pinned to 0.230.x so an update never changes the editor under
-     Gaz without anyone checking it first. To update: change the version, try
-     it at /admin, then publish. -->
-<script src="https://unpkg.com/@sveltia/cms@0.230/dist/sveltia-cms.js"></script>
+<!-- Sveltia CMS 0.230.1, kept in this folder rather than loaded from a CDN, so
+     the editor works as long as his own site does and never changes under him
+     unchecked. To update: `npm pack @sveltia/cms@<version>`, copy
+     dist/sveltia-cms.js and dist/chunks/ here, try /admin, rerun the guide
+     screenshots, then publish. -->
+<script src="/admin/sveltia-cms.js"></script>
 <script>
   // Fewer wrong turns for Gaz: hide the access-token sign-in and the
   // developer items in the editor's menu (Slug, Validation, Backlinks,

@@ -1,0 +1,8 @@
+# Cloudflare Pages headers. The editor is never a search result.
+/admin/*
+  X-Robots-Tag: noindex, nofollow
+
+# Photos cached for a day: quick for visitors, and a replaced photo shows
+# everywhere by the next day at the latest.
+/img/*
+  Cache-Control: public, max-age=86400

@@ -20,12 +20,24 @@
 //   {{phone}} {{tel}} {{wa}}                       his number as shown, for tel: links, for wa.me
 // Run scripts/content.mjs first (npm run build does): it makes the photo sizes.
 //
-// SITE_URL sets the absolute URLs share previews need. It follows the deploy
-// host until a custom domain exists: Netlify sets URL on every build.
+// SITE_URL sets the absolute URLs share previews need. Set it in the Cloudflare
+// Pages settings once his domain is connected. Until then it follows the
+// deploy host: Cloudflare gives each build a URL like abc123.trudrive.pages.dev,
+// and dropping the first part gives the project's own trudrive.pages.dev.
 import fs from 'node:fs';
 import path from 'node:path';
 
-const SITE_URL = (process.env.SITE_URL || process.env.URL || 'http://localhost:4600').replace(/\/$/, '');
+function siteUrl() {
+  if (process.env.SITE_URL) return process.env.SITE_URL;
+  if (process.env.CF_PAGES_URL) {
+    const u = new URL(process.env.CF_PAGES_URL);
+    const host = process.env.CF_PAGES_BRANCH === 'main' ? u.hostname.split('.').slice(1).join('.') : u.hostname;
+    console.warn(`WARNING: SITE_URL is not set in Cloudflare Pages, using https://${host}`);
+    return `https://${host}`;
+  }
+  return 'http://localhost:4600';
+}
+const SITE_URL = siteUrl().replace(/\/$/, '');
 const manifest = JSON.parse(fs.readFileSync('site/img/manifest.json', 'utf8'));
 for (const [name, m] of Object.entries(JSON.parse(fs.readFileSync('site/img/up/manifest.json', 'utf8')))) {
   manifest[name] = { ...m, dir: 'img/up/' };
