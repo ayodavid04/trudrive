@@ -1,0 +1,186 @@
+# Gaz's editor, at /admin. Sveltia CMS: https://sveltiacms.app/en/docs
+#
+# Every save is a commit to his GitHub repo. Netlify sees the commit, runs
+# npm run build, and the site is live about a minute later. A build that fails
+# never replaces the live site, so a bad save cannot take it down.
+#
+# Login: "Sign in with GitHub", through Netlify's GitHub OAuth (Netlify site >
+# Project configuration > Access & security > OAuth > Install provider: GitHub).
+# No auth server to run, nothing for Gaz to set up.
+
+backend:
+  name: github
+  repo: CHANGE-ME/trudrive # his GitHub username / repo name, set at handover
+  branch: main
+  commit_messages:
+    create: "Added {{collection}}: {{slug}}"
+    update: "Changed {{collection}}: {{slug}}"
+    delete: "Removed {{collection}}: {{slug}}"
+    uploadMedia: "Uploaded {{path}}"
+    deleteMedia: "Deleted {{path}}"
+
+locale: en
+
+# Phone photos are 4 to 8 MB. They are shrunk to WebP in his browser before
+# they upload, so the repo stays small and uploads are quick on 4G.
+# scripts/content.mjs makes the sizes the pages use from these.
+media_folder: site/uploads
+public_folder: /uploads
+media_libraries:
+  all:
+    transformations:
+      raster_image:
+        format: webp
+        quality: 90
+        width: 2400
+        height: 2400
+
+collections:
+  - name: jobs
+    label: Before and afters
+    label_singular: Before and after
+    description: Jobs with a before and an after photo. They show on the Our work page, newest first, with the Before / After buttons.
+    icon: compare
+    folder: content/jobs
+    format: json
+    extension: json
+    create: true
+    delete: true
+    slug: "{{fields.date}}-{{slug}}"
+    identifier_field: title
+    summary: "{{title}}"
+    sortable_fields:
+      fields: [date, title]
+      default:
+        field: date
+        direction: descending
+    fields:
+      - name: title
+        label: What was the job?
+        hint: Short, like "Block paved drive" or "Decking to porcelain".
+        widget: string
+      - name: date
+        label: Date finished
+        hint: Newest jobs show first.
+        widget: datetime
+        time_format: false
+        format: YYYY-MM-DD
+        default: "{{now}}"
+      - name: kind
+        label: Type of job
+        widget: select
+        options: [Driveway, Back garden, Front garden, Patio, Path and steps, Fencing, Turf]
+        default: Back garden
+      - name: town
+        label: Town
+        hint: Optional. Shows as "Back garden in Wigan".
+        widget: string
+        required: false
+      - name: before
+        label: Before photo
+        widget: image
+      - name: after
+        label: After photo
+        hint: From the same spot as the before, if you can.
+        widget: image
+      - name: crop
+        label: If the photos get cropped, keep
+        hint: On phones the photo is cut to fit. Pick the part that matters.
+        widget: select
+        options:
+          - { label: Lower down (the ground), value: low }
+          - { label: The middle, value: middle }
+          - { label: The top, value: top }
+        default: low
+      - name: about
+        label: A line or two about it
+        hint: Optional. What it was like before and what you did.
+        widget: text
+        required: false
+      - name: work
+        label: What went in
+        hint: Optional. One thing per line, like "Grey porcelain patio".
+        widget: list
+        required: false
+      - name: home
+        label: Show on the home page
+        hint: The newest ticked job goes at the top of the home page, the next one further down.
+        widget: boolean
+        default: false
+      - name: before_alt
+        label: Describe the before photo
+        hint: Optional. Read out to blind visitors and helps Google. Like "Cracked concrete slabs full of weeds".
+        widget: string
+        required: false
+      - name: after_alt
+        label: Describe the after photo
+        hint: Optional. Like "A grey porcelain patio with black edging".
+        widget: string
+        required: false
+
+  - name: photos
+    label: Finished photos
+    label_singular: Finished photo
+    description: Single photos of finished jobs, for the gallery under the before and afters. The two newest show bigger.
+    icon: photo_library
+    folder: content/photos
+    format: json
+    extension: json
+    create: true
+    delete: true
+    slug: "{{fields.date}}-{{slug}}"
+    identifier_field: title
+    summary: "{{title}}"
+    sortable_fields:
+      fields: [date, title]
+      default:
+        field: date
+        direction: descending
+    fields:
+      - name: photo
+        label: Photo
+        widget: image
+      - name: title
+        label: What is it?
+        hint: Short, like "Block paved driveway".
+        widget: string
+      - name: line
+        label: One line under it
+        hint: Optional. Like "Grey block with a charcoal border".
+        widget: string
+        required: false
+      - name: date
+        label: Date
+        hint: Newest show first.
+        widget: datetime
+        time_format: false
+        format: YYYY-MM-DD
+        default: "{{now}}"
+      - name: crop
+        label: If the photo gets cropped, keep
+        widget: select
+        options:
+          - { label: Lower down (the ground), value: low }
+          - { label: The middle, value: middle }
+          - { label: The top, value: top }
+        default: low
+      - name: alt
+        label: Describe the photo
+        hint: Optional. Read out to blind visitors and helps Google.
+        widget: string
+        required: false
+
+  - name: settings
+    label: Business details
+    icon: call
+    files:
+      - name: business
+        label: Phone number
+        file: content/business.json
+        format: json
+        fields:
+          - name: phone
+            label: Phone number
+            hint: Shown on every page, and the WhatsApp buttons use it, so WhatsApp must be on this number.
+            widget: string
+            pattern: ['^0\d{3,4} ?\d{3} ?\d{3,4}$', 'A UK number starting with 0, like 07923 485811']

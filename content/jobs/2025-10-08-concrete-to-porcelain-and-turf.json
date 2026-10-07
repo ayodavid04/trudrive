@@ -1,0 +1,18 @@
+{
+  "title": "Concrete to porcelain and turf",
+  "date": "2025-10-08",
+  "kind": "Back garden",
+  "town": "",
+  "before": "/uploads/concrete-before.webp",
+  "after": "/uploads/concrete-after.webp",
+  "crop": "low",
+  "about": "Broken slabs and weeds out. A porcelain patio, artificial turf and a new slatted fence in.",
+  "work": [
+    "Porcelain patio",
+    "Artificial turf with dark edging",
+    "Horizontal slatted fencing"
+  ],
+  "home": true,
+  "before_alt": "Cracked concrete slabs with weeds at the back of a house",
+  "after_alt": "A porcelain patio, artificial turf and horizontal slatted fencing at the same house"
+}

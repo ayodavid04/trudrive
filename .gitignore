@@ -3,3 +3,6 @@ lab/
 src/tiktok/*.jpg
 .env*
 .netlify/
+
+# Photo sizes made from site/uploads on every build
+site/img/up/

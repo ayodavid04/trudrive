@@ -24,7 +24,7 @@ const TYPES = {
   ".js": "text/javascript; charset=utf-8", ".json": "application/json",
   ".mp4": "video/mp4", ".webm": "video/webm",
   ".webp": "image/webp", ".png": "image/png", ".jpg": "image/jpeg",
-  ".svg": "image/svg+xml", ".woff2": "font/woff2",
+  ".svg": "image/svg+xml", ".woff2": "font/woff2", ".yml": "text/yaml; charset=utf-8",
 };
 
 http.createServer((req, res) => {

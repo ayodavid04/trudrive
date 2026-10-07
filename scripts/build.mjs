@@ -13,13 +13,104 @@
 //   <x-include file="clean/_header.html" active="services"></x-include>
 //   {{root}}                                       relative path back to the site root
 //
+// Content Gaz edits himself at /admin (site/admin/config.yml), read from content/:
+//   <x-jobs></x-jobs>                              every before and after, newest first
+//   <x-job slot="hero"> / <x-job slot="feature">   the home page pairs, from jobs ticked for the home page
+//   <x-photos></x-photos>                          the finished photos gallery
+//   {{phone}} {{tel}} {{wa}}                       his number as shown, for tel: links, for wa.me
+// Run scripts/content.mjs first (npm run build does): it makes the photo sizes.
+//
 // SITE_URL sets the absolute URLs share previews need. It follows the deploy
-// host until a custom domain exists.
+// host until a custom domain exists: Netlify sets URL on every build.
 import fs from 'node:fs';
 import path from 'node:path';
 
-const SITE_URL = (process.env.SITE_URL || 'http://localhost:4600').replace(/\/$/, '');
+const SITE_URL = (process.env.SITE_URL || process.env.URL || 'http://localhost:4600').replace(/\/$/, '');
 const manifest = JSON.parse(fs.readFileSync('site/img/manifest.json', 'utf8'));
+for (const [name, m] of Object.entries(JSON.parse(fs.readFileSync('site/img/up/manifest.json', 'utf8')))) {
+  manifest[name] = { ...m, dir: 'img/up/' };
+}
+
+// ---------------------------------------------------------- content
+const readDir = (dir) => fs.readdirSync(dir).filter((f) => f.endsWith('.json'))
+  .map((f) => JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')));
+const newestFirst = (a, b) => String(b.date).localeCompare(String(a.date));
+const jobs = readDir('content/jobs').sort(newestFirst);
+const photos = readDir('content/photos').sort(newestFirst);
+const business = JSON.parse(fs.readFileSync('content/business.json', 'utf8'));
+
+// Whatever Gaz types is shown as text, never read as HTML.
+const esc = (v) => String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const upName = (file) => 'up-' + path.basename(file).replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+const FOCUS = { middle: '50 50', low: '50 62', top: '50 30' };
+
+const digits = String(business.phone).replace(/\D/g, '');
+const intl = digits.startsWith('44') ? digits : '44' + digits.replace(/^0/, '');
+const PHONE = { phone: esc(business.phone.trim()), tel: '+' + intl, wa: intl };
+
+function ba(job, R, { slide = false, sizes, eager = false, style = '' }) {
+  const focus = FOCUS[job.crop] || FOCUS.low;
+  const label = `Before and after: ${esc(job.title)}`;
+  const picAttrs = { sizes, focus, eager };
+  const before = pic({ ...picAttrs, name: upName(job.before), class: 'ba__before', alt: `Before: ${esc(job.before_alt || job.title)}` }, R);
+  const after = pic({ ...picAttrs, name: upName(job.after), class: 'ba__after', alt: `After: ${esc(job.after_alt || job.title)}` }, R);
+  const open = slide
+    ? `<div class="ba ba--slide" data-autoplay data-state="after" role="group" aria-label="${label}">`
+    : `<div class="ba ba--fade" data-start="after" role="group" aria-label="${label}"${style ? ` style="${style}"` : ''}>`;
+  return `${open}
+        ${before}
+        ${after}
+        <span class="ba__tag" aria-hidden="true">After</span>
+        <div class="ba__switch"><button type="button" value="before" aria-pressed="false">Before</button><button type="button" value="after" aria-pressed="true">After</button></div>
+      </div>`;
+}
+
+const kicker = (job) => esc(job.kind) + (job.town ? ` in ${esc(job.town)}` : '');
+const ticks = (job) => (job.work || []).filter(Boolean).length
+  ? `<ul class="ticks">${job.work.filter(Boolean).map((w) => `<li>${esc(w)}</li>`).join('')}</ul>` : '';
+const about = (job) => (job.about ? `<p class="muted">${esc(job.about)}</p>` : '');
+
+function jobsList(R) {
+  return jobs.map((job, i) => {
+    const m = manifest[upName(job.before)];
+    const port = m && m.h >= m.w * 0.95 ? ' pair--port' : '';
+    return `<section class="pair${port}" aria-labelledby="w${i + 1}">
+      ${ba(job, R, { sizes: '(max-width: 960px) 100vw, 620px' })}
+      <div class="pair__txt">
+        <p class="kicker">${kicker(job)}</p>
+        <h2 id="w${i + 1}">${esc(job.title)}</h2>
+        ${about(job)}
+        ${ticks(job)}
+      </div>
+    </section>`;
+  }).join('\n\n    ');
+}
+
+// The newest job ticked for the home page goes in the hero, the next one
+// further down. If he has ticked fewer than two, the newest jobs fill in.
+function homeJobs() {
+  const picked = jobs.filter((j) => j.home);
+  return [...picked, ...jobs.filter((j) => !j.home)].slice(0, 2);
+}
+
+function homeJob(slot, R) {
+  const [hero, feature] = homeJobs();
+  if (slot === 'hero') return ba(hero, R, { slide: true, sizes: '(max-width: 960px) 100vw, 44vw', eager: true });
+  if (!feature) return '';
+  return `${ba(feature, R, { sizes: '(max-width: 960px) 100vw, 56vw', style: 'aspect-ratio: 4 / 3' })}
+      <div class="split__txt">
+        <p class="kicker">Before and after</p>
+        <h2 id="ba-t">${esc(feature.title)}</h2>
+        ${about(feature)}
+        ${ticks(feature)}`;
+}
+
+function photosList(R) {
+  return photos.map((p, i) => `<figure${i < 2 ? ' class="half"' : ''}>
+          <div class="photo">${pic({ name: upName(p.photo), alt: esc(p.alt || p.title), sizes: i < 2 ? '(max-width: 960px) 100vw, 560px' : '(max-width: 960px) 100vw, 420px', focus: FOCUS[p.crop] || FOCUS.low }, R)}</div>
+          <figcaption><b>${esc(p.title)}</b>${p.line ? `<span>${esc(p.line)}</span>` : ''}</figcaption>
+        </figure>`).join('\n        ');
+}
 
 const attrs = (s) => {
   const out = {};
@@ -30,7 +121,8 @@ const attrs = (s) => {
 function pic(a, R) {
   const m = manifest[a.name];
   if (!m) throw new Error(`no image called ${a.name}`);
-  const srcset = m.widths.map((w) => `${R}img/${a.name}-${w}.webp ${w}w`).join(', ');
+  const I = R + (m.dir || 'img/');
+  const srcset = m.widths.map((w) => `${I}${a.name}-${w}.webp ${w}w`).join(', ');
   const lazy = a.eager ? 'fetchpriority="high"' : 'loading="lazy"';
   const cls = a.class ? ` class="${a.class}"` : '';
   const focus = a.focus ? ` data-focus="${a.focus}"` : '';
@@ -51,7 +143,7 @@ function pic(a, R) {
     const mm = manifest[a.mobile];
     mobileSource = `<source media="(max-width: 860px)" type="image/webp" srcset="${mm.widths.map((w) => `${R}img/${a.mobile}-${w}.webp ${w}w`).join(', ')}" sizes="100vw">`;
   }
-  return `<picture>${mobileSource}<source type="image/webp" srcset="${srcset}" sizes="${a.sizes || '100vw'}"><img${cls} src="${R}img/${a.name}.jpg" width="${m.w}" height="${m.h}" alt="${a.alt}" ${lazy} decoding="async"${focus}${pos}></picture>`;
+  return `<picture>${mobileSource}<source type="image/webp" srcset="${srcset}" sizes="${a.sizes || '100vw'}"><img${cls} src="${I}${a.name}.jpg" width="${m.w}" height="${m.h}" alt="${a.alt}" ${lazy} decoding="async"${focus}${pos}></picture>`;
 }
 
 function head(a, R) {
@@ -102,6 +194,10 @@ for (const file of walk('pages')) {
   html = html.replace(/<x-pic\s+([^>]*?)\s*\/?>(?:<\/x-pic>)?/g, (_, s) => pic(attrs(s), R));
   html = html.replace(/<x-head\s+([^>]*?)\s*\/?>(?:<\/x-head>)?/g, (_, s) => head(attrs(s), R));
   html = html.replace(/<x-quote\s*\/?>(?:<\/x-quote>)?/g, quote);
+  html = html.replace(/<x-jobs\s*\/?>(?:<\/x-jobs>)?/g, () => jobsList(R));
+  html = html.replace(/<x-job\s+slot="(\w+)"\s*\/?>(?:<\/x-job>)?/g, (_, slot) => homeJob(slot, R));
+  html = html.replace(/<x-photos\s*\/?>(?:<\/x-photos>)?/g, () => photosList(R));
+  html = html.replace(/{{(phone|tel|wa)}}/g, (_, k) => PHONE[k]);
   html = html.replaceAll('{{root}}', R);
   // The first mockups were written for one level deep; the chooser sits at the root.
   if (depth === 0) html = html.replaceAll('../img/', 'img/').replaceAll('../shared/', 'shared/');
@@ -110,3 +206,10 @@ for (const file of walk('pages')) {
   fs.writeFileSync(path.join(outDir, 'index.html'), html);
   console.log('built', path.join(outDir, 'index.html'));
 }
+
+// The quote sheet script carries the number too, for the WhatsApp message it opens.
+const partsPath = 'site/shared/parts.js';
+const parts = fs.readFileSync(partsPath, 'utf8')
+  .replace(/var PHONE_DISPLAY = '[^']*';/, `var PHONE_DISPLAY = '${business.phone.trim().replace(/[^\d +]/g, '')}';`)
+  .replace(/var PHONE_INTL = '[^']*';/, `var PHONE_INTL = '${PHONE.wa}';`);
+fs.writeFileSync(partsPath, parts);

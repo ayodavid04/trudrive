@@ -1,0 +1,18 @@
+{
+  "title": "Decking to porcelain",
+  "date": "2026-01-27",
+  "kind": "Back garden",
+  "town": "",
+  "before": "/uploads/decking-before.webp",
+  "after": "/uploads/decking-after.webp",
+  "crop": "low",
+  "about": "The decking had gone soft and rotten. It came up, and a porcelain patio went down all the way to the shed.",
+  "work": [
+    "Grey porcelain patio",
+    "Black edging and chipping borders",
+    "Composite fence panels"
+  ],
+  "home": true,
+  "before_alt": "Rotten timber decking down to a shed, leaves on the boards",
+  "after_alt": "A grey porcelain patio down to the same shed, edged in black with chipping borders"
+}

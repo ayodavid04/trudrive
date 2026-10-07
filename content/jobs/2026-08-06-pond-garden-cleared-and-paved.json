@@ -1,0 +1,18 @@
+{
+  "title": "Pond garden, cleared and paved",
+  "date": "2026-08-06",
+  "kind": "Back garden",
+  "town": "",
+  "before": "/uploads/pond-before.webp",
+  "after": "/uploads/pond-after.webp",
+  "crop": "middle",
+  "about": "An overgrown pond and old decking nobody used. Now it's a low maintenance garden with somewhere to sit.",
+  "work": [
+    "Porcelain patio and path, dark border",
+    "Artificial turf",
+    "Raised block planter"
+  ],
+  "home": false,
+  "before_alt": "An overgrown pond and rotten decking",
+  "after_alt": "A grey porcelain patio and path, artificial turf and a raised block planter"
+}
