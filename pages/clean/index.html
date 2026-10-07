@@ -81,14 +81,16 @@
     </div>
   </section>
 
-  <!-- Before and after -->
+  <!-- Before and after. Left out if there is no second job to show. -->
+  <x-job slot="feature">
   <section class="sec sec--paper" aria-labelledby="ba-t">
     <div class="wrap split split--wide-img">
-      <x-job slot="feature"></x-job>
+      {{job}}
         <a class="link" href="{{root}}clean/our-work/">See more of our work <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       </div>
     </div>
   </section>
+  </x-job>
 
   <!-- Who you'll deal with -->
   <section class="sec" aria-labelledby="who-t">

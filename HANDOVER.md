@@ -25,6 +25,47 @@ what to set up on handover day.
 - Everything else (layout, services, about text) stays fixed so he cannot
   break the design. Changes there are paid work.
 
+## Dummy-proofing (what Gaz cannot get wrong)
+
+- **A job cannot save without a title, a before photo and an after photo.**
+  The editor blocks it with red messages.
+- **Titles and text have character limits** with a counter, so nothing he
+  types can wreck the layout.
+- **The phone number is checked** before it saves (a UK number starting 0). If
+  it is ever empty or mangled anyway, the build keeps the launch number.
+- **Photos of any size are fine.** They are shrunk on his phone before upload.
+  Phone names like `IMG 4821.JPG` are cleaned to `img-4821.webp`, and an upload
+  with the same name as an old photo is saved as `-1`, never over the old one.
+- **One bad job never blocks the rest.** A photo that will not open (a HEIC or
+  video that slipped through, a broken upload), a missing photo, or a broken
+  file is left off the site with a `WARNING:` line in the Netlify deploy log;
+  everything else still goes live.
+- **Deleting everything is safe.** With no jobs the home page hero falls back
+  to the launch photos and the second before and after section is left out.
+- **Fewer wrong turns:** the developer sign-in and the developer menu items
+  (Slug, Validation, Clear All...) are hidden. He sees his logo and "TruDrive
+  website", not Sveltia.
+- **His guide:** `guide/TruDrive-website-guide.pdf`, six steps with real
+  screenshots. Before sending it, replace `yourwebsite.co.uk` in
+  `guide/index.html` with his domain and run `node scripts/guide-pdf.mjs`.
+  After a Sveltia update, rerun `node scripts/guide-shots.mjs` first.
+
+## Before launch: make Clean the whole site
+
+Right now `/` is the chooser between the four looks, and Clean lives at
+`/clean/`. For his domain, Clean has to be the site at `/`:
+
+- move `pages/clean/*.html` up into `pages/` (replacing the chooser), and
+  remove `pages/solid.html`, `premium.html`, `bold.html` (they stay in git history)
+- in those pages: `{{root}}clean/<page>/` becomes `{{root}}<page>/` (keep
+  `{{root}}clean/clean.css` and `clean.js`), `x-include file="clean/_header.html"`
+  becomes `file="_header.html"` (same for the footer), and `path="clean/..."`
+  in `x-head` drops the `clean/`
+- delete the old built folders under `site/` (`solid`, `premium`, `bold`, and
+  the page folders inside `site/clean/`) so they are not served
+- update `scripts/test-clean.mjs` to the new paths, then rerun the delivery gate
+  (remove `noindex` and the `Disallow: /` in `site/robots.txt` at the same time)
+
 ## Handover day, in this order
 
 Do it with him, on his phone, so every account is his and he has logged in once.
@@ -39,6 +80,9 @@ Do it with him, on his phone, so every account is his and he has logged in once.
    repo. Build settings come from `netlify.toml`. Add his domain.
    (The demo at trudrive-looks-b37345.netlify.app is on your account, deployed
    by CLI. Leave it or delete it once his is live.)
+   **Failed-deploy emails to you:** with his OK, Project configuration >
+   Notifications > Emails > "Deploy failed" to david@travinyx.com, so if a
+   build ever fails you hear about it, not him.
 4. **Editor login.** On GitHub (his account): Settings > Developer settings >
    OAuth Apps > New OAuth App. Homepage URL: his site. Callback URL:
    `https://api.netlify.com/auth/done`. Copy the Client ID and make a client
@@ -46,8 +90,9 @@ Do it with him, on his phone, so every account is his and he has logged in once.
    Install provider > GitHub, paste both.
 5. In `site/admin/config.yml` change `repo: CHANGE-ME/trudrive` to his
    `username/repo`, commit, wait for the deploy.
-6. **He adds a real job himself** at `hissite.co.uk/admin` while you watch.
-   Then add `/admin` to his phone's home screen.
+6. **He adds a real job himself** at `hissite.co.uk/admin` while you watch,
+   following the guide, not you. Then add `/admin` to his phone's home screen
+   and send him the PDF.
 7. Google Business Profile: him as owner, you as manager.
 8. Fill in the account sheet below and give him a copy. Passwords go in his
    phone's password manager, never on the sheet.

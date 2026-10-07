@@ -32,28 +32,55 @@ for (const [name, m] of Object.entries(JSON.parse(fs.readFileSync('site/img/up/m
 }
 
 // ---------------------------------------------------------- content
-const readDir = (dir) => fs.readdirSync(dir).filter((f) => f.endsWith('.json'))
-  .map((f) => JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')));
-const newestFirst = (a, b) => String(b.date).localeCompare(String(a.date));
-const jobs = readDir('content/jobs').sort(newestFirst);
-const photos = readDir('content/photos').sort(newestFirst);
-const business = JSON.parse(fs.readFileSync('content/business.json', 'utf8'));
+// Nothing Gaz does in the editor should break a page. Anything unreadable, or
+// a job whose photos did not process, is left off with a warning in the log.
+const warn = (msg) => console.warn('WARNING: ' + msg);
+const readDir = (dir) => (fs.existsSync(dir) ? fs.readdirSync(dir) : []).filter((f) => f.endsWith('.json'))
+  .flatMap((f) => {
+    try { return [JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'))]; } catch { warn(`skipped ${dir}/${f}: not valid JSON`); return []; }
+  });
+const upName = (file) => 'up-' + path.basename(String(file)).replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+const hasPhoto = (file) => file && manifest[upName(file)];
+const newestFirst = (a, b) => String(b.date ?? '').localeCompare(String(a.date ?? ''));
+const jobs = readDir('content/jobs').filter((j) => {
+  const ok = j.title && hasPhoto(j.before) && hasPhoto(j.after);
+  if (!ok) warn(`left off the job "${j.title || '(no title)'}": it needs a title, a before photo and an after photo that processed`);
+  return ok;
+}).sort(newestFirst);
+const photos = readDir('content/photos').filter((p) => {
+  const ok = p.title && hasPhoto(p.photo);
+  if (!ok) warn(`left off the photo "${p.title || '(no title)'}": it needs a title and a photo that processed`);
+  return ok;
+}).sort(newestFirst);
+const business = readDir('content').find((b) => b.phone) || {};
 
 // Whatever Gaz types is shown as text, never read as HTML.
 const esc = (v) => String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-const upName = (file) => 'up-' + path.basename(file).replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
 const FOCUS = { middle: '50 50', low: '50 62', top: '50 30' };
 
-const digits = String(business.phone).replace(/\D/g, '');
+// The editor checks the number's shape; this is the backstop if it is ever
+// empty or mangled: the site keeps the number it launched with.
+const LAUNCH_PHONE = '07923 485811';
+let digits = String(business.phone || '').replace(/\D/g, '');
+if (!/^(0|44)\d{9,10}$/.test(digits)) {
+  warn(`phone number "${business.phone}" does not look right, using ${LAUNCH_PHONE}`);
+  business.phone = LAUNCH_PHONE;
+  digits = LAUNCH_PHONE.replace(/\D/g, '');
+}
 const intl = digits.startsWith('44') ? digits : '44' + digits.replace(/^0/, '');
 const PHONE = { phone: esc(business.phone.trim()), tel: '+' + intl, wa: intl };
+
+// If every job is deleted, the home page hero falls back to the launch photos.
+const FALLBACK_HERO = { fixed: true, title: 'Decking to porcelain', before: 'j1-before', after: 'j1-after', crop: 'low',
+  before_alt: 'Rotten timber decking down to a shed', after_alt: 'A grey porcelain patio down to the same shed, edged in black' };
+const imgName = (job, k) => (job.fixed ? job[k] : upName(job[k]));
 
 function ba(job, R, { slide = false, sizes, eager = false, style = '' }) {
   const focus = FOCUS[job.crop] || FOCUS.low;
   const label = `Before and after: ${esc(job.title)}`;
   const picAttrs = { sizes, focus, eager };
-  const before = pic({ ...picAttrs, name: upName(job.before), class: 'ba__before', alt: `Before: ${esc(job.before_alt || job.title)}` }, R);
-  const after = pic({ ...picAttrs, name: upName(job.after), class: 'ba__after', alt: `After: ${esc(job.after_alt || job.title)}` }, R);
+  const before = pic({ ...picAttrs, name: imgName(job, 'before'), class: 'ba__before', alt: `Before: ${esc(job.before_alt || job.title)}` }, R);
+  const after = pic({ ...picAttrs, name: imgName(job, 'after'), class: 'ba__after', alt: `After: ${esc(job.after_alt || job.title)}` }, R);
   const open = slide
     ? `<div class="ba ba--slide" data-autoplay data-state="after" role="group" aria-label="${label}">`
     : `<div class="ba ba--fade" data-start="after" role="group" aria-label="${label}"${style ? ` style="${style}"` : ''}>`;
@@ -66,8 +93,10 @@ function ba(job, R, { slide = false, sizes, eager = false, style = '' }) {
 }
 
 const kicker = (job) => esc(job.kind) + (job.town ? ` in ${esc(job.town)}` : '');
-const ticks = (job) => (job.work || []).filter(Boolean).length
-  ? `<ul class="ticks">${job.work.filter(Boolean).map((w) => `<li>${esc(w)}</li>`).join('')}</ul>` : '';
+const workList = (job) => (Array.isArray(job.work) ? job.work : String(job.work || '').split('\n'))
+  .map((w) => String(w).trim()).filter(Boolean);
+const ticks = (job) => (workList(job).length
+  ? `<ul class="ticks">${workList(job).map((w) => `<li>${esc(w)}</li>`).join('')}</ul>` : '');
 const about = (job) => (job.about ? `<p class="muted">${esc(job.about)}</p>` : '');
 
 function jobsList(R) {
@@ -93,16 +122,22 @@ function homeJobs() {
   return [...picked, ...jobs.filter((j) => !j.home)].slice(0, 2);
 }
 
-function homeJob(slot, R) {
-  const [hero, feature] = homeJobs();
-  if (slot === 'hero') return ba(hero, R, { slide: true, sizes: '(max-width: 960px) 100vw, 44vw', eager: true });
+function homeHero(R) {
+  const [hero] = homeJobs();
+  return ba(hero || FALLBACK_HERO, R, { slide: true, sizes: '(max-width: 960px) 100vw, 44vw', eager: true });
+}
+
+// The whole section between <x-job slot="feature"> and </x-job>, with its
+// {{job}} filled in. With fewer than two jobs the section is left out.
+function homeFeature(section, R) {
+  const [, feature] = homeJobs();
   if (!feature) return '';
-  return `${ba(feature, R, { sizes: '(max-width: 960px) 100vw, 56vw', style: 'aspect-ratio: 4 / 3' })}
+  return section.replace('{{job}}', `${ba(feature, R, { sizes: '(max-width: 960px) 100vw, 56vw', style: 'aspect-ratio: 4 / 3' })}
       <div class="split__txt">
         <p class="kicker">Before and after</p>
         <h2 id="ba-t">${esc(feature.title)}</h2>
         ${about(feature)}
-        ${ticks(feature)}`;
+        ${ticks(feature)}`);
 }
 
 function photosList(R) {
@@ -195,7 +230,8 @@ for (const file of walk('pages')) {
   html = html.replace(/<x-head\s+([^>]*?)\s*\/?>(?:<\/x-head>)?/g, (_, s) => head(attrs(s), R));
   html = html.replace(/<x-quote\s*\/?>(?:<\/x-quote>)?/g, quote);
   html = html.replace(/<x-jobs\s*\/?>(?:<\/x-jobs>)?/g, () => jobsList(R));
-  html = html.replace(/<x-job\s+slot="(\w+)"\s*\/?>(?:<\/x-job>)?/g, (_, slot) => homeJob(slot, R));
+  html = html.replace(/<x-job\s+slot="feature">([\s\S]*?)<\/x-job>/g, (_, section) => homeFeature(section, R));
+  html = html.replace(/<x-job\s+slot="hero"\s*\/?>(?:<\/x-job>)?/g, () => homeHero(R));
   html = html.replace(/<x-photos\s*\/?>(?:<\/x-photos>)?/g, () => photosList(R));
   html = html.replace(/{{(phone|tel|wa)}}/g, (_, k) => PHONE[k]);
   html = html.replaceAll('{{root}}', R);

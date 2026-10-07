@@ -14,8 +14,14 @@ const WIDTHS = [480, 800, 1200, 1600];
 
 fs.mkdirSync(OUT, { recursive: true });
 
+// Nothing Gaz does in the editor should stop the site updating. A file or
+// photo that cannot be read is skipped with a warning in the Netlify log, and
+// everything else still goes live.
+const warn = (msg) => console.warn('WARNING: ' + msg);
 const readDir = (dir) => (fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => f.endsWith('.json')) : [])
-  .map((f) => JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8')));
+  .flatMap((f) => {
+    try { return [JSON.parse(fs.readFileSync(path.join(dir, f), 'utf8'))]; } catch { warn(`skipped ${dir}/${f}: not valid JSON`); return []; }
+  });
 
 // Every image a content file points at, as an upload filename.
 const used = new Set();
@@ -31,34 +37,43 @@ let made = 0;
 
 for (const file of used) {
   const src = path.join(UPLOADS, file);
-  if (!fs.existsSync(src)) throw new Error(`a job or photo points at ${file}, which is not in ${UPLOADS}`);
+  if (!fs.existsSync(src)) { warn(`${file} is missing from ${UPLOADS}, so its job or photo is left off the site`); continue; }
   const name = nameFor(file);
   const fallback = path.join(OUT, `${name}.jpg`);
   if (old[name] && fs.existsSync(fallback) && fs.statSync(fallback).mtimeMs > fs.statSync(src).mtimeMs) {
     manifest[name] = old[name];
     continue;
   }
-  // rotate() applies the phone's orientation flag before anything reads the size.
-  const img = sharp(src).rotate();
-  const meta = await sharp(src).metadata();
-  const [w, h] = meta.orientation >= 5 ? [meta.height, meta.width] : [meta.width, meta.height];
-  // Portrait phone photos land around 1125 to 1350 wide: keep the full width
-  // as the top size so a retina hero is not drawn from the 800.
-  const widths = WIDTHS.filter((tw) => tw <= w);
-  if (!widths.length || (w < 1600 && w - widths[widths.length - 1] > 100)) widths.push(w);
-  for (const tw of widths) {
-    await img.clone().resize({ width: tw }).webp({ quality: tw >= 1200 ? 70 : 74, effort: 6 }).toFile(path.join(OUT, `${name}-${tw}.webp`));
+  try {
+    // rotate() applies the phone's orientation flag before anything reads the size.
+    const img = sharp(src).rotate();
+    const meta = await sharp(src).metadata();
+    const [w, h] = meta.orientation >= 5 ? [meta.height, meta.width] : [meta.width, meta.height];
+    // Portrait phone photos land around 1125 to 1350 wide: keep the full width
+    // as the top size so a retina hero is not drawn from the 800.
+    const widths = WIDTHS.filter((tw) => tw <= w);
+    if (!widths.length || (w < 1600 && w - widths[widths.length - 1] > 100)) widths.push(w);
+    for (const tw of widths) {
+      await img.clone().resize({ width: tw }).webp({ quality: tw >= 1200 ? 70 : 74, effort: 6 }).toFile(path.join(OUT, `${name}-${tw}.webp`));
+    }
+    await img.clone().resize({ width: Math.min(1200, w) }).jpeg({ quality: 74, mozjpeg: true }).toFile(fallback);
+    manifest[name] = { w, h, widths };
+    made++;
+  } catch (e) {
+    // An iPhone HEIC that slipped past the editor, a video, a broken upload.
+    warn(`could not read ${file} (${e.message}), so its job or photo is left off the site`);
   }
-  await img.clone().resize({ width: Math.min(1200, w) }).jpeg({ quality: 74, mozjpeg: true }).toFile(fallback);
-  manifest[name] = { w, h, widths };
-  made++;
 }
 
 // Photos removed in the editor leave nothing behind on the site.
-for (const f of fs.readdirSync(OUT)) {
-  const name = f.replace(/(-\d+)?\.(webp|jpg)$/, '');
-  if (f !== 'manifest.json' && !manifest[name]) fs.rmSync(path.join(OUT, f));
+// Matched by exact filename: a name like IMG_4821 ends in digits, so it cannot
+// be told apart from a size suffix by pattern.
+const keep = new Set(['manifest.json']);
+for (const [name, m] of Object.entries(manifest)) {
+  keep.add(`${name}.jpg`);
+  for (const w of m.widths) keep.add(`${name}-${w}.webp`);
 }
+for (const f of fs.readdirSync(OUT)) if (!keep.has(f)) fs.rmSync(path.join(OUT, f));
 
 fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 1));
 console.log(`content photos: ${Object.keys(manifest).length} in use, ${made} processed`);

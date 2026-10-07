@@ -12,5 +12,20 @@
      Gaz without anyone checking it first. To update: change the version, try
      it at /admin, then publish. -->
 <script src="https://unpkg.com/@sveltia/cms@0.230/dist/sveltia-cms.js"></script>
+<script>
+  // Fewer wrong turns for Gaz: hide the access-token sign-in and the
+  // developer items in the editor's menu (Slug, Validation, Backlinks,
+  // Restore Default, Clear All). Duplicate, Delete and Revert stay. If
+  // Sveltia ever renames one, it simply shows again; nothing breaks.
+  var HIDE = /^(Slug|Validation|Backlinks|Restore Default|Clear All)$/;
+  new MutationObserver(function () {
+    document.querySelectorAll('button').forEach(function (b) {
+      if (/Access Token/i.test(b.textContent)) b.style.display = 'none';
+    });
+    document.querySelectorAll('[role^="menuitem"]').forEach(function (m) {
+      if (HIDE.test(m.textContent.trim())) m.style.display = 'none';
+    });
+  }).observe(document.documentElement, { childList: true, subtree: true });
+</script>
 </body>
 </html>
