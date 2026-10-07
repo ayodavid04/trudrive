@@ -1,0 +1,23 @@
+# Normalise line endings so builds on Cloudflare (Linux) and edits on Windows agree.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.webp binary
+*.pdf binary
+
+# Left out of the copy that goes to the owner (scripts/export-for-owner.sh):
+# build notes and working tools from making the demo.
+BRIEF.md export-ignore
+CONFIRM.md export-ignore
+HANDOVER.md export-ignore
+.netlify-site.txt export-ignore
+.claude export-ignore
+src export-ignore
+scripts/fetch-tiktok.mjs export-ignore
+scripts/receive.mjs export-ignore
+scripts/sheet.py export-ignore
+scripts/sheets.py export-ignore
+scripts/snap.mjs export-ignore
+scripts/weight.mjs export-ignore
+scripts/export-for-owner.sh export-ignore
+.gitattributes export-ignore

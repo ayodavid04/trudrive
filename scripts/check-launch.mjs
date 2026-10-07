@@ -1,4 +1,4 @@
-// The travinyx-site delivery gate, run against the built site on the preview
+// Pre-launch checks, run against the built site on the preview
 // server (port 4600). Prints PASS / FAIL / TODO per check; TODO means it is
 // waiting on Gaz's details and the site is correctly hidden from Google.
 //

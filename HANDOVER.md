@@ -1,8 +1,9 @@
 # TruDrive: handing the site to Gaz
 
-Gaz owns everything, updates his own jobs, and never needs Travinyx to keep
-the site running. This is how it fits together, what is still missing before
-launch, and what to set up on handover day.
+**A favour for a friend, not a Travinyx job.** Gaz owns everything and you
+appear nowhere: not on the site, not in his accounts, not in the files or git
+history he gets. This file, BRIEF.md and CONFIRM.md stay on your machine; they
+are left out of his copy (see "Handover day" step 3).
 
 ## How it works
 
@@ -59,7 +60,7 @@ launch, and what to set up on handover day.
   hidden. He sees his logo and "TruDrive website".
 - **His guide** (`guide/TruDrive-website-guide.pdf`): six steps with real
   phone screenshots, fixing a job that has not shown up, and a page on what he
-  owns and the one thing to keep an eye on. It never sends him to Travinyx.
+  owns and the one thing to keep an eye on. It never sends him to anyone.
   Before sending: replace `yourwebsite.co.uk` in `guide/index.html` with his
   domain, then `node scripts/guide-pdf.mjs`.
 
@@ -68,7 +69,7 @@ launch, and what to set up on handover day.
 **Done:** Clean is the whole site at `/` (the other looks are in git history),
 privacy page, 404 page, sitemap.xml, robots.txt, LocalBusiness data for Google,
 logo cut from 200 KB to 35 KB, and `node scripts/check-launch.mjs` passes the
-travinyx-site delivery gate on every page at desktop and phone size.
+pre-launch checks on every page at desktop and phone size.
 
 **Gaz types these into his editor himself** (Business details), and each one
 fills its place on the site. The yellow notes disappear as he does:
@@ -86,12 +87,16 @@ fills its place on the site. The yellow notes disappear as he does:
 filled in, the next build opens it to Google and robots.txt points at the
 sitemap. Nothing to switch on by hand.
 
-## Google Business Profile (you are setting this up)
+## Google Business Profile
 
 For a local trade this matters more than the website: it is what shows in the
-map results when someone searches "driveways near me".
+map results when someone searches "driveways near me". **It has to be his:**
+made on his Google account, on his phone, with him there. Google's
+verification asks the business owner to prove the business (usually a video),
+and whoever creates it owns it. You can do the typing; never add yourself as
+an owner or manager.
 
-1. Make it with **Gaz's own Google account**, so he is the owner from day one.
+1. Make it with **Gaz's own Google account**, signed in on his phone.
 2. **Name: exactly "TruDrive Driveways & Patios".** No towns or keywords added
    to the name. Google suspends profiles for that.
 3. **He goes to customers, so it is a service-area business:** say no to
@@ -119,38 +124,42 @@ Search Console in two clicks; Bing also feeds Copilot and ChatGPT search.
 
 ## Handover day, in this order
 
-Do it with him, on his phone, so every account is his and he has logged in
-once. Two accounts in total: Cloudflare and GitHub.
+Sit with him. You do the clicking, but every account is made with **his**
+email, **his** phone for the two-step codes and **his** card, so nothing is
+ever in your name. Bring: his phone, access to his email, a card for the
+domain. About an hour.
 
-1. **Cloudflare account** in his name and email, his phone for two-step login.
-   Register the domain in Cloudflare Registrar (sells .co.uk at cost, a few
-   pounds a year), his card, **auto-renew on**.
-2. **GitHub account** for him. GitHub makes him set up two-step login: do it
-   together with the GitHub Mobile app. Transfer this repo to his account
-   (Settings > Transfer ownership), so the history comes with it.
-3. **Hosting:** in his Cloudflare, Workers & Pages > Create > Pages > Connect to
+1. **Cloudflare account** (his email). Register the domain in Cloudflare
+   Registrar (sells .co.uk at cost, a few pounds a year), his card,
+   **auto-renew on**.
+2. **GitHub account** (his email). GitHub makes him set up two-step login: use
+   the GitHub Mobile app on his phone. Create an empty private repo called
+   `trudrive`.
+3. **His clean copy, from your machine:** commit everything here, then
+   `sh scripts/export-for-owner.sh ../trudrive-gaz "Gaz <surname>" <his email>`.
+   It copies the site with no history and none of these notes, as one commit in
+   his name, sets his name for future commits in that folder, and checks no
+   other name appears in any file. In `../trudrive-gaz`, set `repo:` (his
+   `username/trudrive`) and `base_url:` (step 5) in `site/admin/config.yml`,
+   commit, then `git remote add origin <his repo URL>` and `git push -u origin main`.
+   Sign in to GitHub as him for the push; never add your own GitHub account.
+4. **Hosting:** in his Cloudflare, Workers & Pages > Create > Pages > Connect to
    Git > his repo. Build command `npm run build`, output directory `site`,
    environment variable `SITE_URL` = `https://his-domain`. Then Custom domains >
    add his domain.
-4. **Editor login:** deploy Sveltia's authenticator to his Cloudflare with the
+5. **Editor login:** deploy Sveltia's authenticator to his Cloudflare with the
    deploy button at https://github.com/sveltia/sveltia-cms-auth. On GitHub (his
    account): Settings > Developer settings > OAuth Apps > New OAuth App,
    callback URL `<worker URL>/callback`. In the Worker's settings add
    `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` (encrypted) and
-   `ALLOWED_DOMAINS` = his domain.
-5. In `site/admin/config.yml` set `repo:` to his `username/trudrive` and
-   `base_url:` to the Worker's URL. Commit and wait for the build.
-6. **He adds a real job himself** at `his-domain/admin`, following the guide,
-   not you. Add `/admin` to his home screen and send him the PDF.
-7. Google Business Profile: him as owner.
-8. **Take yourself off.** Remove your access from his GitHub repo and
-   Cloudflare if you were added while setting up. Nothing should depend on you.
-
-## Legal
-
-The invoice or agreement says: on full payment, all rights in the site's
-design, code and content pass to Gaz; Travinyx may show the site in its
-portfolio.
+   `ALLOWED_DOMAINS` = his domain. Its URL is the `base_url` in step 3.
+6. **He adds a real job himself** at `his-domain/admin`, following the guide.
+   Add `/admin` to his home screen and send him the PDF.
+7. **He types his details into Business details** (towns, address, hours,
+   About). When the last yellow note goes, the site opens to Google by itself.
+8. **Log yourself out** of his Cloudflare and GitHub on your laptop and clear
+   any saved passwords for them. His passwords go in his phone's password
+   manager. Delete `../trudrive-gaz` from your machine once it is pushed.
 
 ## Developer notes
 
