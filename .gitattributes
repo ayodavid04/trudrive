@@ -20,4 +20,5 @@ scripts/sheets.py export-ignore
 scripts/snap.mjs export-ignore
 scripts/weight.mjs export-ignore
 scripts/export-for-owner.sh export-ignore
+scripts/check-names.mjs export-ignore
 .gitattributes export-ignore

@@ -11,6 +11,7 @@ DEST=${1:?give a folder that does not exist yet}
 NAME=${2:-TruDrive}
 EMAIL=${3:-website@trudrive.invalid}
 [ -e "$DEST" ] && { echo "$DEST already exists"; exit 1; }
+SRC=$(pwd)
 
 [ -z "$(git status --porcelain)" ] || { echo "commit your changes first: the copy is made from the last commit"; exit 1; }
 
@@ -25,14 +26,5 @@ git add -A
 git commit -q -m "TruDrive website"
 
 echo "Made $DEST: $(git ls-files | wc -l) files, one commit by $NAME <$EMAIL>"
-# Every committed file, read in full (grep can crash on the large editor file
-# and would then look like a pass). Exits non-zero on a hit or on any error.
-node -e '
-  const fs = require("fs");
-  const names = /travinyx|oduola|ayodavid/i;
-  const files = require("child_process").execSync("git ls-files", { encoding: "utf8" }).split(/\r?\n/).filter(Boolean);
-  if (files.length < 50) { console.log("WARNING: only " + files.length + " files listed, the copy looks wrong"); process.exit(1); }
-  const hits = files.filter((f) => names.test(fs.readFileSync(f, "latin1")));
-  if (hits.length) { console.log("WARNING: these mention a name that should not be there:\n" + hits.join("\n")); process.exit(1); }
-  console.log("Checked all " + files.length + " files: no other names.");
-'
+# Every committed file read in full, plus the commit author.
+node "$SRC/scripts/check-names.mjs"
