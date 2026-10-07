@@ -25,8 +25,13 @@ git add -A
 git commit -q -m "TruDrive website"
 
 echo "Made $DEST: $(git ls-files | wc -l) files, one commit by $NAME <$EMAIL>"
-if grep -rIil -e travinyx -e oduola -e ayodavid --exclude-dir=.git --exclude-dir=node_modules .; then
-  echo "WARNING: the files above mention a name that should not be there"
-  exit 1
-fi
-echo "Checked: no other names in any file."
+# Every committed file, read in full (grep can crash on the large editor file
+# and would then look like a pass). Exits non-zero on a hit or on any error.
+git ls-files -z | node -e '
+  const fs = require("fs");
+  const names = /travinyx|oduola|ayodavid/i;
+  const files = require("fs").readFileSync(0, "utf8").split("\0").filter(Boolean);
+  const hits = files.filter((f) => names.test(fs.readFileSync(f, "latin1")));
+  if (hits.length) { console.log("WARNING: these mention a name that should not be there:\n" + hits.join("\n")); process.exit(1); }
+  console.log("Checked all " + files.length + " files: no other names.");
+'
