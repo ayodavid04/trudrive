@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TruDrive Driveways &amp; Patios: the work</title>
+<meta name="description" content="Porcelain, natural stone, block paving and imprinted concrete, laid across the North West by TruDrive. Free quotes on 07923 485811.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://trudrive-looks-b37345.netlify.app/premium/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="TruDrive Driveways &amp; Patios">
+<meta property="og:title" content="TruDrive Driveways &amp; Patios: the work">
+<meta property="og:description" content="Porcelain, natural stone, block paving and imprinted concrete, laid across the North West by TruDrive. Free quotes on 07923 485811.">
+<meta property="og:url" content="https://trudrive-looks-b37345.netlify.app/premium/">
+<meta property="og:image" content="https://trudrive-looks-b37345.netlify.app/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600&display=swap">
+<link rel="stylesheet" href="../shared/scrollcraft.css">
+<link rel="stylesheet" href="../shared/parts.css">
+<style>
+  /* Premium: his navy as the room, bone type, one sandstone accent.
+     A collection with gallery labels. Facts, not pitch. */
+  :root {
+    --sc-canvas:     #0e1828;
+    --sc-surface:    #16233a;
+    --sc-ink:        #ece7de;
+    --sc-ink-soft:   #a8b1bf;
+    --sc-accent:     #d7bd94;
+    --sc-accent-ink: #0e1828;
+    --sc-font-display: "General Sans", system-ui, sans-serif;
+    --sc-font-text:    "General Sans", system-ui, sans-serif;
+    --part-radius: 2px;
+    --rail: 15.5rem;
+    --pad: clamp(1.25rem, 3.6vw, 3.5rem);
+    --compare-grip: #ece7de; --compare-grip-ink: #0e1828; --compare-line: #ece7de;
+  }
+  body { background: var(--sc-canvas); letter-spacing: 0.002em; line-height: 1.66; }
+  picture { display: contents; }
+  img { color: transparent; }
+
+  /* --------------------------------------------------------- the index -- */
+  .index {
+    position: fixed; z-index: 50; inset: 0 auto 0 0; width: var(--rail);
+    display: flex; flex-direction: column; gap: 28px;
+    padding: 28px 22px 26px 28px;
+    border-right: 1px solid color-mix(in oklab, var(--sc-ink) 9%, transparent);
+    background: var(--sc-canvas);
+  }
+  .index__brand { display: grid; gap: 14px; }
+  .index__logo { display: block; width: 100%; padding: 12px 14px; background: #ece7de; border-radius: var(--part-radius); }
+  .index__logo img { width: 100%; height: auto; }
+  .index nav { flex: 1; overflow: auto; }
+  .index ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+  .index a {
+    display: flex; align-items: baseline; gap: 10px; padding: 7px 0; min-height: 36px;
+    color: var(--sc-ink-soft); text-decoration: none; font-size: 0.94rem;
+    transition: color 160ms var(--sc-ease-out);
+  }
+  .index a span { width: 1.4rem; flex: none; font-size: 0.78rem; font-variant-numeric: tabular-nums; color: color-mix(in oklab, var(--sc-ink-soft) 70%, transparent); }
+  .index a:hover { color: var(--sc-ink); }
+  .index a[aria-current="true"] { color: var(--sc-ink); }
+  .index a[aria-current="true"] span { color: var(--sc-accent); }
+  .index__foot { display: grid; gap: 10px; }
+  .index__phone { color: var(--sc-ink); text-decoration: none; font-weight: 500; font-variant-numeric: tabular-nums; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    min-height: 48px; padding: 0 20px; border: 0; border-radius: var(--part-radius);
+    background: var(--sc-accent); color: var(--sc-accent-ink);
+    font: 600 0.98rem/1 var(--sc-font-text); letter-spacing: 0.005em;
+    text-decoration: none; cursor: pointer; white-space: nowrap;
+    transition: background-color 140ms var(--sc-ease-out), scale 110ms var(--sc-ease-out);
+  }
+  .btn:hover { background: #e4ceaa; }
+  .btn:active { scale: 0.97; }
+  .btn--line { background: transparent; color: var(--sc-ink); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--sc-ink) 40%, transparent); }
+  .btn--line:hover { background: color-mix(in oklab, var(--sc-ink) 7%, transparent); }
+
+  main { margin-left: var(--rail); }
+
+  /* ------------------------------------------------------------ labels -- */
+  /* Every piece gets the same schema: title, then Laid / Also / Before. */
+  .label { display: grid; gap: 10px; max-width: 30rem; }
+  .label h2, .label h3 { margin: 0; font-size: clamp(1.35rem, 1.1rem + 0.8vw, 1.8rem); line-height: 1.15; font-weight: 500; letter-spacing: -0.015em; }
+  .label dl { margin: 0; display: grid; grid-template-columns: 4.6rem 1fr; gap: 6px 14px; font-size: 0.95rem; line-height: 1.5; }
+  .label dt { color: var(--sc-ink-soft); }
+  .label dd { margin: 0; color: var(--sc-ink); }
+
+  /* ------------------------------------------------------ piece one ----- */
+  .one { padding: var(--pad) var(--pad) clamp(3rem, 7vw, 6rem); }
+  .one__h1 { margin: 0 0 18px; max-width: 46ch; font-size: 0.98rem; line-height: 1.5; font-weight: 400; color: var(--sc-ink-soft); }
+  .one__main { position: relative; height: min(72vh, 60vw); }
+  .one__main img { width: 100%; height: 100%; object-fit: cover; }
+  .one__row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--pad); align-items: start; margin-top: 26px; }
+  .one__more { display: grid; grid-template-columns: repeat(2, 13rem); gap: 12px; }
+  .one__more figure { margin: 0; aspect-ratio: 4 / 3; overflow: hidden; }
+  .one__more img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* ------------------------------------------------------ quiet beat ---- */
+  .quiet { padding: clamp(4rem, 12vh, 8rem) var(--pad) clamp(2rem, 6vh, 4rem); }
+  .quiet p { margin: 0; max-width: 24ch; font-size: clamp(1.9rem, 1.2rem + 2.4vw, 3.4rem); line-height: 1.1; font-weight: 400; letter-spacing: -0.025em; text-wrap: balance; }
+
+  /* ------------------------------------------------------- the peak ----- */
+  .peak__stage { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--pad); padding: 0 var(--pad); }
+  .peak__frame { width: min(52vh, 38vw); height: min(86vh, 68vw); box-shadow: 0 30px 80px rgb(0 0 0 / 0.45); }
+  .peak .label { justify-self: end; }
+  .peak .label dl > * { transition: none; }
+
+  /* ------------------------------------------------------- the rail ----- */
+  .rail {
+    display: flex; align-items: flex-start; gap: clamp(1.5rem, 3vw, 3rem);
+    height: 100%; padding: clamp(4.5rem, 12vh, 7rem) var(--pad) 0; width: max-content;
+  }
+  .rail > * { flex: none; }
+  .rail__lead { width: min(24rem, 72vw); padding-top: 2rem; }
+  .rail__lead h2 { margin: 0; font-size: clamp(1.9rem, 1.2rem + 2vw, 3rem); line-height: 1.08; font-weight: 400; letter-spacing: -0.025em; }
+  .rail__lead p { margin: 16px 0 0; color: var(--sc-ink-soft); max-width: 32ch; }
+  .piece { display: grid; gap: 18px; }
+  .piece__img { height: min(56vh, 40vw); overflow: hidden; }
+  .piece__img img { width: 100%; height: 100%; object-fit: cover; }
+  .piece--land .piece__img { aspect-ratio: 4 / 3; }
+  .piece--port .piece__img { aspect-ratio: 3 / 4; }
+  .piece .label { max-width: 26rem; }
+  .piece .label h3 { font-size: 1.3rem; }
+  .rail__note { width: min(20rem, 70vw); padding-top: 2rem; color: var(--sc-ink-soft); }
+  .rail__note a { color: var(--sc-ink); }
+  @media (prefers-reduced-motion: no-preference) {
+    .rail > :not(:first-child) { opacity: clamp(0.55, calc(0.55 + (var(--sc-p, 0) * 9 - var(--i, 1) + 1.5) * 0.45), 1); }
+  }
+
+  /* ------------------------------------------------------- materials ---- */
+  .mat { padding: clamp(5rem, 12vh, 8rem) var(--pad) clamp(4rem, 10vh, 7rem); }
+  .mat h2 { margin: 0; font-size: clamp(1.9rem, 1.2rem + 2vw, 3rem); line-height: 1.08; font-weight: 400; letter-spacing: -0.025em; }
+  .mat dl { margin: 40px 0 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr)); gap: 28px clamp(2rem, 4vw, 4rem); max-width: 72rem; }
+  .mat dl > div { display: grid; gap: 4px; }
+  .mat dt { font-weight: 500; font-size: 1.08rem; }
+  .mat dd { margin: 0; color: var(--sc-ink-soft); font-size: 0.95rem; }
+
+  /* ------------------------------------------------------ the close ----- */
+  .close__stage { display: grid; align-content: center; padding: clamp(4rem, 10vh, 6rem) var(--pad) 0; }
+  .close__plates { display: grid; grid-template-columns: repeat(2, minmax(0, 28rem)); gap: clamp(2rem, 5vw, 5rem); align-items: start; }
+  .close .label dl { grid-template-columns: 5rem 1fr; }
+  .close__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
+  .close__foot { margin-top: clamp(3rem, 8vh, 5rem); padding: 18px 0 26px; border-top: 1px solid color-mix(in oklab, var(--sc-ink) 10%, transparent); display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 0.84rem; color: var(--sc-ink-soft); }
+  .close__foot a { color: inherit; }
+
+  /* --------------------------------------------------------- phones ----- */
+  .bar { display: none; }
+  @media (max-width: 860px) {
+    :root { --rail: 0px; }
+    .index { display: none; }
+    .bar {
+      display: flex; position: fixed; z-index: 55; left: 10px; right: 10px; bottom: 10px;
+      gap: 8px; padding: 8px; border-radius: 4px;
+      background: color-mix(in oklab, var(--sc-canvas) 88%, transparent);
+      backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgb(0 0 0 / 0.4);
+    }
+    .bar .btn { flex: 1; }
+    .bar__logo { display: grid; place-items: center; padding: 0 10px; background: #ece7de; border-radius: var(--part-radius); }
+    .bar__logo img { width: 6.4rem; height: auto; }
+    .one { padding-top: 14px; }
+    .one__main { height: 56svh; }
+    .one__h1 { font-size: 0.92rem; margin-bottom: 12px; }
+    .one__row { grid-template-columns: 1fr; }
+    .one__more { grid-template-columns: 1fr 1fr; }
+    .one__more { width: 100%; }
+    .peak__stage { grid-template-columns: 1fr; grid-template-rows: 1fr auto; align-items: end; padding: 14px 14px 88px; gap: 14px; }
+    .peak__frame { width: 100%; height: 100%; order: -1; }
+    .peak .label { justify-self: start; }
+    .peak .label dl { font-size: 0.88rem; }
+    .piece__img { height: 46svh; }
+    .rail { padding-top: 3.5rem; }
+    .close__stage { padding-bottom: 80px; align-content: start; padding-top: 3rem; }
+    .close__plates { grid-template-columns: 1fr; gap: 2.2rem; }
+    .close__foot { margin-top: 1.5rem; }
+  }
+</style>
+</head>
+<body class="premium">
+<div class="sc-grain" aria-hidden="true"></div>
+
+<aside class="index" aria-label="Index">
+  <div class="index__brand">
+    <a class="index__logo" href="#top"><img src="../img/logo.png" width="860" height="375" alt="TruDrive Driveways and Patios"></a>
+  </div>
+  <nav aria-label="The work">
+    <ol>
+      <li><a href="#p1"><span>1</span>Porcelain garden</a></li>
+      <li><a href="#p2"><span>2</span>Decking to porcelain</a></li>
+      <li><a href="#p3" data-rail><span>3</span>Pond garden</a></li>
+      <li><a href="#p4" data-rail><span>4</span>Concrete to porcelain</a></li>
+      <li><a href="#p5" data-rail><span>5</span>Front garden</a></li>
+      <li><a href="#p6" data-rail><span>6</span>Printed driveway</a></li>
+      <li><a href="#p7" data-rail><span>7</span>Stone patio</a></li>
+      <li><a href="#materials"><span></span>Materials</a></li>
+      <li><a href="#enquiries"><span></span>Enquiries</a></li>
+    </ol>
+  </nav>
+  <div class="index__foot">
+    <button class="btn" type="button" data-quote>Get a free quote</button>
+    <a class="index__phone" href="tel:+447923485811">07923 485811</a>
+  </div>
+</aside>
+
+<div class="bar">
+  <a class="bar__logo" href="#top"><img src="../img/logo.png" width="860" height="375" alt="TruDrive, back to the top"></a>
+  <button class="btn" type="button" data-quote>Get a free quote</button>
+</div>
+
+<main id="top">
+
+  <!-- 1. Calm: piece one, already in view, already labelled -->
+  <section class="one" id="p1" aria-labelledby="p1-t">
+    <h1 class="one__h1">TruDrive lays driveways and patios across the North West, and has for over 15 years. This is some of the work.</h1>
+    <div class="one__main">
+      <picture><source type="image/webp" srcset="../img/j6-wide-480.webp 480w, ../img/j6-wide-800.webp 800w, ../img/j6-wide-1200.webp 1200w, ../img/j6-wide-1600.webp 1600w" sizes="(max-width: 860px) 100vw, calc(100vw - 15.5rem)"><img src="../img/j6-wide.jpg" width="2880" height="2160" alt="A back garden with a large grey porcelain patio, raised beds clad in dark split-face stone, and a new lawn with stepping stones" fetchpriority="high" decoding="async" data-focus="50 60" style="object-position:50% 60%"></picture>
+    </div>
+    <div class="one__row">
+      <div class="label">
+        <h2 id="p1-t">Porcelain garden</h2>
+        <dl>
+          <dt>Laid</dt><dd>Grey porcelain patio, steps, stepping stones</dd>
+          <dt>Built</dt><dd>Raised beds in split-face cladding</dd>
+          <dt>Also</dt><dd>New turf</dd>
+        </dl>
+      </div>
+      <div class="one__more" data-sc-in data-sc-stagger="70">
+        <figure><picture><source type="image/webp" srcset="../img/j6-steps-480.webp 480w, ../img/j6-steps-800.webp 800w, ../img/j6-steps-1200.webp 1200w, ../img/j6-steps-1600.webp 1600w" sizes="13rem"><img src="../img/j6-steps.jpg" width="2880" height="2160" alt="Steps up from the patio between the clad raised beds" loading="lazy" decoding="async"></picture></figure>
+        <figure><picture><source type="image/webp" srcset="../img/j6-lawn-480.webp 480w, ../img/j6-lawn-800.webp 800w, ../img/j6-lawn-1200.webp 1200w, ../img/j6-lawn-1600.webp 1600w" sizes="13rem"><img src="../img/j6-lawn.jpg" width="2880" height="2160" alt="The new lawn with porcelain stepping stones and a curved bed" loading="lazy" decoding="async"></picture></figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Authored silence -->
+  <section class="quiet" aria-label="Next piece">
+    <div data-sc-in><p>The next one started as rotten decking.</p></div>
+  </section>
+
+  <!-- 3. The peak: piece two lays itself -->
+  <section class="peak" id="p2" data-sc-act="pin" data-sc-span="2.6" aria-labelledby="p2-t">
+    <div data-sc-stage class="peak__stage">
+      <div class="label">
+        <h2 id="p2-t">Decking to porcelain</h2>
+        <dl>
+          <dt data-sc-cue="0 0.97 0 0.05">Before</dt><dd data-sc-cue="0 0.97 0 0.05">Rotten timber decking</dd>
+          <dt data-sc-cue="0.3 0.97 0.2 0.05">Laid</dt><dd data-sc-cue="0.3 0.97 0.2 0.05">Grey porcelain to the shed, black edging</dd>
+          <dt data-sc-cue="0.62 0.97 0.2 0.05">Also</dt><dd data-sc-cue="0.62 0.97 0.2 0.05">Chipping borders, composite fence panels</dd>
+        </dl>
+      </div>
+      <div class="slablay peak__frame" data-cols="5 5" data-ratio="1.5">
+        <canvas aria-hidden="true"></canvas>
+        <picture><source media="(max-width: 860px)" srcset="../img/j1-before-800.webp"><img class="slablay__before" src="../img/j1-before-1200.webp" width="1536" height="2048" alt="Before: rotten timber decking down to a shed" loading="lazy" decoding="async" data-focus="50 60"></picture>
+        <picture><source media="(max-width: 860px)" srcset="../img/j1-after-800.webp"><img class="slablay__after" src="../img/j1-after-1200.webp" width="1206" height="2144" alt="After: grey porcelain patio down to the same shed, black edging and chipping borders" loading="lazy" decoding="async" data-focus="50 60"></picture>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Breadth: the rest of the collection -->
+  <section class="more" data-sc-act="pan" data-sc-span="4.6" aria-label="More of the work">
+    <div data-sc-stage>
+      <div class="rail" data-sc-pan="0.04">
+        <div class="rail__lead">
+          <h2>More of the work</h2>
+          <p>Where there's a before photo, drag across the picture to see how it started.</p>
+        </div>
+        <article class="piece piece--port" id="p3" style="--i:1">
+          <div class="piece__img compare" data-compare data-label="Pond garden: slide to compare before and after">
+            <picture><source type="image/webp" srcset="../img/j2-before-480.webp 480w, ../img/j2-before-800.webp 800w, ../img/j2-before-1200.webp 1200w, ../img/j2-before-1600.webp 1600w" sizes="(max-width: 860px) 80vw, 32vw"><img class="compare__before" src="../img/j2-before.jpg" width="1600" height="1600" alt="Before: an overgrown pond and rotten decking" loading="lazy" decoding="async" data-focus="45 55" style="object-position:45% 55%"></picture>
+            <picture><source type="image/webp" srcset="../img/j2-after-480.webp 480w, ../img/j2-after-800.webp 800w, ../img/j2-after-1200.webp 1200w" sizes="(max-width: 860px) 80vw, 32vw"><img class="compare__after" src="../img/j2-after.jpg" width="1200" height="1600" alt="After: porcelain patio and path, artificial turf and a raised planter" loading="lazy" decoding="async" data-focus="50 60" style="object-position:50% 60%"></picture>
+            <span class="compare__tag compare__tag--before">Before</span><span class="compare__tag compare__tag--after">After</span>
+          </div>
+          <div class="label"><h3>Pond garden</h3><dl><dt>Laid</dt><dd>Porcelain patio and path, dark border</dd><dt>Also</dt><dd>Artificial turf, raised block planter</dd><dt>Before</dt><dd>Overgrown pond and decking</dd></dl></div>
+        </article>
+        <article class="piece piece--land" id="p4" style="--i:2">
+          <div class="piece__img compare" data-compare data-label="Concrete to porcelain: slide to compare before and after">
+            <picture><source type="image/webp" srcset="../img/j3-before-480.webp 480w, ../img/j3-before-800.webp 800w, ../img/j3-before-1200.webp 1200w, ../img/j3-before-1600.webp 1600w" sizes="(max-width: 860px) 90vw, 50vw"><img class="compare__before" src="../img/j3-before.jpg" width="1600" height="1200" alt="Before: cracked concrete at the back of the house" loading="lazy" decoding="async" data-focus="55 62" style="object-position:55% 62%"></picture>
+            <picture><source type="image/webp" srcset="../img/j3-after-480.webp 480w, ../img/j3-after-800.webp 800w, ../img/j3-after-1200.webp 1200w, ../img/j3-after-1600.webp 1600w" sizes="(max-width: 860px) 90vw, 50vw"><img class="compare__after" src="../img/j3-after.jpg" width="2048" height="1536" alt="After: porcelain patio, artificial turf and horizontal slatted fencing" loading="lazy" decoding="async" data-focus="55 62" style="object-position:55% 62%"></picture>
+            <span class="compare__tag compare__tag--before">Before</span><span class="compare__tag compare__tag--after">After</span>
+          </div>
+          <div class="label"><h3>Concrete to porcelain</h3><dl><dt>Laid</dt><dd>Porcelain patio</dd><dt>Also</dt><dd>Artificial turf, horizontal slatted fencing</dd><dt>Before</dt><dd>Cracked concrete</dd></dl></div>
+        </article>
+        <article class="piece piece--land" id="p5" style="--i:3">
+          <div class="piece__img"><picture><source type="image/webp" srcset="../img/j4-front-480.webp 480w, ../img/j4-front-800.webp 800w, ../img/j4-front-1200.webp 1200w, ../img/j4-front-1600.webp 1600w" sizes="(max-width: 860px) 90vw, 50vw"><img src="../img/j4-front.jpg" width="1600" height="1200" alt="The front of a white bungalow with a grey porcelain garden and a dark border" loading="lazy" decoding="async" data-focus="50 60" style="object-position:50% 60%"></picture></div>
+          <div class="label"><h3>Front garden</h3><dl><dt>Laid</dt><dd>Grey porcelain, dark border course</dd><dt>Also</dt><dd>Back patio with a patterned tile border</dd></dl></div>
+        </article>
+        <article class="piece piece--land" id="p6" style="--i:4">
+          <div class="piece__img"><picture><source type="image/webp" srcset="../img/j7-drive-480.webp 480w, ../img/j7-drive-800.webp 800w, ../img/j7-drive-1200.webp 1200w, ../img/j7-drive-1600.webp 1600w" sizes="(max-width: 860px) 90vw, 50vw"><img src="../img/j7-drive.jpg" width="1600" height="1200" alt="A dark imprinted concrete driveway with a light border, a curved artificial turf bed and a drainage channel" loading="lazy" decoding="async" data-focus="50 60" style="object-position:50% 60%"></picture></div>
+          <div class="label"><h3>Printed driveway</h3><dl><dt>Laid</dt><dd>Imprinted concrete, light border</dd><dt>Also</dt><dd>Curved artificial turf bed, drainage channel</dd></dl></div>
+        </article>
+        <article class="piece piece--land" id="p7" style="--i:5">
+          <div class="piece__img"><picture><source type="image/webp" srcset="../img/j5-patio-480.webp 480w, ../img/j5-patio-800.webp 800w, ../img/j5-patio-1200.webp 1200w" sizes="(max-width: 860px) 90vw, 50vw"><img src="../img/j5-patio.jpg" width="1206" height="890" alt="A patio in mixed-size natural stone slabs with a raised artificial turf bed" loading="lazy" decoding="async" data-focus="50 55" style="object-position:50% 55%"></picture></div>
+          <div class="label"><h3>Stone patio</h3><dl><dt>Laid</dt><dd>Natural stone in mixed sizes</dd><dt>Also</dt><dd>Raised bed with artificial turf, clad walls</dd></dl></div>
+        </article>
+        <p class="rail__note" style="--i:6">New jobs go up on his TikTok first: <a href="https://www.tiktok.com/@tru.drive" rel="noopener">@tru.drive</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Understanding: materials -->
+  <section class="mat" id="materials" aria-labelledby="mat-t">
+    <div data-sc-in data-sc-stagger="40">
+      <h2 id="mat-t">Materials</h2>
+      <dl>
+        <div><dt>Porcelain</dt><dd>Patios, paths and steps. Hard-wearing and easy to clean.</dd></div>
+        <div><dt>Indian sandstone</dt><dd>Natural stone patios in mixed sizes.</dd></div>
+        <div><dt>Block paving</dt><dd>Driveways, borders and edging.</dd></div>
+        <div><dt>Imprinted concrete</dt><dd>One-piece driveways with a pattern pressed in.</dd></div>
+        <div><dt>Tarmac</dt><dd>Driveways and paths.</dd></div>
+        <div><dt>Gravel</dt><dd>Gravel driveways.</dd></div>
+        <div><dt>Crazy paving</dt><dd>Random-cut stone, laid by eye.</dd></div>
+        <div><dt>Fencing</dt><dd>Timber, slatted and composite panels.</dd></div>
+        <div><dt>Brickwork</dt><dd>Walls, raised beds and pillars.</dd></div>
+        <div><dt>Turf</dt><dd>Real lawns and artificial grass.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- 6-7. Trust, then intent: two plates typeset like labels -->
+  <section class="close" id="enquiries" data-sc-act="pin" data-sc-span="1.15" aria-label="Reviews and enquiries">
+    <div data-sc-stage class="close__stage">
+      <div class="close__plates">
+        <div class="label" data-sc-cue="0 1 0 0">
+          <h2>Reviews</h2>
+          <dl><dt>Where</dt><dd>Google reviews appear here</dd><dt>After a job</dt><dd>Customers get one link to leave theirs</dd></dl>
+          <p class="demo-note"><b>For Gaz:</b> once your Google Business Profile is set up, your reviews show here by themselves. Nothing to update.</p>
+        </div>
+        <div class="label" data-sc-cue="0 1 0 0">
+          <h2>Your drive or garden</h2>
+          <dl><dt>Quote</dt><dd>Free, no obligation</dd><dt>How</dt><dd>Send a few photos on WhatsApp, or ring <a href="tel:+447923485811">07923 485811</a></dd><dt>Covering</dt><dd>The North West</dd></dl>
+          <div class="close__actions"><button class="btn" type="button" data-quote>Get a free quote</button></div>
+        </div>
+      </div>
+      <footer class="close__foot">
+        <span>TruDrive Driveways &amp; Patios</span>
+        <a href="https://www.tiktok.com/@tru.drive" rel="noopener">TikTok @tru.drive</a>
+        <span class="demo-note"><b>For Gaz:</b> business address and your towns go here.</span>
+      </footer>
+    </div>
+  </section>
+
+</main>
+
+<dialog class="quote" id="quote" aria-labelledby="quote-title">
+  <div class="quote__in">
+    <div class="quote__top">
+      <div>
+        <h2 id="quote-title">Get a free quote</h2>
+        <p class="quote__lede">Tell us what you need. It opens WhatsApp with this filled in, so you can add a photo of the space and send it straight to Gaz.</p>
+      </div>
+      <button class="quote__x" type="button" data-close aria-label="Close">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <form novalidate>
+      <label>What needs doing
+        <select name="job" required>
+          <option value="">Choose one</option>
+          <option>New driveway</option>
+          <option>Patio</option>
+          <option>Full garden makeover</option>
+          <option>Paths or steps</option>
+          <option>Fencing</option>
+          <option>Turf or artificial grass</option>
+          <option>Walls or brickwork</option>
+          <option>Something else</option>
+        </select>
+      </label>
+      <label>Your town or postcode <span class="opt">(optional)</span>
+        <input name="where" autocomplete="postal-code" inputmode="text">
+      </label>
+      <label>Your name <span class="opt">(optional)</span>
+        <input name="name" autocomplete="name">
+      </label>
+      <label>Anything else <span class="opt">(optional)</span>
+        <textarea name="notes" rows="3" placeholder="Rough size, what's there now, when you're hoping for"></textarea>
+      </label>
+      <p data-status role="status" aria-live="polite"></p>
+      <button class="quote__send" type="submit">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.1 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2c.2-.6.2-1.1.1-1.2l-.5-.3z"/></svg>
+        Send on WhatsApp
+      </button>
+      <p class="quote__or">Rather talk? Ring Gaz on <a href="tel:+447923485811">07923 485811</a>.</p>
+    </form>
+  </div>
+</dialog>
+
+
+<script src="../shared/lenis.min.js"></script>
+<script src="../shared/parts.js"></script>
+<script src="../shared/scrollcraft.js"></script>
+<script src="../shared/slablay.js"></script>
+<script>
+  TD.boot();
+  ScrollCraft.mount(document.body);
+
+  // The peak: laid row by row from the far end, gently.
+  var peak = document.getElementById('p2');
+  var lay = new SlabLay(peak.querySelector('.slablay'), { drop: 0.55 });
+  TD.everyFrame(function () { lay.render(TD.actProgress(peak)); });
+
+  // The index jumps, including to pieces that live on the sideways rail.
+  var more = document.querySelector('.more');
+  var rail = more.querySelector('.rail');
+  function railY(item) {
+    var top = more.getBoundingClientRect().top + scrollY;
+    var travel = Math.max(more.offsetHeight - innerHeight, 1);
+    var over = Math.max(rail.scrollWidth - innerWidth, 1);
+    var x = item.offsetLeft - parseFloat(getComputedStyle(rail).paddingLeft);
+    return top + travel * Math.min(1, Math.max(0, x / over));
+  }
+  document.querySelectorAll('.index nav a').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      var target = document.querySelector(a.getAttribute('href'));
+      if (!target) return;
+      e.preventDefault();
+      var y = a.hasAttribute('data-rail') ? railY(target) : target.getBoundingClientRect().top + scrollY;
+      var l = TD.lenis();
+      if (l) l.scrollTo(y, { duration: 1.4 }); else scrollTo({ top: y, behavior: TD.reduce ? 'auto' : 'smooth' });
+    });
+  });
+
+  // Mark where the reader is.
+  var links = Array.prototype.slice.call(document.querySelectorAll('.index nav a'));
+  TD.everyFrame(function () {
+    var mid = innerHeight * 0.5, best = null;
+    links.forEach(function (a) {
+      var el = document.querySelector(a.getAttribute('href'));
+      var r = el.getBoundingClientRect();
+      if (a.hasAttribute('data-rail')) { if (r.left < innerWidth * 0.6 && r.right > innerWidth * 0.2 && r.top < mid && r.bottom > 0) best = a; }
+      else if (r.top < mid && r.bottom > mid * 0.4) best = best || a;
+    });
+    links.forEach(function (a) { if (a === best) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current'); });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TruDrive: four looks for your new website</title>
+<meta name="description" content="Four ways the TruDrive website could look and feel. Same photos, same features, different style. Pick the one that feels like you.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://trudrive-looks-b37345.netlify.app/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="TruDrive Driveways &amp; Patios">
+<meta property="og:title" content="TruDrive: four looks for your new website">
+<meta property="og:description" content="Four ways the TruDrive website could look and feel. Same photos, same features, different style. Pick the one that feels like you.">
+<meta property="og:url" content="https://trudrive-looks-b37345.netlify.app/">
+<meta property="og:image" content="https://trudrive-looks-b37345.netlify.app/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="img/favicon.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@800&f[]=switzer@400,500,600&display=swap">
+<style>
+  :root {
+    --ground: #eeece7; --paper: #fbfaf8; --ink: #1a1e23; --soft: #4d5560; --blue: #2858b8;
+    --line: color-mix(in oklab, #1a1e23 14%, transparent);
+    --pad: clamp(1rem, 4vw, 3rem);
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--ground); color: var(--ink); font: 400 1.02rem/1.6 "Switzer", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  img { display: block; max-width: 100%; height: auto; }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+  .wrap { max-width: 76rem; margin: 0 auto; padding: 0 var(--pad); }
+  header { padding: clamp(1.5rem, 4vw, 3rem) 0 clamp(1.5rem, 3vw, 2.5rem); display: grid; gap: 22px; }
+  header img { width: 12rem; }
+  h1 { margin: 0; font: 800 clamp(2.2rem, 1.2rem + 3.6vw, 4.2rem)/1 "Cabinet Grotesk", system-ui, sans-serif; letter-spacing: -0.03em; max-width: 18ch; text-wrap: balance; }
+  header p { margin: 0; max-width: 58ch; color: var(--soft); font-size: 1.08rem; }
+  .looks { list-style: none; margin: 0; padding: 0; display: grid; gap: clamp(1.5rem, 3vw, 2.5rem); }
+  .look { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: clamp(1rem, 3vw, 2.5rem); align-items: center; padding: clamp(14px, 2vw, 22px); background: var(--paper); border-radius: 6px; box-shadow: 0 1px 2px rgb(0 0 0 / 0.06), 0 10px 30px rgb(0 0 0 / 0.06); }
+  .look__shots { position: relative; }
+  .look__shots .desk { border-radius: 3px; box-shadow: 0 1px 2px rgb(0 0 0 / 0.12); }
+  .look__shots .phone { position: absolute; right: 4%; bottom: -6%; width: 22%; border-radius: 10px; border: 3px solid #15171a; box-shadow: 0 12px 30px rgb(0 0 0 / 0.3); }
+  .look h2 { margin: 0; font: 800 clamp(1.8rem, 1.2rem + 1.6vw, 2.6rem)/1 "Cabinet Grotesk", system-ui, sans-serif; letter-spacing: -0.025em; }
+  .look p { margin: 12px 0 0; color: var(--soft); max-width: 40ch; }
+  .look .go { display: inline-flex; align-items: center; gap: 10px; margin-top: 20px; min-height: 50px; padding: 0 20px; border-radius: 3px; background: var(--blue); color: #fff; text-decoration: none; font: 800 1.05rem/1 "Cabinet Grotesk", system-ui, sans-serif; }
+  .look .go:hover { background: #1f4b9f; }
+  .look--pick { box-shadow: 0 0 0 2px var(--blue), 0 10px 30px rgb(0 0 0 / 0.08); }
+  .look__flag { display: inline-block; margin: 0 0 12px !important; padding: 5px 10px; border-radius: 999px; background: #edf2fb; color: #1e4796 !important; font-size: 0.85rem; font-weight: 600; }
+  .same { margin: clamp(2.5rem, 6vw, 4.5rem) 0; padding: clamp(18px, 3vw, 30px); border-top: 2px solid var(--ink); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: clamp(1rem, 3vw, 3rem); }
+  .same h2 { margin: 0; font: 800 1.6rem/1.05 "Cabinet Grotesk", system-ui, sans-serif; letter-spacing: -0.02em; }
+  .same ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 14px; }
+  .same li { display: grid; grid-template-columns: 1.4rem 1fr; gap: 10px; }
+  .same li::before { content: ""; width: 12px; height: 8px; margin-top: 0.55em; background: var(--blue); }
+  .same b { font-weight: 600; }
+  footer { padding: 0 0 3rem; color: var(--soft); font-size: 0.9rem; }
+  @media (max-width: 760px) {
+    .look { grid-template-columns: 1fr; }
+    .look__shots { margin-bottom: 10px; }
+    .same { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img src="img/logo.png" width="860" height="375" alt="TruDrive Driveways and Patios">
+    <h1>Four looks for the TruDrive website</h1>
+    <p>Same photos, same features in each. What changes is the feel. Have a scroll through them on your phone, then say which one feels most like TruDrive. We can mix bits from different ones too.</p>
+  </header>
+
+  <ol class="looks">
+    <li class="look look--pick">
+      <div class="look__shots">
+        <img class="desk" src="img/look-clean.jpg" width="960" height="600" alt="The Clean look on a laptop: a bright home page with a porcelain patio photo and a Get a free quote button">
+        <img class="phone" src="img/look-clean-m.jpg" width="260" height="563" alt="" loading="lazy">
+      </div>
+      <div>
+        <p class="look__flag">Our pick</p>
+        <h2>Clean</h2>
+        <p>A proper website with all the pages: home, services, our work, about, reviews and a free quote page. Bright and simple, your photos front and centre, one before and after slide on the home page. Built to be what your customers expect, done better than the firms round you.</p>
+        <a class="go" href="../clean/">Open Clean</a>
+      </div>
+    </li>
+    <li class="look">
+      <div class="look__shots">
+        <img class="desk" src="img/look-solid.jpg" width="960" height="600" alt="The Solid look on a laptop: before on the left, after on the right">
+        <img class="phone" src="img/look-solid-m.jpg" width="260" height="563" alt="" loading="lazy">
+      </div>
+      <div>
+        <h2>Solid</h2>
+        <p>Plain and honest. The whole site is before on one side, after on the other, and you can drag the line between them. At the end the new patio lays itself over the old garden.</p>
+        <a class="go" href="../solid/">Open Solid</a>
+      </div>
+    </li>
+    <li class="look">
+      <div class="look__shots">
+        <img class="desk" src="img/look-premium.jpg" width="960" height="600" alt="The Premium look on a laptop: a large photo of a porcelain garden on a navy page" loading="lazy">
+        <img class="phone" src="img/look-premium-m.jpg" width="260" height="563" alt="" loading="lazy">
+      </div>
+      <div>
+        <h2>Premium</h2>
+        <p>Quiet and high end, like a gallery of your jobs. Navy from your logo, lots of space, each job labelled with what was laid. One job lays itself slab by slab as you scroll.</p>
+        <a class="go" href="../premium/">Open Premium</a>
+      </div>
+    </li>
+    <li class="look">
+      <div class="look__shots">
+        <img class="desk" src="img/look-bold.jpg" width="960" height="600" alt="The Bold look on a laptop: From this, in huge letters over an overgrown garden" loading="lazy">
+        <img class="phone" src="img/look-bold-m.jpg" width="260" height="563" alt="" loading="lazy">
+      </div>
+      <div>
+        <h2>Bold</h2>
+        <p>Loud, like your TikTok and your flyer. Blue, white and black, big letters, your number at the top the whole time. From this, to this, then the slabs slam down.</p>
+        <a class="go" href="../bold/">Open Bold</a>
+      </div>
+    </li>
+  </ol>
+
+  <section class="same" aria-labelledby="same-t">
+    <h2 id="same-t">In all four</h2>
+    <ul>
+      <li><span><b>Your own photos.</b> These are from your TikTok for now. Your originals will look sharper.</span></li>
+      <li><span><b>Quotes come to your WhatsApp.</b> The customer fills in what they need and it opens WhatsApp to you, ready for them to add photos. Nothing to log into.</span></li>
+      <li><span><b>Your Google reviews show up by themselves.</b> After a job you text the customer one link.</span></li>
+      <li><span><b>Your number on every screen,</b> one tap to ring.</span></li>
+      <li><span><b>Before and afters</b> on the jobs where there's a before photo.</span></li>
+    </ul>
+  </section>
+
+  <footer>Concept by Travinyx. Not live yet, and not on Google.</footer>
+</div>
+</body>
+</html>

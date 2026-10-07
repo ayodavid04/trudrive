@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TruDrive Driveways &amp; Patios, North West</title>
+<meta name="description" content="Driveways and patios across the North West. Over 15 years on the tools. Free, no-obligation quotes from Gaz on 07923 485811.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="canonical" href="https://trudrive-looks-b37345.netlify.app/solid/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="TruDrive Driveways &amp; Patios">
+<meta property="og:title" content="TruDrive Driveways &amp; Patios, North West">
+<meta property="og:description" content="Driveways and patios across the North West. Over 15 years on the tools. Free, no-obligation quotes from Gaz on 07923 485811.">
+<meta property="og:url" content="https://trudrive-looks-b37345.netlify.app/solid/">
+<meta property="og:image" content="https://trudrive-looks-b37345.netlify.app/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@700,800&f[]=switzer@400,500,600,700&display=swap">
+<link rel="stylesheet" href="../shared/scrollcraft.css">
+<link rel="stylesheet" href="../shared/parts.css">
+<style>
+  /* Solid: daylight, porcelain grey, his blue. Signs, not cards. */
+  :root {
+    --sc-canvas:     #e8e6e1;
+    --sc-surface:    #f6f5f2;
+    --sc-ink:        #1a1e23;
+    --sc-ink-soft:   #48505a;
+    --sc-accent:     #2858b8;
+    --sc-accent-ink: #ffffff;
+    --sc-font-display: "Cabinet Grotesk", system-ui, sans-serif;
+    --sc-font-text:    "Switzer", system-ui, sans-serif;
+    --part-radius: 3px;
+    --before-ground: #d8d3c9;
+    --after-ground:  #f6f5f2;
+    --split: 50%;
+    --gut: clamp(1.25rem, 3.4vw, 3.25rem);
+  }
+  body { background: var(--sc-canvas); }
+
+  .display {
+    margin: 0; font-family: var(--sc-font-display); font-weight: 800;
+    font-size: var(--sc-t-3xl); line-height: 0.98; letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    min-height: 52px; padding: 0 22px; border: 0; border-radius: var(--part-radius);
+    background: var(--sc-accent); color: var(--sc-accent-ink);
+    font: 800 1.05rem/1 var(--sc-font-display); letter-spacing: 0.005em;
+    text-decoration: none; cursor: pointer; white-space: nowrap;
+    box-shadow: 0 1px 0 rgb(0 0 0 / 0.2), 0 6px 18px rgb(40 88 184 / 0.28);
+    transition: background-color 140ms var(--sc-ease-out), scale 110ms var(--sc-ease-out);
+  }
+  .btn:hover { background: #1f4b9f; }
+  .btn:active { scale: 0.97; }
+  .btn--quiet { background: transparent; color: var(--sc-ink); box-shadow: inset 0 0 0 2px currentColor; }
+  .btn--quiet:hover { background: color-mix(in oklab, var(--sc-ink) 8%, transparent); }
+
+  /* ---------------------------------------------------------- the split -- */
+  .split {
+    display: grid; grid-template-columns: var(--split) 1fr;
+    height: 100vh; height: 100svh;
+  }
+  .side { position: relative; overflow: hidden; min-width: 0; }
+  .side--before { background: var(--before-ground); }
+  .side--after  { background: var(--after-ground); }
+  .photo { position: absolute; inset: 0; }
+  .photo img { width: 100%; height: 100%; object-fit: cover; }
+  picture { display: contents; }
+
+  /* Plates are signs: before on dark, after on light. */
+  .plate {
+    position: absolute; z-index: 2; bottom: var(--gut);
+    max-width: min(34rem, calc(100% - 2 * var(--gut)));
+    padding: clamp(16px, 2vw, 26px);
+    border-radius: var(--part-radius);
+    box-shadow: 0 1px 0 rgb(255 255 255 / 0.06) inset, 0 12px 40px rgb(0 0 0 / 0.22);
+  }
+  .side--before .plate { left: var(--gut); background: #1c2025; color: #efece6; }
+  .side--after  .plate { left: var(--gut); background: var(--after-ground); color: var(--sc-ink); }
+  .plate p { margin: 0; }
+  .plate__note { margin-top: 12px !important; font-size: var(--sc-t-base); line-height: 1.5; max-width: 44ch; }
+  .side--before .plate__note { color: #c4c0b8; }
+  .side--after .plate__note { color: var(--sc-ink-soft); }
+  .plate .cta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; margin-top: 20px; }
+
+  /* --------------------------------------------------- divider = chrome -- */
+  .divider { position: fixed; inset: 0; z-index: 60; pointer-events: none; }
+  .divider__line {
+    position: absolute; top: 0; bottom: 0; left: var(--line, var(--split));
+    width: 3px; margin-left: -1.5px; background: var(--sc-ink);
+    box-shadow: 0 0 0 1px rgb(255 255 255 / 0.5);
+  }
+  .divider__plaque {
+    position: absolute; top: 14px; left: var(--line, var(--split)); translate: -50% 0;
+    pointer-events: auto;
+    display: grid; justify-items: center; gap: 8px;
+    padding: 12px 16px 12px; width: 13.5rem;
+    background: var(--after-ground); border-radius: var(--part-radius);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.2), 0 12px 32px rgb(0 0 0 / 0.2);
+  }
+  .plaque__logo img { width: 10.5rem; height: auto; }
+  .plaque__phone {
+    display: inline-flex; align-items: center; gap: 7px; min-height: 36px;
+    font: 800 1.08rem/1 var(--sc-font-display); letter-spacing: 0.01em;
+    color: var(--sc-ink); text-decoration: none; font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  .plaque__phone svg { color: var(--sc-accent); }
+  .plaque__phone:hover { color: var(--sc-accent); }
+  .divider__tag {
+    position: absolute; top: 34px;
+    font: 800 0.95rem/1 var(--sc-font-display); letter-spacing: 0.01em;
+    padding: 8px 11px; border-radius: var(--part-radius);
+  }
+  .divider__tag--before { right: calc(100% - var(--line, var(--split)) + 7.6rem); background: #1c2025; color: #efece6; }
+  .divider__tag--after  { left: calc(var(--line, var(--split)) + 7.6rem); background: var(--sc-accent); color: #fff; }
+  .divider__grip {
+    position: absolute; top: 50%; left: var(--line, var(--split)); translate: -50% -50%;
+    width: 52px; height: 52px; border-radius: 50%;
+    display: grid; place-items: center; pointer-events: auto; cursor: ew-resize; touch-action: none;
+    background: var(--sc-ink); color: #fff;
+    box-shadow: 0 0 0 3px rgb(255 255 255 / 0.85), 0 10px 26px rgb(0 0 0 / 0.3);
+    transition: scale 140ms var(--sc-ease-out);
+  }
+  .divider__grip:hover { scale: 1.06; }
+  .divider.is-dragging .divider__grip { scale: 0.94; }
+  .divider__grip:focus-visible { outline: 3px solid var(--sc-accent); outline-offset: 4px; border-radius: 50%; }
+  .divider [data-fade] { transition: opacity 200ms var(--sc-ease-out); }
+  .divider.is-gone { opacity: 0; visibility: hidden; transition: opacity 240ms var(--sc-ease-out), visibility 0s 240ms; }
+
+  /* ------------------------------------------------------------- hero ---- */
+  .hero .display { font-size: clamp(2.3rem, 1.5rem + 3.4vw, 4.6rem); }
+
+  /* ------------------------------------------------------------- jobs ---- */
+  .jobs .side--before { --k: clamp(0, calc((var(--sc-p, 0) - 0.4) / 0.16), 1); }
+  .jobs .side--after  { --k: clamp(0, calc((var(--sc-p, 0) - 0.46) / 0.16), 1); }
+  .photo--next { clip-path: inset(calc((1 - var(--k)) * 100%) 0 0 0); }
+  .job__h { margin: 0; font: 800 var(--sc-t-xl)/1.08 var(--sc-font-display); letter-spacing: -0.02em; text-wrap: balance; }
+  .job__meta { margin-top: 10px !important; font-size: var(--sc-t-sm); font-weight: 600; letter-spacing: 0.01em; }
+  .side--before .job__meta { color: #a9a49b; }
+  .side--after .job__meta { color: var(--sc-accent); }
+
+  /* --------------------------------------------------------- what you say */
+  .say .side { display: grid; align-content: center; padding: clamp(5.5rem, 12vh, 8rem) var(--gut) var(--gut); }
+  .say .side--before { padding-right: calc(var(--gut) + 2rem); }
+  .say .side--after  { padding-left: calc(var(--gut) + 2rem); }
+  .say__h { margin: 0 0 clamp(18px, 3vh, 34px); font: 800 var(--sc-t-lg)/1.1 var(--sc-font-display); letter-spacing: -0.01em; }
+  .side--before .say__h { color: #5e574c; }
+  .side--after .say__h { color: var(--sc-accent); }
+  .say__lines { display: grid; }
+  .say__lines > * { grid-area: 1 / 1; margin: 0; font: 800 var(--sc-t-2xl)/1.08 var(--sc-font-display); letter-spacing: -0.025em; text-wrap: balance; max-width: 18ch; }
+  .side--before .say__lines > * { color: #3c362e; }
+
+  /* ------------------------------------------------------- how + reviews */
+  .flow { display: grid; grid-template-columns: var(--split) 1fr; }
+  .flow .side { padding: clamp(5rem, 10vw, 8.5rem) var(--gut) clamp(4rem, 8vw, 7rem); overflow: visible; }
+  .flow .side--before { padding-right: calc(var(--gut) + 2rem); }
+  .flow .side--after  { padding-left: calc(var(--gut) + 2rem); }
+  .flow h2 { margin: 0; font: 800 var(--sc-t-2xl)/1.02 var(--sc-font-display); letter-spacing: -0.025em; }
+  .steps { list-style: none; margin: 28px 0 0; padding: 0; display: grid; gap: 18px; counter-reset: s; max-width: 30rem; }
+  .steps li { counter-increment: s; display: grid; grid-template-columns: 2.6rem 1fr; gap: 14px; align-items: start; font-size: var(--sc-t-base); line-height: 1.5; }
+  .steps li::before {
+    content: counter(s); display: grid; place-items: center; width: 2.6rem; height: 2.6rem;
+    border-radius: var(--part-radius); background: #1c2025; color: #efece6;
+    font: 800 1.15rem/1 var(--sc-font-display);
+  }
+  .steps b { display: block; font-family: var(--sc-font-display); font-size: 1.15rem; font-weight: 800; letter-spacing: -0.01em; }
+  .reviews { margin-top: 28px; max-width: 32rem; display: grid; gap: 16px; }
+  .reviews__slot {
+    display: grid; gap: 10px; padding: 20px; border-radius: var(--part-radius);
+    border: 2px dashed color-mix(in oklab, var(--sc-ink) 22%, transparent);
+  }
+  .stars { display: flex; gap: 3px; color: #c7c2b8; }
+  .reviews__slot p { margin: 0; color: var(--sc-ink-soft); font-size: var(--sc-t-sm); }
+  .reviews__actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+
+  /* ------------------------------------------------------------ close ---- */
+  .close__stage { background: #1c2025; }
+  .close__lay { position: absolute; inset: 0; }
+  .close__plate {
+    position: absolute; z-index: 3; right: var(--gut); bottom: var(--gut);
+    width: min(30rem, calc(100% - 2 * var(--gut)));
+    padding: clamp(20px, 2.6vw, 32px); border-radius: var(--part-radius);
+    background: var(--after-ground); color: var(--sc-ink);
+    box-shadow: 0 20px 60px rgb(0 0 0 / 0.3);
+  }
+  .close__plate .display { font-size: var(--sc-t-2xl); }
+  .close__plate p { margin: 12px 0 0; color: var(--sc-ink-soft); }
+  .close__plate .cta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; margin-top: 20px; }
+  .close__plate .cta a { color: var(--sc-ink); font-weight: 700; }
+  .close__foot {
+    display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: center;
+    margin-top: 22px; padding-top: 16px; border-top: 1px solid color-mix(in oklab, var(--sc-ink) 14%, transparent);
+    font-size: var(--sc-t-xs); color: var(--sc-ink-soft);
+  }
+  .close__foot img { width: 7.5rem; height: auto; }
+  .close__foot a { color: inherit; }
+  .close .demo-note { margin-top: 14px; }
+
+  /* ----------------------------------------------------------- phones ---- */
+  @media (max-width: 860px) {
+    .split { grid-template-columns: 1fr; grid-template-rows: var(--split) 1fr; }
+    .flow { grid-template-columns: 1fr; }
+    .flow .side, .flow .side--before, .flow .side--after { padding: 3.5rem var(--gut); }
+    .say .side, .say .side--before, .say .side--after { padding: 3.6rem var(--gut) 1.2rem; align-content: start; }
+    .say .side--after { padding-top: 2.6rem; }
+    .say__h { margin-bottom: 10px; font-size: var(--sc-t-base); }
+    .say__lines > * { font-size: clamp(1.45rem, 1rem + 2.2vw, 2rem); max-width: 22ch; }
+    .plate { bottom: 14px; left: 14px !important; right: 14px; max-width: none; padding: 14px 16px; }
+    /* Before plates sit up top on a phone, clear of the Before tag on the line. */
+    .side--before .plate { top: 64px; bottom: auto; }
+    .hero .display { font-size: clamp(1.7rem, 1.1rem + 3.2vw, 2.4rem); }
+    .hero .side--before .plate__note { display: none; }
+    .plate__note { font-size: var(--sc-t-sm); margin-top: 8px !important; }
+    .plate .cta { margin-top: 12px; }
+    .job__h { font-size: 1.3rem; }
+    .divider__line { top: var(--line, var(--split)); bottom: auto; left: 0; right: 0; width: auto; height: 3px; margin: -1.5px 0 0; }
+    .divider__plaque { top: 10px; left: 50%; width: auto; grid-auto-flow: column; align-items: center; gap: 12px; padding: 7px 12px; }
+    .plaque__logo img { width: 6rem; }
+    .plaque__phone { font-size: 0.98rem; }
+    .divider__tag { top: auto; font-size: 0.8rem; padding: 6px 9px; }
+    .divider__tag--before { left: 14px; right: auto; bottom: calc(100% - var(--line, var(--split)) + 10px); }
+    .divider__tag--after  { left: 14px; top: calc(var(--line, var(--split)) + 10px); }
+    .divider__grip { top: var(--line, var(--split)); left: auto; right: 14px; translate: 0 -50%; width: 46px; height: 46px; cursor: ns-resize; }
+    .divider__grip svg { rotate: 90deg; }
+    .divider.is-flow { opacity: 0; visibility: hidden; }
+    .close__plate { left: 12px; right: 12px; bottom: 12px; width: auto; padding: 18px; }
+    .close__plate .display { font-size: 1.7rem; }
+    .close__plate p { font-size: var(--sc-t-sm); }
+  }
+  @media (max-width: 860px) and (max-height: 700px) {
+    .close__foot { display: none; }
+  }
+</style>
+</head>
+<body class="solid">
+<div class="sc-grain" aria-hidden="true"></div>
+
+<!-- The divider is the chrome: brand, phone, and the line you can drag. -->
+<div class="divider" id="divider">
+  <div class="divider__line" data-fade></div>
+  <span class="divider__tag divider__tag--before" data-fade aria-hidden="true">Before</span>
+  <span class="divider__tag divider__tag--after" data-fade aria-hidden="true">After</span>
+  <div class="divider__plaque" data-fade>
+    <a class="plaque__logo" href="#top"><img src="../img/logo.png" width="860" height="375" alt="TruDrive Driveways and Patios, back to the top"></a>
+    <a class="plaque__phone" href="tel:+447923485811"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>07923 485811</a>
+  </div>
+  <div class="divider__grip" data-fade role="slider" tabindex="0" aria-label="Line between before and after" aria-orientation="horizontal" aria-valuemin="25" aria-valuemax="75" aria-valuenow="50" aria-valuetext="Half before, half after">
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+</div>
+
+<main id="top">
+
+  <!-- 1. Recognition: both sides at once -->
+  <section class="hero split" aria-label="Before and after">
+    <div class="side side--before">
+      <div class="photo"><picture><source type="image/webp" srcset="../img/j1-before-480.webp 480w, ../img/j1-before-800.webp 800w, ../img/j1-before-1200.webp 1200w" sizes="(max-width: 860px) 100vw, 50vw"><img src="../img/j1-before.jpg" width="1536" height="2048" alt="Before: rotten timber decking down to a shed, leaves and a broken board" fetchpriority="high" decoding="async" data-focus="50 64" style="object-position:50% 64%"></picture></div>
+      <div class="plate">
+        <p class="display">The garden you put up with.</p>
+        <p class="plate__note">Rotten decking, cracked concrete, weeds in every joint.</p>
+      </div>
+    </div>
+    <div class="side side--after">
+      <div class="photo"><picture><source type="image/webp" srcset="../img/j1-after-480.webp 480w, ../img/j1-after-800.webp 800w, ../img/j1-after-1200.webp 1200w" sizes="(max-width: 860px) 100vw, 50vw"><img src="../img/j1-after.jpg" width="1206" height="2144" alt="After: the same garden with a grey porcelain patio running to the shed, edged in black with chipping borders" fetchpriority="high" decoding="async" data-focus="50 62" style="object-position:50% 62%"></picture></div>
+      <div class="plate">
+        <h1 class="display">Laid properly.<span class="vh"> TruDrive, driveways and patios across the North West.</span></h1>
+        <p class="plate__note">Driveways and patios across the North West, from a firm with over 15 years on the tools.</p>
+        <div class="cta"><button class="btn" type="button" data-quote>Get a free quote</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Trust: two more jobs, both ways. Drag the line. -->
+  <section class="jobs" data-sc-act="pin" data-sc-span="2.6" aria-label="Recent jobs">
+    <div data-sc-stage class="split">
+      <div class="side side--before">
+        <div class="photo"><picture><source type="image/webp" srcset="../img/j2-before-480.webp 480w, ../img/j2-before-800.webp 800w, ../img/j2-before-1200.webp 1200w, ../img/j2-before-1600.webp 1600w" sizes="(max-width: 860px) 100vw, 50vw"><img src="../img/j2-before.jpg" width="1600" height="1600" alt="Before: an overgrown pond and rotten decking in a back garden" loading="lazy" decoding="async" data-focus="42 58" style="object-position:42% 58%"></picture></div>
+        <div class="photo photo--next"><picture><source type="image/webp" srcset="../img/j3-hottub-480.webp 480w, ../img/j3-hottub-800.webp 800w, ../img/j3-hottub-1200.webp 1200w, ../img/j3-hottub-1600.webp 1600w" sizes="(max-width: 860px) 100vw, 50vw"><img src="../img/j3-hottub.jpg" width="1600" height="1200" alt="Before: cracked concrete down the side of a house, a hot tub and weeds in the joints" loading="lazy" decoding="async" data-focus="40 70" style="object-position:40% 70%"></picture></div>
+        <div class="plate" data-sc-cue="0 0.5 0 0.1"><h2 class="job__h">An overgrown pond and decking nobody used.</h2></div>
+        <div class="plate" data-sc-cue="0.47 1 0.1 0.06"><h2 class="job__h">Cracked concrete, a hot tub, weeds in every crack.</h2></div>
+      </div>
+      <div class="side side--after">
+        <div class="photo"><picture><source type="image/webp" srcset="../img/j2-after-480.webp 480w, ../img/j2-after-800.webp 800w, ../img/j2-after-1200.webp 1200w" sizes="(max-width: 860px) 100vw, 50vw"><img src="../img/j2-after.jpg" width="1200" height="1600" alt="After: grey porcelain patio and path with a dark border, artificial turf and a raised block planter" loading="lazy" decoding="async" data-focus="50 62" style="object-position:50% 62%"></picture></div>
+        <div class="photo photo--next"><picture><source type="image/webp" srcset="../img/j3-garden-480.webp 480w, ../img/j3-garden-800.webp 800w, ../img/j3-garden-1200.webp 1200w, ../img/j3-garden-1600.webp 1600w" sizes="(max-width: 860px) 100vw, 50vw"><img src="../img/j3-garden.jpg" width="2048" height="1536" alt="After: grey porcelain patio beside artificial turf, with horizontal slatted fencing" loading="lazy" decoding="async" data-focus="50 60" style="object-position:50% 60%"></picture></div>
+        <div class="plate" data-sc-cue="0 0.54 0 0.1"><p class="job__h">Porcelain patio and path, artificial turf, a raised planter wall.</p><p class="job__meta">Porcelain, turf, blockwork</p></div>
+        <div class="plate" data-sc-cue="0.51 1 0.1 0.06"><p class="job__h">Porcelain patio, artificial turf, horizontal slatted fence.</p><p class="job__meta">Porcelain, turf, fencing</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Relief: what they say, what gets laid -->
+  <section class="say" data-sc-act="pin" data-sc-span="2.2" aria-label="What you tell us and what we lay">
+    <div data-sc-stage class="split">
+      <div class="side side--before">
+        <h2 class="say__h" data-sc-cue="0 0.97 0 0.04">What you tell us</h2>
+        <div class="say__lines">
+          <p data-sc-cue="0 0.27 0">The decking has gone soft and it's lethal in the rain.</p>
+          <p data-sc-cue="0.24 0.52">Weeds come up through the slabs every spring.</p>
+          <p data-sc-cue="0.49 0.77">The drive is cracked and holds puddles.</p>
+          <p data-sc-cue="0.74 1 0.12 0.06">I haven't got time for the garden.</p>
+        </div>
+      </div>
+      <div class="side side--after">
+        <h2 class="say__h" data-sc-cue="0 0.97 0 0.04">What we lay</h2>
+        <div class="say__lines">
+          <p data-sc-cue="0 0.29 0">A porcelain patio. Level underfoot, and it hoses clean.</p>
+          <p data-sc-cue="0.27 0.54">Slabs on a proper base with the joints filled, so nothing comes through.</p>
+          <p data-sc-cue="0.52 0.79">Block paving, tarmac or imprinted concrete, with drainage where the water sits.</p>
+          <p data-sc-cue="0.77 1 0.12 0.06">Porcelain and artificial turf. Nothing to mow, nothing to stain.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Reassurance: how a quote works, and where reviews go -->
+  <section class="flow" id="flow" aria-label="Getting a price and reviews">
+    <div class="side side--before">
+      <div class="sc-stack" data-sc-in data-sc-stagger="70">
+        <h2>Getting a price</h2>
+        <ol class="steps">
+          <li><span><b>Send a few photos</b>On WhatsApp, or give Gaz a ring.</span></li>
+          <li><span><b>He comes out and measures up</b>Then gives you a price. The quote is free and there's no obligation.</span></li>
+          <li><span><b>Pick a start date</b>One that suits you.</span></li>
+        </ol>
+      </div>
+    </div>
+    <div class="side side--after">
+      <div class="sc-stack" data-sc-in data-sc-stagger="70">
+        <h2>What customers say</h2>
+        <div class="reviews">
+          <div class="reviews__slot">
+            <div class="stars" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z"/></svg><svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z"/></svg><svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z"/></svg><svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z"/></svg><svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z"/></svg></div>
+            <p>Google reviews appear here.</p>
+          </div>
+          <p class="demo-note"><b>For Gaz:</b> once your Google Business Profile is set up, your Google reviews show here by themselves. After a job you text the customer one link, and that's it.</p>
+          <div class="reviews__actions">
+            <span class="btn btn--quiet" aria-disabled="true">Leave a review</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5-6. Satisfaction, then resolve: the after side lays itself across -->
+  <section class="close" id="close" data-sc-act="pin" data-sc-span="3.2" aria-label="Get a free quote">
+    <div data-sc-stage class="close__stage">
+      <div class="slablay close__lay" data-cols="6 10" data-ratio="1.5">
+        <canvas aria-hidden="true"></canvas>
+        <picture><source media="(max-width: 860px)" srcset="../img/j1-before-800.webp"><img class="slablay__before" src="../img/j3-before-1600.webp" width="1600" height="1200" alt="Before: the garden as it was, cracked slabs and weeds" loading="lazy" decoding="async" data-focus="55 62" data-focus-mobile="50 62"></picture>
+        <picture><source media="(max-width: 860px)" srcset="../img/j1-after-800.webp"><img class="slablay__after" src="../img/j3-after-1600.webp" width="2048" height="1536" alt="After: the same garden with a new porcelain patio" loading="lazy" decoding="async" data-focus="55 62" data-focus-mobile="50 62"></picture>
+      </div>
+      <div class="close__plate" data-sc-cue="0.86">
+        <h2 class="display">Your garden next?</h2>
+        <p>Send Gaz a photo of your drive or garden. He'll tell you what it needs and what it costs.</p>
+        <div class="cta">
+          <button class="btn" type="button" data-quote>Get a free quote</button>
+          <span>or ring <a href="tel:+447923485811">07923 485811</a></span>
+        </div>
+        <footer class="close__foot">
+          <img src="../img/logo.png" width="860" height="375" alt="TruDrive Driveways and Patios" loading="lazy">
+          <span>North West</span>
+          <a href="https://www.tiktok.com/@tru.drive" rel="noopener">TikTok @tru.drive</a>
+        </footer>
+        <p class="demo-note"><b>For Gaz:</b> the business address and the towns you cover go here.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<dialog class="quote" id="quote" aria-labelledby="quote-title">
+  <div class="quote__in">
+    <div class="quote__top">
+      <div>
+        <h2 id="quote-title">Get a free quote</h2>
+        <p class="quote__lede">Tell us what you need. It opens WhatsApp with this filled in, so you can add a photo of the space and send it straight to Gaz.</p>
+      </div>
+      <button class="quote__x" type="button" data-close aria-label="Close">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <form novalidate>
+      <label>What needs doing
+        <select name="job" required>
+          <option value="">Choose one</option>
+          <option>New driveway</option>
+          <option>Patio</option>
+          <option>Full garden makeover</option>
+          <option>Paths or steps</option>
+          <option>Fencing</option>
+          <option>Turf or artificial grass</option>
+          <option>Walls or brickwork</option>
+          <option>Something else</option>
+        </select>
+      </label>
+      <label>Your town or postcode <span class="opt">(optional)</span>
+        <input name="where" autocomplete="postal-code" inputmode="text">
+      </label>
+      <label>Your name <span class="opt">(optional)</span>
+        <input name="name" autocomplete="name">
+      </label>
+      <label>Anything else <span class="opt">(optional)</span>
+        <textarea name="notes" rows="3" placeholder="Rough size, what's there now, when you're hoping for"></textarea>
+      </label>
+      <p data-status role="status" aria-live="polite"></p>
+      <button class="quote__send" type="submit">
+        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.1 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2c.2-.6.2-1.1.1-1.2l-.5-.3z"/></svg>
+        Send on WhatsApp
+      </button>
+      <p class="quote__or">Rather talk? Ring Gaz on <a href="tel:+447923485811">07923 485811</a>.</p>
+    </form>
+  </div>
+</dialog>
+
+
+<script src="../shared/lenis.min.js"></script>
+<script src="../shared/parts.js"></script>
+<script src="../shared/scrollcraft.js"></script>
+<script src="../shared/slablay.js"></script>
+<script>
+  TD.boot();
+  ScrollCraft.mount(document.body);
+
+  // ---- the divider: drag it, arrow-key it, double-click to centre it
+  var root = document.documentElement;
+  var divider = document.getElementById('divider');
+  var grip = divider.querySelector('.divider__grip');
+  var phone = matchMedia('(max-width: 860px)');
+  var split = 50;
+  function setSplit(v) {
+    split = Math.max(25, Math.min(75, v));
+    root.style.setProperty('--split', split + '%');
+    grip.setAttribute('aria-valuenow', Math.round(split));
+    grip.setAttribute('aria-valuetext', Math.round(split) + ' percent before');
+    if (lay) lay.refresh();
+  }
+  var dragging = false;
+  grip.addEventListener('pointerdown', function (e) { dragging = true; grip.setPointerCapture(e.pointerId); divider.classList.add('is-dragging'); e.preventDefault(); });
+  grip.addEventListener('pointermove', function (e) {
+    if (!dragging) return;
+    setSplit(phone.matches ? e.clientY / innerHeight * 100 : e.clientX / innerWidth * 100);
+  });
+  ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(function (t) { grip.addEventListener(t, function () { dragging = false; divider.classList.remove('is-dragging'); }); });
+  grip.addEventListener('dblclick', function () { setSplit(50); });
+  grip.addEventListener('keydown', function (e) {
+    var step = e.shiftKey ? 10 : 4;
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { setSplit(split - step); e.preventDefault(); }
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { setSplit(split + step); e.preventDefault(); }
+    if (e.key === 'Home') { setSplit(25); e.preventDefault(); }
+    if (e.key === 'End') { setSplit(75); e.preventDefault(); }
+  });
+
+  // ---- the close: pave the before side, working out from the line
+  var close = document.getElementById('close');
+  var lay = new SlabLay(close.querySelector('.slablay'), {
+    split: function (s) {
+      return phone.matches ? { axis: 'y', at: s.h * split / 100 } : { axis: 'x', at: s.w * split / 100 };
+    },
+    prelaid: function (t, s) {
+      return phone.matches ? t.y >= s.h * split / 100 : t.x >= s.w * split / 100;
+    },
+    order: function (t, s) {
+      if (phone.matches) {
+        // Row by row from the line upwards, working along each row and back.
+        var r = Math.floor((s.h * split / 100 - (t.y + t.h / 2)) / s.sh);
+        return r * 1000 + (r % 2 ? s.w - t.cx : t.cx);
+      }
+      // Column by column from the line to the left edge, down one and up the next.
+      var c = Math.floor((s.w * split / 100 - t.cx) / (s.sw / 2));
+      return c * 1000 + (c % 2 ? s.h - t.y : t.y);
+    }
+  });
+
+  var flow = document.getElementById('flow');
+  var fades = divider.querySelectorAll('[data-fade]');
+  TD.everyFrame(function () {
+    var p = TD.actProgress(close);
+    lay.render(p);
+    // The line travels with the laying and the chrome bows out at the end.
+    var lp = lay.layProgress(p);
+    if (p > 0) root.style.setProperty('--line', (split * (1 - lp)) + '%');
+    else root.style.removeProperty('--line');
+    var fade = 1 - Math.min(1, lp * 1.25);
+    for (var i = 0; i < fades.length; i++) fades[i].style.opacity = fade;
+    divider.classList.toggle('is-gone', lp >= 0.99);
+    // On a phone the line runs across the screen, so it steps aside while
+    // plain text scrolls under it.
+    if (phone.matches) {
+      var r = flow.getBoundingClientRect();
+      var lineY = innerHeight * split / 100;
+      divider.classList.toggle('is-flow', r.top < lineY && r.bottom > lineY);
+    } else divider.classList.remove('is-flow');
+  });
+</script>
+</body>
+</html>

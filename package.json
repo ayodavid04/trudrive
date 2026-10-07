@@ -1,0 +1,19 @@
+{
+  "name": "trudrive",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "lenis": "^1.3.26"
+  },
+  "devDependencies": {
+    "netlify-cli": "^27.8.1",
+    "playwright-core": "^1.63.0"
+  }
+}

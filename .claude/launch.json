@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "trudrive",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["scripts/serve.mjs", "--root", "site", "--port", "4600"],
+      "port": 4600
+    }
+  ]
+}
