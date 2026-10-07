@@ -65,33 +65,57 @@ launch, and what to set up on handover day.
 
 ## Still to do before launch
 
-**Needs Gaz** (see CONFIRM.md):
+**Done:** Clean is the whole site at `/` (the other looks are in git history),
+privacy page, 404 page, sitemap.xml, robots.txt, LocalBusiness data for Google,
+logo cut from 200 KB to 35 KB, and `node scripts/check-launch.mjs` passes the
+travinyx-site delivery gate on every page at desktop and phone size.
+
+**Gaz types these into his editor himself** (Business details), and each one
+fills its place on the site. The yellow notes disappear as he does:
 
 - [ ] **Business address** (legal requirement; a registered office service is fine)
-- [ ] **Towns covered** and the hours he takes calls
-- [ ] **A few lines in his own words** for About, and a photo of him, the team or the van
-- [ ] **Google Business Profile** and its review link (Reviews page and home page)
-- [ ] **His original photos** to replace the TikTok ones (he can do this himself in the editor)
-- [ ] **The domain name** he wants
-- [ ] Check the job descriptions written from his photos
+- [ ] **Towns he covers**, and the hours he takes calls
+- [ ] **About you:** a few lines in his own words, and a photo
+- [ ] **Google review link and Maps link**, once the Business Profile exists
+- [ ] **His original photos** in place of the TikTok ones
+- [ ] Check the job descriptions written from his photos, and the privacy
+  page's wording about how long he keeps customer details
 
-**Build work, once his details are in:**
+**The site stays out of Google automatically** while any yellow note is left
+(every page `noindex`, robots.txt blocking everything). When the last one is
+filled in, the next build opens it to Google and robots.txt points at the
+sitemap. Nothing to switch on by hand.
 
-- [ ] **Make Clean the whole site.** `/` is still the chooser between four looks,
-  Clean is at `/clean/`. Move `pages/clean/*.html` up into `pages/` replacing
-  the chooser; remove `pages/solid.html`, `premium.html`, `bold.html` (they stay
-  in git history); in those pages `{{root}}clean/<page>/` becomes
-  `{{root}}<page>/` (keep `clean/clean.css` and `clean.js`), the `x-include`
-  files drop `clean/`, and `path="clean/..."` in `x-head` drops `clean/`;
-  delete the old built folders under `site/` (`solid`, `premium`, `bold`, and
-  the page folders in `site/clean/`); update `scripts/test-clean.mjs`.
-- [ ] Remove the five yellow "For Gaz" notes (`.demo-note`) and put his details in
-- [ ] Privacy page linked in the footer (no cookies or tracking on the site;
-  say what happens to details sent through the quote sheet and WhatsApp)
-- [ ] `sitemap.xml`, robots.txt pointing at it, remove `Disallow: /` and the
-  `noindex` in `scripts/build.mjs`, a 404 page
-- [ ] JSON-LD with his address once it exists, only facts the site states
-- [ ] Run the travinyx-site delivery gate
+## Google Business Profile (you are setting this up)
+
+For a local trade this matters more than the website: it is what shows in the
+map results when someone searches "driveways near me".
+
+1. Make it with **Gaz's own Google account**, so he is the owner from day one.
+2. **Name: exactly "TruDrive Driveways & Patios".** No towns or keywords added
+   to the name. Google suspends profiles for that.
+3. **He goes to customers, so it is a service-area business:** say no to
+   "a location customers can visit", then add the towns he covers (up to 20).
+   His address stays hidden on Google but is still needed for verification and
+   on the website by law.
+4. **Category:** primary "Paving contractor" if it is offered; add others that
+   are true, like Landscaper or Fence contractor. Pick from Google's list.
+5. **Phone and website exactly as on the site.** Same name, number and
+   address everywhere (Facebook, Checkatrade, Yell) is a ranking signal.
+6. **Verification** is usually a short video: the van, tools, a job, proof he
+   runs the business. It can take a few days.
+7. Add his before and after photos, and post a job now and then.
+8. Once it is live: **"Ask for reviews"** gives the review link, and "Share"
+   on Google Maps gives the profile link. Both go into his editor under
+   Business details, Google reviews links. Text the review link to every
+   customer after a job, and reply to every review.
+9. Never buy reviews, offer anything for them, or only ask happy customers.
+   Google removes them and the CMA can fine for fake reviews.
+
+**After the domain is live:** add it to Google Search Console in his Google
+account (Cloudflare can verify it in one click) and submit
+`https://his-domain/sitemap.xml`. Then import it into Bing Webmaster Tools from
+Search Console in two clicks; Bing also feeds Copilot and ChatGPT search.
 
 ## Handover day, in this order
 
@@ -143,3 +167,7 @@ portfolio.
 - The fixed photos elsewhere on the site still come from `scripts/images.py`.
 - The old demo at trudrive-looks-b37345.netlify.app is on your Netlify,
   deployed by CLI. It has nothing to do with his site.
+- Checks: `node scripts/check-launch.mjs` (the delivery gate: SEO tags, links,
+  headings, alt text, page weight, phone width, console errors, reduced motion,
+  404, sitemap) and `node scripts/test-clean.mjs` (sliders, quote sheet, nav).
+  Both need `npm run build` and the preview running.

@@ -114,7 +114,8 @@ collections:
         maxlength: 300
       - name: work
         label: What went in (optional)
-        hint: One thing per line, like "Grey porcelain patio".
+        label_singular: item
+        hint: Tap Add item for each one, like "Grey porcelain patio".
         widget: list
         required: false
       - name: crop
@@ -195,12 +196,58 @@ collections:
         required: false
         maxlength: 150
 
+  - name: reviews
+    label: Reviews
+    label_singular: Review
+    description: Copy a customer's Google review onto your website, word for word. Press Save and it is on your website in about a minute.
+    icon: star
+    folder: content/reviews
+    format: json
+    extension: json
+    create: true
+    delete: true
+    slug: "{{fields.date}}-{{slug}}"
+    identifier_field: name
+    summary: "{{name}}"
+    sortable_fields:
+      fields: [date, name]
+      default:
+        field: date
+        direction: descending
+    fields:
+      - name: name
+        label: Customer's name
+        hint: As it shows on Google, like "Sarah T".
+        widget: string
+        maxlength: 40
+      - name: text
+        label: What they wrote
+        hint: Word for word from Google. Don't change or add anything. It has to be their words.
+        widget: text
+        maxlength: 700
+      - name: stars
+        label: Stars
+        widget: select
+        options:
+          - { label: 5 stars, value: 5 }
+          - { label: 4 stars, value: 4 }
+          - { label: 3 stars, value: 3 }
+        default: 5
+      - name: date
+        label: Date of the review
+        widget: datetime
+        time_format: false
+        format: YYYY-MM-DD
+        default: "{{now}}"
+
+  # Business details are files, not lists: they can be changed but never
+  # deleted, so a footer or the legal address can never go missing.
   - name: settings
     label: Business details
     icon: call
     files:
       - name: business
-        label: Phone number
+        label: Phone, towns, address and hours
         file: content/business.json
         format: json
         fields:
@@ -209,3 +256,63 @@ collections:
             hint: Shown on every page, and the WhatsApp buttons use it, so WhatsApp must be on this number.
             widget: string
             pattern: ['^0\d{3,4} ?\d{3} ?\d{3,4}$', 'A UK number starting with 0, like 07923 485811']
+          - name: areas
+            label: Towns you cover
+            label_singular: town
+            hint: Tap Add town for each one, like Wigan. They show in the footer and on the contact page, and tell Google where you work.
+            widget: list
+            required: false
+          - name: hours
+            label: When you take calls (optional)
+            hint: Like "Mon to Sat, 8am to 6pm".
+            widget: string
+            required: false
+            maxlength: 60
+          - name: street
+            label: Business address, first line
+            hint: The law says your business address must be on your website. A registered office address is fine if you don't want your home shown.
+            widget: string
+            required: false
+            maxlength: 80
+          - name: town
+            label: Business address, town
+            widget: string
+            required: false
+            maxlength: 40
+          - name: postcode
+            label: Business address, postcode
+            widget: string
+            required: false
+            pattern: ['^[A-Za-z]{1,2}\d[A-Za-z\d]? ?\d[A-Za-z]{2}$', 'A UK postcode, like WN1 1AA']
+      - name: google
+        label: Google reviews links
+        file: content/google.json
+        format: json
+        fields:
+          - name: review_link
+            label: Your "leave a review" link
+            hint: In your Google Business Profile, tap "Ask for reviews" and copy the link. It puts a Leave a review button on your website.
+            widget: string
+            type: url
+            required: false
+          - name: profile_link
+            label: Your business on Google Maps
+            hint: Open your business on Google Maps, tap Share and copy the link. It puts a See our reviews on Google button on your website.
+            widget: string
+            type: url
+            required: false
+      - name: about
+        label: About you
+        file: content/about.json
+        format: json
+        fields:
+          - name: text
+            label: A few lines about you
+            hint: In your own words. How you started, what you care about on a job. Leave a blank line between paragraphs.
+            widget: text
+            required: false
+            maxlength: 900
+          - name: photo
+            label: Photo of you, the team or the van (optional)
+            widget: image
+            required: false

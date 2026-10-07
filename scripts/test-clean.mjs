@@ -1,6 +1,6 @@
 // Functional checks for the Clean site.
 import { chromium } from 'playwright-core';
-const B = 'http://localhost:4600/clean/';
+const B = 'http://localhost:4600/';
 const browser = await chromium.launch({ executablePath: 'C:/Program Files/Google/Chrome/Application/chrome.exe' });
 let fails = 0;
 const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fails++; };

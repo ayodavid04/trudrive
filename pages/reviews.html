@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<x-head title="Reviews | TruDrive Driveways &amp; Patios" desc="What customers say about TruDrive Driveways &amp; Patios on Google." path="reviews/"></x-head>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap">
+<link rel="stylesheet" href="{{root}}assets/parts.css">
+<link rel="stylesheet" href="{{root}}assets/clean.css">
+</head>
+<body>
+<x-include file="_header.html" active="reviews"></x-include>
+
+<main id="main">
+  <section class="page-head">
+    <div class="wrap">
+      <h1>Reviews</h1>
+      <p class="lead">What customers say about TruDrive, straight from Google.</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <x-reviews></x-reviews>
+    </div>
+  </section>
+
+  <section class="sec sec--paper">
+    <div class="wrap split">
+      <div class="split__txt">
+        <h2>Seen the work on TikTok?</h2>
+        <p class="muted">One of our porcelain patios has been watched 22.8K times. New jobs go up there first.</p>
+        <a class="btn btn--ghost" href="https://www.tiktok.com/@tru.drive" rel="noopener">Follow @tru.drive</a>
+      </div>
+      <div class="photo" style="aspect-ratio: 4 / 3"><x-pic name="j6-lawn" alt="A finished garden with a new lawn, stepping stones and a porcelain patio" sizes="(max-width: 960px) 100vw, 520px" focus="50 60"></x-pic></div>
+    </div>
+  </section>
+</main>
+
+<x-include file="_footer.html"></x-include>
+</body>
+</html>

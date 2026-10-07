@@ -1,22 +1,27 @@
-// Expands the page sources in pages/ into site/.
+// Expands the page sources in pages/ into site/, plus sitemap.xml and robots.txt.
 //
 //   pages/index.html          -> site/index.html
-//   pages/solid.html          -> site/solid/index.html
-//   pages/clean/index.html    -> site/clean/index.html
-//   pages/clean/services.html -> site/clean/services/index.html
+//   pages/services.html       -> site/services/index.html
+//   pages/404.html            -> site/404.html
 //   Files starting with _ are partials.
 //
 // Tags:
 //   <x-pic name="j1-before" alt="..." sizes="50vw" class="..." focus="50 60" eager [mobile="name"] [plain]>
-//   <x-head title="..." desc="..." path="clean/services/"></x-head>
+//   <x-head title="..." desc="..." path="services/" [noindex]></x-head>
 //   <x-quote></x-quote>                            the shared quote sheet
-//   <x-include file="clean/_header.html" active="services"></x-include>
-//   {{root}}                                       relative path back to the site root
+//   <x-include file="_header.html" active="services"></x-include>
+//   {{root}}                                       the site root, /
+//   {{year}}                                       this year, for the footer
 //
 // Content Gaz edits himself at /admin (site/admin/config.yml), read from content/:
 //   <x-jobs></x-jobs>                              every before and after, newest first
-//   <x-job slot="hero"> / <x-job slot="feature">   the home page pairs, from jobs ticked for the home page
+//   <x-job slot="hero"> / <x-job slot="feature">   the home page pairs, from jobs switched on for the home page
 //   <x-photos></x-photos>                          the finished photos gallery
+//   <x-reviews></x-reviews>                        the reviews he has copied in, and his Google buttons
+//   <x-reviews home>...{{reviews}}...</x-reviews>  the newest review; the section is left out with none
+//   <x-where [contact]></x-where>                  towns, hours and address, from Business details
+//   <x-about-text>, <x-about-photo>                About you
+//   <x-ldjson></x-ldjson>                          LocalBusiness data for Google
 //   {{phone}} {{tel}} {{wa}}                       his number as shown, for tel: links, for wa.me
 // Run scripts/content.mjs first (npm run build does): it makes the photo sizes.
 //
@@ -64,10 +69,105 @@ const photos = readDir('content/photos').filter((p) => {
   if (!ok) warn(`left off the photo "${p.title || '(no title)'}": it needs a title and a photo that processed`);
   return ok;
 }).sort(newestFirst);
-const business = readDir('content').find((b) => b.phone) || {};
+const readJson = (file) => {
+  try { return JSON.parse(fs.readFileSync(file, 'utf8')) || {}; } catch { warn(`could not read ${file}, using blanks`); return {}; }
+};
+const business = readJson('content/business.json');
+const google = readJson('content/google.json');
+const aboutMe = readJson('content/about.json');
+const reviews = readDir('content/reviews').filter((r) => r.name && r.text).sort(newestFirst);
 
 // Whatever Gaz types is shown as text, never read as HTML.
 const esc = (v) => String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const clean = (v) => String(v ?? '').trim();
+const isUrl = (v) => /^https:\/\/\S+$/.test(clean(v));
+
+const areas = (Array.isArray(business.areas) ? business.areas : String(business.areas || '').split('\n')).map(clean).filter(Boolean);
+const andList = (xs) => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} and ${xs.at(-1)}`);
+const address = [business.street, business.town, clean(business.postcode).toUpperCase()].map(clean).filter(Boolean);
+const hasAddress = Boolean(clean(business.street) && clean(business.town) && clean(business.postcode));
+
+// While something the law or Google needs is missing, a yellow note says what,
+// and the build keeps the whole site out of search results (see `indexable`).
+const note = (text) => `<p class="demo-note"><b>For Gaz:</b> ${text}</p>`;
+
+function where(style) {
+  const lines = [`<p>Across the North West${areas.length ? `: ${esc(andList(areas))}.` : '.'}</p>`];
+  if (clean(business.hours)) lines.push(`<p>Calls: ${esc(business.hours)}</p>`);
+  if (hasAddress) lines.push(`<address>${address.map(esc).join('<br>')}</address>`);
+  const missing = [!areas.length && 'the towns you cover', !hasAddress && 'your business address'].filter(Boolean);
+  if (missing.length) lines.push(note(`add ${andList(missing)} in your editor, under Business details.`));
+  return lines.join(style === 'contact' ? '' : '\n      ');
+}
+
+const STAR = '<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6L10 15l-5.4 3 1.2-6L1.3 7.8l6.1-.7z"/></svg>';
+const stars = (n) => `<span class="stars" role="img" aria-label="${n} out of 5 stars">${STAR.repeat(n)}</span>`;
+const prettyDate = (d) => { const t = new Date(d); return isNaN(t) ? '' : t.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }); };
+
+function reviewCard(r) {
+  const n = Math.min(5, Math.max(1, Number(r.stars) || 5));
+  return `<figure class="review">
+          ${stars(n)}
+          <blockquote>${esc(r.text).split(/\n\s*\n/).map((p) => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('')}</blockquote>
+          <figcaption><b>${esc(r.name)}</b><span>Google review${prettyDate(r.date) ? `, ${prettyDate(r.date)}` : ''}</span></figcaption>
+        </figure>`;
+}
+
+function googleButtons() {
+  const b = [];
+  if (isUrl(google.review_link)) b.push(`<a class="btn" href="${esc(clean(google.review_link))}" rel="noopener">Leave a review on Google</a>`);
+  if (isUrl(google.profile_link)) b.push(`<a class="btn btn--ghost" href="${esc(clean(google.profile_link))}" rel="noopener">See our reviews on Google</a>`);
+  return b.length ? `<div class="review-btns">${b.join('')}</div>` : '';
+}
+
+// Reviews page: every review Gaz has copied in, then the Google buttons.
+function reviewsPage() {
+  const list = reviews.length
+    ? `<div class="reviews">${reviews.map(reviewCard).join('\n        ')}</div>`
+    : '<p class="muted">Reviews from our customers on Google will be here soon.</p>';
+  return `${list}\n      ${googleButtons()}`;
+}
+
+// Home page: the newest review, or nothing at all if there are none yet.
+function reviewsHome(section) {
+  if (!reviews.length && !googleButtons()) return '';
+  return section.replace('{{reviews}}', reviews.length ? reviewCard(reviews[0]) : googleButtons());
+}
+
+function aboutText() {
+  const text = clean(aboutMe.text);
+  if (!text) return note('a few lines in your own words go here. Add them in your editor, under Business details, About you.');
+  return text.split(/\n\s*\n/).map((p) => `<p class="muted">${esc(p).replace(/\n/g, '<br>')}</p>`).join('\n        ');
+}
+
+function aboutPhoto(R) {
+  if (aboutMe.photo && hasPhoto(aboutMe.photo)) {
+    return `<div class="photo" style="aspect-ratio: 4 / 3.2">${pic({ name: upName(aboutMe.photo), alt: 'Gaz and the TruDrive team', sizes: '(max-width: 960px) 100vw, 520px', focus: '50 40' }, R)}</div>`;
+  }
+  return '<div class="photo photo--todo" style="aspect-ratio: 4 / 3.2"><span>Photo of Gaz, the team or the van</span></div>';
+}
+
+// LocalBusiness data for Google, built only from facts the site states.
+// No review or rating markup: Google ignores self-published reviews of a
+// business on its own site, and it can count against it.
+function ldJson() {
+  const ld = {
+    '@context': 'https://schema.org',
+    '@type': 'HomeAndConstructionBusiness',
+    name: 'TruDrive Driveways & Patios',
+    url: `${SITE_URL}/`,
+    telephone: '+' + intl,
+    image: `${SITE_URL}/img/og.jpg`,
+    logo: `${SITE_URL}/img/logo.png`,
+    description: 'Driveways and patios: porcelain, block paving, imprinted concrete, tarmac, gravel, Indian sandstone, fencing, brickwork and turfing.',
+    areaServed: areas.length ? areas.map((name) => ({ '@type': 'City', name })) : 'North West England',
+    sameAs: ['https://www.tiktok.com/@tru.drive', ...(isUrl(google.profile_link) ? [clean(google.profile_link)] : [])],
+  };
+  if (hasAddress) {
+    ld.address = { '@type': 'PostalAddress', streetAddress: clean(business.street), addressLocality: clean(business.town), postalCode: clean(business.postcode).toUpperCase(), addressCountry: 'GB' };
+  }
+  return `<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>`;
+}
 const FOCUS = { middle: '50 50', low: '50 62', top: '50 30' };
 
 // The editor checks the number's shape; this is the backstop if it is ever
@@ -199,7 +299,7 @@ function head(a, R) {
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>${a.title}</title>
 <meta name="description" content="${a.desc}">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="${a.noindex ? 'noindex' : '{{robots}}'}">
 <link rel="canonical" href="${url}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="TruDrive Driveways &amp; Patios">
@@ -228,16 +328,28 @@ function walk(dir) {
 }
 
 const quote = fs.readFileSync('pages/_quote.html', 'utf8');
+const built = [];
 
 for (const file of walk('pages')) {
   const base = path.basename(file);
   if (!base.endsWith('.html') || base.startsWith('_')) continue;
   const rel = path.relative('pages', file).replace(/\\/g, '/').replace(/\.html$/, '');
   const outRel = rel === 'index' ? '' : rel.endsWith('/index') ? rel.slice(0, -'/index'.length) : rel;
-  const depth = outRel ? outRel.split('/').length : 0;
-  const R = '../'.repeat(depth);
+  // Links start from the site root, so the 404 page works at any address.
+  const R = '/';
   let html = fs.readFileSync(file, 'utf8');
+  // Partials first, so tags inside the header and footer are filled in too.
   html = html.replace(/<x-include\s+([^>]*?)\s*\/?>(?:<\/x-include>)?/g, (_, s) => include(attrs(s), R));
+  html = html.replace(/<x-ldjson\s*\/?>(?:<\/x-ldjson>)?/g, () => ldJson());
+  html = html.replace(/<x-where\s*(contact)?\s*\/?>(?:<\/x-where>)?/g, (_, style) => where(style));
+  html = html.replace(/<x-reviews\s+home>([\s\S]*?)<\/x-reviews>/g, (_, section) => reviewsHome(section));
+  html = html.replace(/<x-reviews\s*\/?>(?:<\/x-reviews>)?/g, () => reviewsPage());
+  html = html.replace(/<x-address\s*\/?>(?:<\/x-address>)?/g, () => (hasAddress
+    ? `<address>TruDrive Driveways &amp; Patios<br>${address.map(esc).join('<br>')}</address>`
+    : note('add your business address in your editor, under Business details.')));
+  html = html.replace(/<x-about-text\s*\/?>(?:<\/x-about-text>)?/g, () => aboutText());
+  html = html.replace(/<x-about-photo\s*\/?>(?:<\/x-about-photo>)?/g, () => aboutPhoto(R));
+  html = html.replaceAll('{{year}}', String(new Date().getFullYear()));
   html = html.replace(/<x-pic\s+([^>]*?)\s*\/?>(?:<\/x-pic>)?/g, (_, s) => pic(attrs(s), R));
   html = html.replace(/<x-head\s+([^>]*?)\s*\/?>(?:<\/x-head>)?/g, (_, s) => head(attrs(s), R));
   html = html.replace(/<x-quote\s*\/?>(?:<\/x-quote>)?/g, quote);
@@ -247,16 +359,34 @@ for (const file of walk('pages')) {
   html = html.replace(/<x-photos\s*\/?>(?:<\/x-photos>)?/g, () => photosList(R));
   html = html.replace(/{{(phone|tel|wa)}}/g, (_, k) => PHONE[k]);
   html = html.replaceAll('{{root}}', R);
-  // The first mockups were written for one level deep; the chooser sits at the root.
-  if (depth === 0) html = html.replaceAll('../img/', 'img/').replaceAll('../shared/', 'shared/');
-  const outDir = path.join('site', outRel);
-  fs.mkdirSync(outDir, { recursive: true });
-  fs.writeFileSync(path.join(outDir, 'index.html'), html);
-  console.log('built', path.join(outDir, 'index.html'));
+  // Cloudflare Pages serves /404.html for any address that does not exist.
+  const out = rel === '404' ? path.join('site', '404.html') : path.join('site', outRel, 'index.html');
+  built.push({ out, html, url: `${SITE_URL}/${outRel ? outRel + '/' : ''}`, listed: rel !== '404' });
 }
 
+// Search engines see the site only once nothing is left for Gaz to fill in:
+// a yellow note anywhere keeps every page out of Google, so a half-finished
+// site can never be indexed by accident.
+const unfinished = built.filter((b) => b.html.includes('class="demo-note"')).map((b) => b.out);
+const indexable = unfinished.length === 0;
+if (!indexable) warn(`hidden from search engines until the yellow notes are gone: ${unfinished.join(', ')}`);
+for (const b of built) {
+  fs.mkdirSync(path.dirname(b.out), { recursive: true });
+  fs.writeFileSync(b.out, b.html.replaceAll('{{robots}}', indexable ? 'index, follow' : 'noindex, nofollow'));
+  console.log('built', b.out);
+}
+
+fs.writeFileSync('site/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${built.filter((b) => b.listed).map((b) => `  <url><loc>${b.url}</loc></url>`).join('\n')}
+</urlset>
+`);
+fs.writeFileSync('site/robots.txt', indexable
+  ? `User-agent: *\nAllow: /\nDisallow: /admin/\n\nSitemap: ${SITE_URL}/sitemap.xml\n`
+  : 'User-agent: *\nDisallow: /\n');
+
 // The quote sheet script carries the number too, for the WhatsApp message it opens.
-const partsPath = 'site/shared/parts.js';
+const partsPath = 'site/assets/parts.js';
 const parts = fs.readFileSync(partsPath, 'utf8')
   .replace(/var PHONE_DISPLAY = '[^']*';/, `var PHONE_DISPLAY = '${business.phone.trim().replace(/[^\d +]/g, '')}';`)
   .replace(/var PHONE_INTL = '[^']*';/, `var PHONE_INTL = '${PHONE.wa}';`);

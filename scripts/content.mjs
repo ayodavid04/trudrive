@@ -27,6 +27,10 @@ const readDir = (dir) => (fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) =>
 const used = new Set();
 for (const job of readDir('content/jobs')) for (const k of ['before', 'after']) if (job[k]) used.add(path.basename(job[k]));
 for (const p of readDir('content/photos')) if (p.photo) used.add(path.basename(p.photo));
+try {
+  const about = JSON.parse(fs.readFileSync('content/about.json', 'utf8'));
+  if (about.photo) used.add(path.basename(about.photo));
+} catch { /* no about photo yet */ }
 
 const nameFor = (file) => 'up-' + path.basename(file).replace(/\.[^.]+$/, '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
 
@@ -76,4 +80,13 @@ for (const [name, m] of Object.entries(manifest)) {
 for (const f of fs.readdirSync(OUT)) if (!keep.has(f)) fs.rmSync(path.join(OUT, f));
 
 fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 1));
+
+// The logo is drawn 150 px wide; 450 px covers a 3x phone screen. The 860 px
+// master stays for Google's business data.
+const LOGO = 'site/img/logo.png';
+// A palette PNG came out smaller than WebP for this flat logo.
+const SMALL = 'site/img/logo-450.png';
+if (!fs.existsSync(SMALL) || fs.statSync(SMALL).mtimeMs < fs.statSync(LOGO).mtimeMs) {
+  await sharp(LOGO).resize({ width: 450 }).png({ palette: true, quality: 90 }).toFile(SMALL);
+}
 console.log(`content photos: ${Object.keys(manifest).length} in use, ${made} processed`);

@@ -111,5 +111,21 @@ for (let i = 0; i < mc && !opened; i++) {
 if (!opened) throw new Error('could not find the menu at the top');
 await page.getByText('Delete', { exact: false }).first().waitFor();
 await shot('7-delete');
+await page.keyboard.press('Escape');
+
+// Business details: towns, address, hours.
+await page.goto('http://localhost:4600/admin/#/collections/settings');
+await page.getByText('Phone, towns, address and hours').waitFor({ timeout: 20000 });
+// (the Business details list itself is not in the guide)
+await page.goto('http://localhost:4600/admin/#/collections/settings/entries/business');
+await page.getByText('Towns you cover').first().waitFor({ timeout: 20000 });
+await page.getByText('Towns you cover').first().scrollIntoViewIfNeeded();
+await page.evaluate(() => scrollBy(0, -140));
+await shot('9-towns');
+
+// A new review.
+await page.goto('http://localhost:4600/admin/#/collections/reviews/new');
+await page.getByText("Customer's name").waitFor({ timeout: 20000 });
+await shot('10-review');
 
 await browser.close();
