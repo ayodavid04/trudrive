@@ -375,3 +375,9 @@ p { margin: 0; text-wrap: pretty; }
 .prose li { margin-bottom: 6px; }
 .prose b { color: var(--ink); }
 address { font-style: normal; }
+
+/* Blocks below the first screen rise into place as they arrive (clean.js).
+   translate, not transform, so nothing already transformed is disturbed. */
+.rv { opacity: 0; translate: 0 30px; transition: opacity 1.4s var(--ease), translate 1.4s var(--ease); }
+.rv.rv-in { opacity: 1; translate: none; }
+@media (prefers-reduced-motion: reduce) { .rv { opacity: 1; translate: none; transition: none; } }

@@ -1,6 +1,8 @@
-/* TruDrive, clean: header state, phone menu, and the before and afters.
+/* TruDrive, clean: header state, phone menu, the before and afters, and a
+   quiet rise on each block as it scrolls into view.
    The home hero plays its before-to-after slide once, when the photos are
-   ready. Everything else waits for the visitor to press something. */
+   ready. That stays the one thing that moves on its own: the rest only
+   settles into place as the visitor reaches it. */
 (function () {
   'use strict';
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -22,6 +24,10 @@
       menuBtn.setAttribute('aria-expanded', String(open));
       menuBtn.querySelector('span').textContent = open ? 'Close' : 'Menu';
       document.documentElement.style.overflow = open ? 'hidden' : '';
+      // Smooth scroll writes the scroll position itself, so it has to stop too
+      // or the wheel moves the page behind the open menu.
+      var smooth = window.TD && TD.lenis();
+      if (smooth) { if (open) smooth.stop(); else smooth.start(); }
     };
     menuBtn.addEventListener('click', function () { setOpen(!drawer.classList.contains('is-open')); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && drawer.classList.contains('is-open')) { setOpen(false); menuBtn.focus(); } });
@@ -60,4 +66,31 @@
   });
 
   if (window.TD) TD.boot();
+
+  // Blocks below the first screen rise 30px and fade in over 1.4s as they
+  // arrive, a few at a time. Only blocks that start off screen are ever hidden,
+  // and only by this script, so if it fails to run nothing is left invisible.
+  // New jobs and photos added in the editor pick this up on their own.
+  if (!reduce && 'IntersectionObserver' in window) {
+    var blocks = Array.prototype.filter.call(
+      document.querySelectorAll('main section:not(.hero) .wrap > *'),
+      function (el) { return el.getBoundingClientRect().top > innerHeight; }
+    );
+    var io = new IntersectionObserver(function (entries) {
+      entries.filter(function (e) { return e.isIntersecting; }).forEach(function (e, i) {
+        var el = e.target;
+        el.style.transitionDelay = (i * 0.08).toFixed(2) + 's';
+        el.classList.add('rv-in');
+        io.unobserve(el);
+        // Once landed, hand the block its own transitions back (hover states).
+        el.addEventListener('transitionend', function done(ev) {
+          if (ev.target !== el || ev.propertyName !== 'opacity') return;
+          el.classList.remove('rv', 'rv-in');
+          el.style.transitionDelay = '';
+          el.removeEventListener('transitionend', done);
+        });
+      });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    blocks.forEach(function (el) { el.classList.add('rv'); io.observe(el); });
+  }
 })();

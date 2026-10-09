@@ -58,7 +58,16 @@ for (const file of used) {
     const widths = WIDTHS.filter((tw) => tw <= w);
     if (!widths.length || (w < 1600 && w - widths[widths.length - 1] > 100)) widths.push(w);
     for (const tw of widths) {
-      await img.clone().resize({ width: tw }).webp({ quality: tw >= 1200 ? 70 : 74, effort: 6 }).toFile(path.join(OUT, `${name}-${tw}.webp`));
+      const dest = path.join(OUT, `${name}-${tw}.webp`);
+      const big = tw >= 1200;
+      const resized = img.clone().resize({ width: tw });
+      // Same settings as the TikTok photos (scripts/images.py), so every photo on the site is encoded alike.
+      await resized.clone().webp({ quality: big ? 62 : 68, effort: 6 }).toFile(dest);
+      // Decking, foliage and weeds are all fine detail. A light smooth is invisible at display size and
+      // cuts the big sizes by about 40%. Only the heavy ones get it.
+      if (big && fs.statSync(dest).size > 280 * 1024) {
+        await resized.clone().blur(0.6).webp({ quality: 60, effort: 6 }).toFile(dest);
+      }
     }
     await img.clone().resize({ width: Math.min(1200, w) }).jpeg({ quality: 74, mozjpeg: true }).toFile(fallback);
     manifest[name] = { w, h, widths };
