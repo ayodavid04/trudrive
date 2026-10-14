@@ -78,7 +78,12 @@ const readJson = (file) => {
 const business = readJson('content/business.json');
 const google = readJson('content/google.json');
 const aboutMe = readJson('content/about.json');
-const reviews = readDir('content/reviews').filter((r) => r.name && r.text).sort(newestFirst);
+const ownReviews = readDir('content/reviews').filter((r) => r.name && r.text);
+// Straight from Google when the build could fetch them (scripts/google-reviews.mjs),
+// plus any he copied in himself that Google did not send.
+const fromGoogle = (() => { try { return JSON.parse(fs.readFileSync('site/img/up/google.json', 'utf8')); } catch { return null; } })();
+const googleNames = new Set((fromGoogle?.reviews || []).map((r) => r.name.toLowerCase()));
+const reviews = [...(fromGoogle?.reviews || []), ...ownReviews.filter((r) => !googleNames.has(String(r.name).toLowerCase()))].sort(newestFirst);
 // Videos the content step made a web copy of (scripts/videos.mjs). Any it
 // could not use were already reported there.
 const videoManifest = (() => { try { return JSON.parse(fs.readFileSync('site/img/up/videos.json', 'utf8')); } catch { return {}; } })();
@@ -93,6 +98,11 @@ const groupAttr = (kind) => (groupOf(kind) ? ` data-group="${groupOf(kind)}"` : 
 const esc = (v) => String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const clean = (v) => String(v ?? '').trim();
 const isUrl = (v) => /^https:\/\/\S+$/.test(clean(v));
+// His links from the editor win; otherwise they come from his place ID.
+const placeId = clean(process.env.GOOGLE_PLACE_ID);
+const reviewLink = isUrl(google.review_link) ? clean(google.review_link)
+  : placeId ? `https://search.google.com/local/writereview?placeid=${encodeURIComponent(placeId)}` : '';
+const profileLink = isUrl(google.profile_link) ? clean(google.profile_link) : isUrl(fromGoogle?.mapsUrl) ? fromGoogle.mapsUrl : '';
 
 const areas = (Array.isArray(business.areas) ? business.areas : String(business.areas || '').split('\n')).map(clean).filter(Boolean);
 const andList = (xs) => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} and ${xs.at(-1)}`);
@@ -127,23 +137,27 @@ function reviewCard(r) {
 
 function googleButtons() {
   const b = [];
-  if (isUrl(google.review_link)) b.push(`<a class="btn" href="${esc(clean(google.review_link))}" rel="noopener">Leave a review on Google</a>`);
-  if (isUrl(google.profile_link)) b.push(`<a class="btn btn--ghost" href="${esc(clean(google.profile_link))}" rel="noopener">See our reviews on Google</a>`);
+  if (reviewLink) b.push(`<a class="btn" href="${esc(reviewLink)}" rel="noopener">Leave a review on Google</a>`);
+  if (profileLink) b.push(`<a class="btn btn--ghost" href="${esc(profileLink)}" rel="noopener">See all our reviews on Google</a>`);
   return b.length ? `<div class="review-btns">${b.join('')}</div>` : '';
 }
 
-// Reviews page: every review Gaz has copied in, then the Google buttons.
+// His rating on Google, when the build fetched it.
+const ratingLine = () => (fromGoogle?.count
+  ? `<p class="rating">${stars(Math.round(fromGoogle.rating))}<b>${fromGoogle.rating.toFixed(1)}</b> from ${fromGoogle.count} review${fromGoogle.count === 1 ? '' : 's'} on Google</p>` : '');
+
+// Reviews page: his rating, the reviews, then the Google buttons.
 function reviewsPage() {
   const list = reviews.length
     ? `<div class="reviews">${reviews.map(reviewCard).join('\n        ')}</div>`
     : '<p class="muted">Reviews from our customers on Google will be here soon.</p>';
-  return `${list}\n      ${googleButtons()}`;
+  return `${ratingLine()}\n      ${list}\n      ${googleButtons()}`;
 }
 
 // Home page: the newest review, or nothing at all if there are none yet.
 function reviewsHome(section) {
   if (!reviews.length && !googleButtons()) return '';
-  return section.replace('{{reviews}}', reviews.length ? reviewCard(reviews[0]) : googleButtons());
+  return section.replace('{{reviews}}', reviews.length ? ratingLine() + reviewCard(reviews[0]) : googleButtons());
 }
 
 function aboutText() {
@@ -154,7 +168,7 @@ function aboutText() {
 
 function aboutPhoto(R) {
   if (aboutMe.photo && hasPhoto(aboutMe.photo)) {
-    return `<div class="photo" style="aspect-ratio: 4 / 3.2">${pic({ name: upName(aboutMe.photo), alt: 'Gaz and the TruDrive team', sizes: '(max-width: 960px) 100vw, 520px', focus: '50 40' }, R)}</div>`;
+    return `<div class="photo" style="aspect-ratio: 4 / 3.2">${pic({ name: upName(aboutMe.photo), alt: 'Gaz and the TruDrive team', sizes: '(max-width: 760px) 67vw, (max-width: 960px) 100vw, 520px', focus: '50 40' }, R)}</div>`;
   }
   return '<div class="photo photo--todo" style="aspect-ratio: 4 / 3.2"><span>Photo of Gaz, the team or the van</span></div>';
 }
@@ -173,7 +187,7 @@ function ldJson() {
     logo: `${SITE_URL}/img/logo.png`,
     description: 'Driveways and patios: porcelain, block paving, imprinted concrete, tarmac, gravel, Indian sandstone, fencing, brickwork and turfing.',
     areaServed: areas.length ? areas.map((name) => ({ '@type': 'City', name })) : 'North West England',
-    sameAs: ['https://www.tiktok.com/@tru.drive', ...(isUrl(google.profile_link) ? [clean(google.profile_link)] : [])],
+    sameAs: ['https://www.tiktok.com/@tru.drive', ...(profileLink ? [profileLink] : [])],
   };
   if (hasAddress) {
     ld.address = { '@type': 'PostalAddress', streetAddress: clean(business.street), addressLocality: clean(business.town), postalCode: clean(business.postcode).toUpperCase(), addressCountry: 'GB' };
@@ -236,7 +250,7 @@ function homeJobs() {
 
 function homeHero(R) {
   const [hero] = homeJobs();
-  return ba(hero || FALLBACK_HERO, R, { slide: true, sizes: '(max-width: 960px) 100vw, 44vw', eager: true });
+  return ba(hero || FALLBACK_HERO, R, { slide: true, sizes: '(max-width: 760px) 67vw, (max-width: 960px) 100vw, 44vw', eager: true });
 }
 
 // The whole section between <x-job slot="feature"> and </x-job>, with its
@@ -244,7 +258,7 @@ function homeHero(R) {
 function homeFeature(section, R) {
   const [, feature] = homeJobs();
   if (!feature) return '';
-  return section.replace('{{job}}', `${ba(feature, R, { sizes: '(max-width: 960px) 100vw, 56vw', style: 'aspect-ratio: 4 / 3' })}
+  return section.replace('{{job}}', `${ba(feature, R, { sizes: '(max-width: 760px) 67vw, (max-width: 960px) 100vw, 56vw', style: 'aspect-ratio: 4 / 3' })}
       <div class="split__txt">
         <p class="kicker">Before and after</p>
         <h2 id="ba-t">${esc(feature.title)}</h2>
@@ -262,7 +276,7 @@ const lbAttrs = (name, title, line) => {
 function photosList(R) {
   return photos.map((p, i) => `<figure${i < 2 ? ' class="half"' : ''}${groupAttr(p.kind)}>
           <button class="ph" type="button" ${lbAttrs(upName(p.photo), p.title, p.line)} aria-label="Show bigger: ${esc(p.title)}">
-            <span class="photo">${pic({ name: upName(p.photo), alt: esc(p.alt || p.title), sizes: i < 2 ? '(max-width: 960px) 100vw, 560px' : '(max-width: 760px) 100vw, (max-width: 960px) 50vw, 420px', focus: FOCUS[p.crop] || FOCUS.low }, R)}</span>
+            <span class="photo">${pic({ name: upName(p.photo), alt: esc(p.alt || p.title), sizes: i < 2 ? '(max-width: 760px) 67vw, (max-width: 960px) 100vw, 560px' : '(max-width: 760px) 67vw, (max-width: 960px) 50vw, 420px', focus: FOCUS[p.crop] || FOCUS.low }, R)}</span>
           </button>
           <figcaption><b>${esc(p.title)}</b>${p.line ? `<span>${esc(p.line)}</span>` : ''}</figcaption>
         </figure>`).join('\n        ');
@@ -288,7 +302,7 @@ function showcase(section, R) {
     while (ids.has(id)) id += '-' + (i + 1);
     ids.add(id);
     return `<article class="show__slide" id="${id}"${groupAttr(job.kind)} aria-label="${esc(job.title)}">
-          ${ba(job, R, { show: true, sizes: '(max-width: 960px) 100vw, 780px', eager: i === 0 })}
+          ${ba(job, R, { show: true, sizes: '(max-width: 760px) 67vw, (max-width: 960px) 100vw, 780px', eager: i === 0 })}
           <div class="show__txt">
             <p class="kicker">${kicker(job)}</p>
             <h3>${esc(job.title)}</h3>
@@ -326,7 +340,8 @@ function videoCard(v, R) {
   const [w, h] = m.tiktok ? [720, 1280] : [m.w, m.h];
   const media = m.tiktok
     ? (poster ? `<img src="${poster}" width="${w}" height="${h}" alt="" loading="lazy" decoding="async">` : '<span class="vid__blank"></span>')
-    : `<video muted playsinline loop preload="${poster ? 'none' : 'metadata'}"${poster ? ` poster="${poster}"` : ''} width="${w}" height="${h}" ${poster ? 'data-src' : 'src'}="${R}img/up/${key}.mp4${poster ? '' : '#t=0.6'}"></video>`;
+    : (poster ? `<img class="vid__cover" src="${poster}" width="${w}" height="${h}" alt="" loading="lazy" decoding="async">` : '')
+      + `<video muted playsinline loop preload="${poster ? 'none' : 'metadata'}" width="${w}" height="${h}" ${poster ? 'data-src' : 'src'}="${R}img/up/${key}.mp4${poster ? '' : '#t=0.6'}"></video>`;
   const src = m.tiktok ? m.tiktok : `${R}img/up/${key}.mp4`;
   return `<li class="vid${h > w ? '' : ' vid--wide'}"${groupAttr(v.kind)}>
           <button class="vid__open" type="button" data-lb="${m.tiktok ? 'tiktok' : 'video'}" data-src="${src}" data-w="${w}" data-h="${h}"${poster ? ` data-poster="${poster}"` : ''} data-title="${esc(v.title)}" data-line="${esc(v.line || '')}" aria-label="Play the video: ${esc(v.title)}">
@@ -493,7 +508,7 @@ fs.writeFileSync('site/robots.txt', indexable
 // he pastes the new one in his editor and /review follows it. 302, not 301,
 // so phones never remember an old destination. Cloudflare Pages reads this file.
 fs.writeFileSync('site/_redirects', `# Made by scripts/build.mjs from content/google.json. Edits here are overwritten.
-/review ${isUrl(google.review_link) ? clean(google.review_link) : '/reviews/'} 302
+/review ${reviewLink || '/reviews/'} 302
 /quote /contact/ 302
 `);
 

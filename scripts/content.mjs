@@ -9,6 +9,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
 import { makeVideos } from './videos.mjs';
+import { fetchGoogleReviews } from './google-reviews.mjs';
 
 const UPLOADS = 'site/uploads';
 const OUT = 'site/img/up';
@@ -104,3 +105,6 @@ console.log(`content photos: ${Object.keys(manifest).length} in use, ${made} pro
 
 const vids = await makeVideos(readDir('content/videos'), { warn, coverPath: (p) => path.join(UPLOADS, path.basename(String(p))) });
 console.log(`content videos: ${vids.count} in use, ${vids.made} made${vids.ffmpeg ? '' : ', no ffmpeg'}`);
+
+const g = await fetchGoogleReviews({ warn });
+if (g) console.log(`google reviews: ${g.rating} from ${g.count}, ${g.reviews.length} to show`);

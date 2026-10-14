@@ -1,0 +1,19 @@
+# Rebuilds the website once a day so new Google reviews show up without
+# anyone saving anything. It only asks Cloudflare to build; nothing in the
+# repo changes. Needs the CLOUDFLARE_DEPLOY_HOOK secret (Cloudflare Pages >
+# Settings > Builds > Deploy hooks), set at handover. Without it, it does
+# nothing.
+name: Refresh Google reviews
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ask Cloudflare to rebuild the site
+        env:
+          HOOK: ${{ secrets.CLOUDFLARE_DEPLOY_HOOK }}
+        run: |
+          if [ -n "$HOOK" ]; then curl -fsS -X POST "$HOOK"; else echo "No deploy hook set yet, nothing to do"; fi

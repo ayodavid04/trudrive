@@ -134,13 +134,23 @@ an owner or manager.
    Finder gives the place ID for
    `https://search.google.com/local/writereview?placeid=<id>`.
 9. **QR codes:** once the domain is registered,
-   `node scripts/qr.mjs https://his-domain` writes `qr/review` and `qr/quote`
-   (SVG for printers, PNG for everything else). They hold
-   `his-domain/review` and `his-domain/quote`, not Google's link, so cards
-   never go stale: the build points `/review` at whatever review link is in
+   `node scripts/qr.mjs https://his-domain` writes `qr/review` and `qr/website`
+   (SVG for printers, PNG for everything else). The review one holds
+   `his-domain/review`, not Google's link, so cards never go stale: the build points `/review` at whatever review link is in
    his editor (and at the reviews page until there is one). Scan both on a
    phone against the live site before anything is printed.
-10. Never buy reviews, offer anything for them, or only ask happy customers.
+10. **His Google reviews on the site by themselves** (optional, 15 minutes, his
+   Google account and card; it stays inside Google's free allowance):
+   Google Cloud console > new project > enable **Places API (New)** > Credentials >
+   API key, restricted to that one API. In Cloudflare Pages > Settings >
+   Variables add `GOOGLE_PLACES_KEY` (encrypted) and `GOOGLE_PLACE_ID` (from
+   Google's Place ID Finder). Then Settings > Builds > Deploy hooks > add one,
+   and put its URL in GitHub > his repo > Settings > Secrets > Actions as
+   `CLOUDFLARE_DEPLOY_HOOK`. The site then shows his rating and Google's five
+   most relevant reviews, refreshed daily (`.github/workflows/refresh-reviews.yml`),
+   and the review QR and buttons follow his place ID. Reviews he copies in by
+   hand still show underneath. Without the key nothing changes.
+11. Never buy reviews, offer anything for them, or only ask happy customers.
    Google removes them and the CMA can fine for fake reviews.
 
 **After the domain is live:** add it to Google Search Console in his Google

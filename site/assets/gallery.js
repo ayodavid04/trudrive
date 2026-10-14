@@ -50,7 +50,7 @@
     var thumbs = slides.map(function (s, i) { return show.querySelector('.show__thumb[data-to="' + i + '"]'); });
     var count = show.querySelector('.show__count');
     var playBtn = show.querySelector('[data-play]');
-    var BEFORE = 1300, SLIDE = 1350, AFTER = 3400;
+    var BEFORE = 1000, SLIDE = 900, AFTER = 3000;
     var list = slides.slice();
     var at = 0;
     var timer = 0;

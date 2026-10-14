@@ -499,3 +499,15 @@ address { font-style: normal; }
 .rv { opacity: 0; translate: 0 30px; transition: opacity 1.4s var(--ease), translate 1.4s var(--ease); }
 .rv.rv-in { opacity: 1; translate: none; }
 @media (prefers-reduced-motion: reduce) { .rv { opacity: 1; translate: none; transition: none; } }
+
+/* The reel moves quicker than the home hero: about five seconds a job. */
+.show .ba--slide.is-ready .ba__after, .show .ba--slide.is-ready .ba__before { transition-duration: 0.9s; }
+
+/* His Google rating above the reviews, when the build fetched it. */
+.rating { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-bottom: 20px; color: var(--ink-2); }
+.rating .stars { color: #f5b301; }
+.rating b { font-size: 1.3rem; color: var(--ink); }
+
+/* The cover is a lazy image; the video sits over it, seen only while previewing. */
+.vid__open img.vid__cover + video { visibility: hidden; }
+.vid.is-previewing .vid__open img.vid__cover + video { visibility: visible; }
