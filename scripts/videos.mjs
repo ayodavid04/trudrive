@@ -59,8 +59,13 @@ const child = (buf, box, type) => boxes(buf, box.start, box.end).find((b) => b.t
 
 export function mp4Info(file) {
   const buf = fs.readFileSync(file);
-  const moov = boxes(buf, 0, buf.length).find((b) => b.type === 'moov');
+  const top = boxes(buf, 0, buf.length);
+  const moov = top.find((b) => b.type === 'moov');
   if (!moov) return null;
+  // The index (moov) before the picture data (mdat) lets a browser start
+  // playing before the whole file has arrived.
+  const mdat = top.find((b) => b.type === 'mdat');
+  const faststart = !mdat || moov.start < mdat.start;
   let duration = 0;
   const mvhd = child(buf, moov, 'mvhd');
   if (mvhd) {
@@ -83,7 +88,7 @@ export function mp4Info(file) {
       // the browser turns it, so the page has to know the turned size.
       if (buf.readInt32BE(tkhd.end - 44) === 0 && buf.readInt32BE(tkhd.end - 28) === 0) [w, h] = [h, w];
     }
-    return { codec, w, h, duration };
+    return { codec, w, h, duration, faststart };
   }
   return null;
 }
@@ -163,7 +168,12 @@ export async function makeVideos(entries, { warn, coverPath }) {
           const bytes = fs.statSync(src).size;
           const h264 = info && /^avc/.test(info.codec);
           const light = h264 && bytes <= MAX_BYTES && Math.max(info.w, info.h) <= 1280 && bytes * 8 / Math.max(info.duration, 1) <= 3.5e6;
-          if (light) {
+          if (light && ffmpeg) {
+            // Already small, so no re-encoding: rewritten as it is, without the
+            // phone's location and with its index at the front.
+            const r = ffmpegRun(ffmpeg, ['-y', '-i', src, '-map', '0:v:0', '-map', '0:a:0?', '-c', 'copy', '-map_metadata', '-1', '-movflags', '+faststart', mp4], 60000);
+            if (r.status !== 0) copy(src, mp4);
+          } else if (light) {
             copy(src, mp4);
           } else if (ffmpeg) {
             if (Date.now() - started > BUDGET_MS) { warn(`ran out of time making videos: "${title}" goes on with the next save`); continue; }

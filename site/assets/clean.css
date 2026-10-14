@@ -307,7 +307,7 @@ p { margin: 0; text-wrap: pretty; }
 .vid { display: grid; gap: 10px; align-content: start; }
 .vid--wide { grid-column: span 2; }
 .vid__open {
-  position: relative; display: block; width: 100%; aspect-ratio: 9 / 16; padding: 0; overflow: hidden;
+  position: relative; display: block; width: 100%; aspect-ratio: 3 / 4; padding: 0; overflow: hidden;
   border: 0; border-radius: 8px; background: var(--ink); color: #fff; cursor: pointer; isolation: isolate;
 }
 .vid--wide .vid__open { aspect-ratio: 16 / 9; }
@@ -344,7 +344,7 @@ p { margin: 0; text-wrap: pretty; }
 .more-btn { margin-top: 28px; }
 
 /* the full screen viewer */
-.lb { position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: rgb(9 11 15 / 0.97); color: #fff; overscroll-behavior: contain; }
+.lb { position: fixed; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: #090b0f; color: #fff; overscroll-behavior: contain; }
 .lb::backdrop { background: rgb(9 11 15 / 0.7); }
 .lb[open] { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
 .lb__top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 14px 8px 20px; }

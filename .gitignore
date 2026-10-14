@@ -1,6 +1,7 @@
 node_modules/
 lab/
 src/tiktok/*.jpg
+src/gaz/*.jpg
 .env*
 .netlify/
 # Drop folders for his original photos and videos as they arrive, before they

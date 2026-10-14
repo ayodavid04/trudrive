@@ -1,43 +1,31 @@
-# Builds site/img from the TikTok pulls: named, resized WebP (plus a JPEG
-# fallback), the logo with its white removed, and the share image.
-# Stand-ins until Gaz sends his originals; rerun with the new files.
+# Builds site/img from the photos in src/: named, resized WebP (plus a JPEG
+# fallback). tiktok/ is what was pulled from his TikTok for the demo; gaz/ is
+# what he sent himself on 14 Oct 2026, used wherever it is the better copy.
+# The logo and share image are scripts/logo.py and scripts/og.py.
 import json
 from pathlib import Path
 from PIL import Image, ImageOps, ImageFilter
 
-SRC = Path('src/tiktok')
+SRC = Path('src')
 OUT = Path('site/img')
 OUT.mkdir(parents=True, exist_ok=True)
 
 # name -> (source file, focal point x%, y%)
 PICK = {
-    'j1-before':  ('7599984407696428310-01.jpg', 50, 55),
-    'j1-after':   ('7599984407696428310-03.jpg', 50, 55),
-    'j1-house':   ('7599984407696428310-02.jpg', 50, 55),
-    'j1-fence':   ('7599984407696428310-05.jpg', 50, 55),
-    'j2-before':  ('7670973537603063042-01.jpg', 45, 50),
-    'j2-rip':     ('7670973537603063042-02.jpg', 50, 55),
-    'j2-weeds':   ('7670973537603063042-03.jpg', 50, 60),
-    'j2-after':   ('7670973537603063042-04.jpg', 50, 55),
-    'j2-path':    ('7670973537603063042-05.jpg', 50, 50),
-    'j3-before':  ('7558941538148093206-03.jpg', 50, 60),
-    'j3-hottub':  ('7558941538148093206-02.jpg', 50, 55),
-    'j3-after':   ('7558941538148093206-05.jpg', 50, 55),
-    'j3-garden':  ('7558941538148093206-06.jpg', 50, 55),
-    'j4-front':   ('7524458162640997654-02.jpg', 50, 55),
-    'j4-pergola': ('7524458162640997654-04.jpg', 50, 60),
-    'j4-border':  ('7524458162640997654-05.jpg', 50, 60),
-    'j5-patio':   ('7536519404712906006-01.jpg', 50, 55),
-    'j5-bed':     ('7536519404712906006-05.jpg', 50, 55),
-    'j6-wide':    ('7598588934813175062-01.jpg', 50, 55),
-    'j6-shed':    ('7598588934813175062-02.jpg', 50, 55),
-    'j6-path':    ('7598588934813175062-03.jpg', 50, 55),
-    'j6-lawn':    ('7598588934813175062-04.jpg', 50, 55),
-    'j6-steps':   ('7598588934813175062-05.jpg', 50, 55),
-    'j7-drive':   ('7641929953017089302-02.jpg', 50, 55),
-    'j7-front':   ('7641929953017089302-04.jpg', 50, 55),
-    'j7-side':    ('7641929953017089302-01.jpg', 50, 60),
-    'j9-block':   ('7558941538148093206-08.jpg', 50, 60),
+    # Only what the pages use: j1 is the home hero if every job is deleted.
+    'j1-before':  ('tiktok/7599984407696428310-01.jpg', 50, 55),
+    'j1-after':   ('tiktok/7599984407696428310-03.jpg', 50, 55),
+    'j6-path':    ('tiktok/7598588934813175062-03.jpg', 50, 55),
+    'j6-lawn':    ('tiktok/7598588934813175062-04.jpg', 50, 55),
+    'j6-steps':   ('tiktok/7598588934813175062-05.jpg', 50, 55),
+    # From Gaz, 14 Oct 2026
+    'g1-drive':   ('gaz/drive-block.jpg', 50, 55),
+    'g2-patio':   ('gaz/patio-sleepers.jpg', 50, 60),
+    'g3-patio':   ('gaz/patio-sleepers-2.jpg', 50, 55),
+    'g4-path':    ('gaz/path-drainage.jpg', 50, 50),
+    'g5-fence':   ('gaz/fence-composite.jpg', 50, 60),
+    'g6-turf':    ('gaz/turf-new-build.jpg', 50, 65),
+    'g7-front':   ('gaz/front-bungalow.jpg', 50, 55),
 }
 
 manifest = {}

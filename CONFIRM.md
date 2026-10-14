@@ -59,3 +59,30 @@ New on the Clean site (the fourth mockup), all written from his flyer and photos
 - Privacy page, footer address, remove `noindex`, sitemap and robots, JSON-LD LocalBusiness with only
   facts the site states.
 - Set `SITE_URL` for the build so share previews point at the real domain.
+
+## His photos and videos (sent 14 Oct 2026)
+
+Put in as he would in his editor. Captions were written from what the photos
+show, so he should check them. The dates on the new ones only set the order on
+Our work (newest first); he can change them.
+
+| On the site | His file | Check |
+|---|---|---|
+| Video: "Before and after: overgrown garden" | The two videos sent at 20:56 (overgrown garden, then the composite fence garden), joined with a wipe and Before/After labels | **Same garden?** They were sent a second apart, so assumed yes. If not, delete the video in the editor. |
+| Video: "Finished garden at dusk" | Evening video, lit fence | Did he put the lights in? The caption only says "lit up at dusk". |
+| Video: "Porcelain path and new lawn", "Porcelain patio" | Two walkaround videos | |
+| Photo: "New lawn" | Solar panel house, striped lawn | Real turf? |
+| Photo: "Slatted fence and artificial grass", "New build back garden", "Stone patio and raised lawn" | | Artificial grass in all three? |
+| Photo: "Composite fencing" | Black fence, grey porcelain | Same job as the decking before and after (the shed garden)? It answers "did he fit the composite fence": looks like yes. |
+| Photo: "Front path" | Terraced house, blue door | Top cut off: a political party sign on the street was in shot. |
+| Photo: "Imprinted concrete driveway" | Already on the site | Top cut off: the customer was standing in the doorway, with a house sign. |
+| Home and Services tiles | His block paved drive, sleeper patio, drainage path, composite fence, new build garden, bungalow front | |
+
+Not used: his photos of the same shots already on the site where the TikTok copy
+was bigger (the decking after, porcelain steps garden, imprinted drive, pergola
+patio), close-ups that repeat a job, and the in-progress ones (tools and a turf
+roll on the patio).
+
+His WhatsApp videos came through at 480 to 576 px wide. Fine on a phone, soft
+full screen on a laptop. The originals from his phone would be sharper; he can
+add them himself in the editor later (under 25 MB each).
