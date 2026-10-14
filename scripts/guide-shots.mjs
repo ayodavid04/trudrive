@@ -12,7 +12,7 @@ const OUT = 'guide';
 fs.mkdirSync(OUT, { recursive: true });
 
 const files = {};
-for (const d of ['content/jobs', 'content/photos']) for (const f of fs.readdirSync(d)) files[`${d}/${f}`] = fs.readFileSync(path.join(d, f), 'utf8');
+for (const d of ['content/jobs', 'content/photos', 'content/videos']) for (const f of fs.readdirSync(d).filter((x) => x.endsWith('.json'))) files[`${d}/${f}`] = fs.readFileSync(path.join(d, f), 'utf8');
 for (const f of ['content/business.json', 'site/admin/config.yml', 'site/admin/index.html']) files[f] = fs.readFileSync(f, 'utf8');
 const uploads = fs.readdirSync('site/uploads');
 
@@ -127,5 +127,10 @@ await shot('9-towns');
 await page.goto('http://localhost:4600/admin/#/collections/reviews/new');
 await page.getByText("Customer's name").waitFor({ timeout: 20000 });
 await shot('10-review');
+
+// A new video.
+await page.goto('http://localhost:4600/admin/#/collections/videos/new');
+await page.getByText('Or a TikTok link').waitFor({ timeout: 20000 });
+await shot('11-video');
 
 await browser.close();
