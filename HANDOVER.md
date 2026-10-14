@@ -13,6 +13,8 @@ are left out of his copy (see "Handover day" step 3).
     date, type, "put it on the home page", and optional town, description,
     what went in.
   - **Finished photos** (`content/photos/`): the gallery under the before and afters.
+  - **Videos** (`content/videos/`): a video picked from his phone (up to
+    25 MB, about 30 seconds) or a TikTok link for anything longer.
   - **Business details** (`content/business.json`): his phone number, used on
     every page and by the WhatsApp buttons.
 - Photos are shrunk to 2400 px WebP on his phone before they upload, and land
@@ -23,6 +25,19 @@ are left out of his copy (see "Handover day" step 3).
 - The newest job switched on for the home page goes in the hero, the next one
   further down. With fewer than two, the newest jobs fill in.
 - Layout, services and about text stay fixed so he cannot break the design.
+- **Our work** plays every before and after as a reel (newest first, each
+  from its before, the after sliding across), then the videos, then the
+  photos, with Driveways / Patios and gardens / Fencing buttons from each
+  item's "Type of job". Photos and videos open full screen. All of it is
+  built from his lists, so anything he adds joins in by itself.
+- **Videos:** his phone file is saved to `content/videos/files/`, outside the
+  published folder, and `scripts/videos.mjs` makes the web copy on every build
+  (H.264, at most 720 x 1280, the phone's GPS position stripped, a cover
+  image). iPhone HEVC is converted so Chrome can play it. ffmpeg comes from the
+  `ffmpeg-static` package; if it ever fails to install, small H.264 videos
+  still go on and the rest wait with a warning. Encoding stops after 8 minutes
+  so a build never hits Cloudflare's 20 minute limit. A TikTok link plays in
+  TikTok's own player, loaded only when someone presses play.
 
 ## Why it stays up
 
@@ -189,5 +204,7 @@ domain. About an hour.
   deployed by CLI. It has nothing to do with his site.
 - Checks: `node scripts/check-launch.mjs` (the delivery gate: SEO tags, links,
   headings, alt text, page weight, phone width, console errors, reduced motion,
-  404, sitemap) and `node scripts/test-clean.mjs` (sliders, quote sheet, nav).
-  Both need `npm run build` and the preview running.
+  404, sitemap), `node scripts/test-clean.mjs` (sliders, quote sheet, nav) and
+  `node scripts/test-work.mjs` (the reel, filters, full screen viewer, videos,
+  reduced motion, phone, no JavaScript). All need `npm run build` and the
+  preview running.

@@ -4,6 +4,9 @@
 *.jpg binary
 *.webp binary
 *.pdf binary
+*.mp4 binary
+*.mov binary
+*.m4v binary
 
 # Left out of the copy that goes to the owner (scripts/export-for-owner.sh):
 # build notes and working tools from making the demo.

@@ -52,14 +52,15 @@ for (const pg of ['', 'services/', 'our-work/', 'about/', 'reviews/', 'contact/'
   ok(await page.locator('#quote select[name=job]').inputValue() === 'New driveway', 'services: "Get a driveway quote" pre-picks New driveway');
   await page.context().close();
 }
-// Our work: fade toggles.
+// Our work: the reel's Before and After switches (the rest is in test-work.mjs).
 {
   const page = await (await browser.newContext({ viewport: { width: 1280, height: 800 } })).newPage();
   await page.goto(B + 'our-work/', { waitUntil: 'networkidle' });
-  const ba = page.locator('.ba').first();
-  ok(await ba.getAttribute('data-state') === 'after', 'our work: pairs open on the finished job');
+  const ba = page.locator('.show__slide.is-on .ba, .show__slide:only-child .ba').first();
+  await ba.locator('button[value=after]').click();
+  ok(await ba.getAttribute('data-state') === 'after' && await ba.locator('button[value=after]').getAttribute('aria-pressed') === 'true', 'our work: After switch shows the finished job and reports pressed');
   await ba.locator('button[value=before]').click();
-  ok(await ba.getAttribute('data-state') === 'before' && await ba.locator('button[value=before]').getAttribute('aria-pressed') === 'true', 'our work: Before toggle switches and reports pressed');
+  ok(await ba.getAttribute('data-state') === 'before' && await ba.locator('button[value=before]').getAttribute('aria-pressed') === 'true', 'our work: Before switch goes back and reports pressed');
   await page.context().close();
 }
 // Contact: inline form fails loudly, then sends.

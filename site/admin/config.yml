@@ -49,6 +49,9 @@ media_libraries:
     config:
       # "IMG 4821.JPG" is saved as img-4821.webp: no spaces or capitals in web addresses.
       slugify_filename: true
+      # 25 MB. Only a video can get near it (about 30 seconds from an iPhone);
+      # bigger uploads to GitHub can fail, so the editor stops them first.
+      max_file_size: 26214400
 
 collections:
   - name: jobs
@@ -167,6 +170,12 @@ collections:
         hint: Short, like "Block paved driveway".
         widget: string
         maxlength: 50
+      - name: kind
+        label: Type of job
+        hint: Sorts it under Driveways, Patios and gardens or Fencing on Our work.
+        widget: select
+        options: [Driveway, Back garden, Front garden, Patio, Path and steps, Fencing, Turf]
+        default: Patio
       - name: date
         label: Date
         hint: Newest show first.
@@ -195,6 +204,76 @@ collections:
         widget: string
         required: false
         maxlength: 150
+
+  - name: videos
+    label: Videos
+    label_singular: Video
+    description: Videos of your jobs, newest first. Pick one from your phone and press Save. Videos take a few minutes longer than photos to show on your website.
+    icon: videocam
+    folder: content/videos
+    format: json
+    extension: json
+    create: true
+    delete: true
+    slug: "{{fields.date}}-{{slug}}"
+    identifier_field: title
+    summary: "{{title}}"
+    sortable_fields:
+      fields: [date, title]
+      default:
+        field: date
+        direction: descending
+    fields:
+      - name: video
+        label: Video
+        hint: Pick it from your phone. Up to 25 MB, about 30 seconds. Too big? Leave this empty and paste the TikTok link below instead.
+        widget: file
+        accept: video/*
+        required: false
+        # Kept out of the website folder: the build makes the web copy from it.
+        media_folder: /content/videos/files
+        public_folder: /content/videos/files
+      - name: tiktok
+        label: Or a TikTok link
+        hint: On TikTok, tap Share, then Copy link, and paste it here.
+        widget: string
+        required: false
+        pattern: ['^https://([a-z]+\.)?tiktok\.com/\S+$', 'A TikTok link, starting https://www.tiktok.com or https://vm.tiktok.com']
+      - name: title
+        label: What is it?
+        hint: Short, like "Laying a porcelain patio".
+        widget: string
+        maxlength: 50
+      - name: kind
+        label: Type of job
+        hint: Sorts it under Driveways, Patios and gardens or Fencing on Our work.
+        widget: select
+        options: [Driveway, Back garden, Front garden, Patio, Path and steps, Fencing, Turf]
+        default: Patio
+      - name: date
+        label: Date
+        hint: Newest show first.
+        widget: datetime
+        time_format: false
+        format: YYYY-MM-DD
+        default: "{{now}}"
+      - name: home
+        label: Put it on the home page
+        hint: Up to four show on the home page. The ones switched on go first, then the newest.
+        widget: boolean
+        required: false
+        default: false
+      - name: line
+        label: One line under it (optional)
+        hint: Like "Grey porcelain, black edging".
+        widget: string
+        required: false
+        maxlength: 80
+      - name: poster
+        label: Cover photo (optional)
+        hint: What shows before it plays. Leave it and a picture from the start of the video is used.
+        widget: image
+        required: false
 
   - name: reviews
     label: Reviews

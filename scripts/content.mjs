@@ -1,21 +1,23 @@
 // Turns the photos Gaz uploads through the editor (site/uploads/) into the
 // resized WebP set the pages use, plus a JPEG fallback, in site/img/up/.
+// Then the videos (scripts/videos.mjs).
 //
 // The editor already shrinks phone photos to 2000 px WebP on upload, so the
 // file in site/uploads/ is the master. This script never touches it.
-// Runs on every Netlify build; locally it skips photos already done.
+// Runs on every Cloudflare build; locally it skips anything already done.
 import fs from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
+import { makeVideos } from './videos.mjs';
 
 const UPLOADS = 'site/uploads';
 const OUT = 'site/img/up';
-const WIDTHS = [480, 800, 1200, 1600];
+const WIDTHS = [240, 480, 800, 1200, 1600];
 
 fs.mkdirSync(OUT, { recursive: true });
 
 // Nothing Gaz does in the editor should stop the site updating. A file or
-// photo that cannot be read is skipped with a warning in the Netlify log, and
+// photo that cannot be read is skipped with a warning in the build log, and
 // everything else still goes live.
 const warn = (msg) => console.warn('WARNING: ' + msg);
 const readDir = (dir) => (fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => f.endsWith('.json')) : [])
@@ -86,7 +88,7 @@ for (const [name, m] of Object.entries(manifest)) {
   keep.add(`${name}.jpg`);
   for (const w of m.widths) keep.add(`${name}-${w}.webp`);
 }
-for (const f of fs.readdirSync(OUT)) if (!keep.has(f)) fs.rmSync(path.join(OUT, f));
+for (const f of fs.readdirSync(OUT)) if (f.startsWith('up-') && !keep.has(f)) fs.rmSync(path.join(OUT, f));
 
 fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 1));
 
@@ -99,3 +101,6 @@ if (!fs.existsSync(SMALL) || fs.statSync(SMALL).mtimeMs < fs.statSync(LOGO).mtim
   await sharp(LOGO).resize({ width: 450 }).png({ palette: true, quality: 90 }).toFile(SMALL);
 }
 console.log(`content photos: ${Object.keys(manifest).length} in use, ${made} processed`);
+
+const vids = await makeVideos(readDir('content/videos'), { warn, coverPath: (p) => path.join(UPLOADS, path.basename(String(p))) });
+console.log(`content videos: ${vids.count} in use, ${vids.made} made${vids.ffmpeg ? '' : ', no ffmpeg'}`);

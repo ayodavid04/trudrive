@@ -14,9 +14,11 @@
 //   {{year}}                                       this year, for the footer
 //
 // Content Gaz edits himself at /admin (site/admin/config.yml), read from content/:
-//   <x-jobs></x-jobs>                              every before and after, newest first
 //   <x-job slot="hero"> / <x-job slot="feature">   the home page pairs, from jobs switched on for the home page
-//   <x-photos></x-photos>                          the finished photos gallery
+//   <x-photos></x-photos>                          the finished photos gallery, opening full screen
+//   <x-filters></x-filters>                        Driveways / Patios and gardens / Fencing buttons (gallery.js)
+//   <x-showcase>...{{showcase}}...</x-showcase>    every before and after as one playing reel; left out with none
+//   <x-videos [home]>...{{videos}}...</x-videos>   the Videos list as a row of cards; left out with none
 //   <x-reviews></x-reviews>                        the reviews he has copied in, and his Google buttons
 //   <x-reviews home>...{{reviews}}...</x-reviews>  the newest review; the section is left out with none
 //   <x-where [contact]></x-where>                  towns, hours and address, from Business details
@@ -31,6 +33,7 @@
 // and dropping the first part gives the project's own trudrive.pages.dev.
 import fs from 'node:fs';
 import path from 'node:path';
+import { videoKey } from './videos.mjs';
 
 function siteUrl() {
   if (process.env.SITE_URL) return process.env.SITE_URL;
@@ -76,6 +79,15 @@ const business = readJson('content/business.json');
 const google = readJson('content/google.json');
 const aboutMe = readJson('content/about.json');
 const reviews = readDir('content/reviews').filter((r) => r.name && r.text).sort(newestFirst);
+// Videos the content step made a web copy of (scripts/videos.mjs). Any it
+// could not use were already reported there.
+const videoManifest = (() => { try { return JSON.parse(fs.readFileSync('site/img/up/videos.json', 'utf8')); } catch { return {}; } })();
+const videos = readDir('content/videos').filter((v) => v.title && (v.video || v.tiktok) && videoManifest[videoKey(v)]).sort(newestFirst);
+
+// The gallery's filter buttons. Each type of job belongs to one of these.
+const GROUPS = [['driveways', 'Driveways'], ['gardens', 'Patios and gardens'], ['fencing', 'Fencing']];
+const groupOf = (kind) => (kind === 'Driveway' ? 'driveways' : kind === 'Fencing' ? 'fencing' : kind ? 'gardens' : '');
+const groupAttr = (kind) => (groupOf(kind) ? ` data-group="${groupOf(kind)}"` : '');
 
 // Whatever Gaz types is shown as text, never read as HTML.
 const esc = (v) => String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -187,7 +199,9 @@ const FALLBACK_HERO = { fixed: true, title: 'Decking to porcelain', before: 'j1-
   before_alt: 'Rotten timber decking down to a shed', after_alt: 'A grey porcelain patio down to the same shed, edged in black' };
 const imgName = (job, k) => (job.fixed ? job[k] : upName(job[k]));
 
-function ba(job, R, { slide = false, sizes, eager = false, style = '' }) {
+// slide: the home hero, plays once by itself (clean.js). show: a slide in the
+// Our work reel, driven by gallery.js. Otherwise the plain fade toggle.
+function ba(job, R, { slide = false, show = false, sizes, eager = false, style = '' }) {
   const focus = FOCUS[job.crop] || FOCUS.low;
   const label = `Before and after: ${esc(job.title)}`;
   const picAttrs = { sizes, focus, eager };
@@ -195,7 +209,9 @@ function ba(job, R, { slide = false, sizes, eager = false, style = '' }) {
   const after = pic({ ...picAttrs, name: imgName(job, 'after'), class: 'ba__after', alt: `After: ${esc(job.after_alt || job.title)}` }, R);
   const open = slide
     ? `<div class="ba ba--slide" data-autoplay data-state="after" role="group" aria-label="${label}">`
-    : `<div class="ba ba--fade" data-start="after" role="group" aria-label="${label}"${style ? ` style="${style}"` : ''}>`;
+    : show
+      ? `<div class="ba ba--slide" data-start="after" data-state="after" role="group" aria-label="${label}">`
+      : `<div class="ba ba--fade" data-start="after" role="group" aria-label="${label}"${style ? ` style="${style}"` : ''}>`;
   return `${open}
         ${before}
         ${after}
@@ -210,22 +226,6 @@ const workList = (job) => (Array.isArray(job.work) ? job.work : String(job.work 
 const ticks = (job) => (workList(job).length
   ? `<ul class="ticks">${workList(job).map((w) => `<li>${esc(w)}</li>`).join('')}</ul>` : '');
 const about = (job) => (job.about ? `<p class="muted">${esc(job.about)}</p>` : '');
-
-function jobsList(R) {
-  return jobs.map((job, i) => {
-    const m = manifest[upName(job.before)];
-    const port = m && m.h >= m.w * 0.95 ? ' pair--port' : '';
-    return `<section class="pair${port}" aria-labelledby="w${i + 1}">
-      ${ba(job, R, { sizes: '(max-width: 960px) 100vw, 620px' })}
-      <div class="pair__txt">
-        <p class="kicker">${kicker(job)}</p>
-        <h2 id="w${i + 1}">${esc(job.title)}</h2>
-        ${about(job)}
-        ${ticks(job)}
-      </div>
-    </section>`;
-  }).join('\n\n    ');
-}
 
 // The newest job ticked for the home page goes in the hero, the next one
 // further down. If he has ticked fewer than two, the newest jobs fill in.
@@ -252,11 +252,112 @@ function homeFeature(section, R) {
         ${ticks(feature)}`);
 }
 
+// Each photo opens full screen (gallery.js) at the size the screen needs.
+const lbAttrs = (name, title, line) => {
+  const m = manifest[name];
+  const I = '/' + (m.dir || 'img/');
+  return `data-lb="image" data-srcset="${m.widths.map((w) => `${I}${name}-${w}.webp ${w}w`).join(', ')}" data-w="${m.w}" data-h="${m.h}" data-title="${esc(title)}" data-line="${esc(line || '')}"`;
+};
+
 function photosList(R) {
-  return photos.map((p, i) => `<figure${i < 2 ? ' class="half"' : ''}>
-          <div class="photo">${pic({ name: upName(p.photo), alt: esc(p.alt || p.title), sizes: i < 2 ? '(max-width: 960px) 100vw, 560px' : '(max-width: 960px) 100vw, 420px', focus: FOCUS[p.crop] || FOCUS.low }, R)}</div>
+  return photos.map((p, i) => `<figure${i < 2 ? ' class="half"' : ''}${groupAttr(p.kind)}>
+          <button class="ph" type="button" ${lbAttrs(upName(p.photo), p.title, p.line)} aria-label="Show bigger: ${esc(p.title)}">
+            <span class="photo">${pic({ name: upName(p.photo), alt: esc(p.alt || p.title), sizes: i < 2 ? '(max-width: 960px) 100vw, 560px' : '(max-width: 760px) 100vw, (max-width: 960px) 50vw, 420px', focus: FOCUS[p.crop] || FOCUS.low }, R)}</span>
+          </button>
           <figcaption><b>${esc(p.title)}</b>${p.line ? `<span>${esc(p.line)}</span>` : ''}</figcaption>
         </figure>`).join('\n        ');
+}
+
+// ------------------------------------------------------------ Our work reel
+// Every before and after, newest first, as one reel: gallery.js plays each
+// from its before, slides the after across, holds, and moves on. Without
+// JavaScript, or with reduced motion, it is a plain list with the switches.
+const ICON = {
+  prev: '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  next: '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  pause: '<svg class="i-pause" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>',
+  play: '<svg class="i-play" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13a1 1 0 0 0 1.5.86l10.6-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>',
+};
+const slugOf = (t) => String(t).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'job';
+
+function showcase(section, R) {
+  if (!jobs.length) return '';
+  const ids = new Set();
+  const slides = jobs.map((job, i) => {
+    let id = 'job-' + slugOf(job.title);
+    while (ids.has(id)) id += '-' + (i + 1);
+    ids.add(id);
+    return `<article class="show__slide" id="${id}"${groupAttr(job.kind)} aria-label="${esc(job.title)}">
+          ${ba(job, R, { show: true, sizes: '(max-width: 960px) 100vw, 780px', eager: i === 0 })}
+          <div class="show__txt">
+            <p class="kicker">${kicker(job)}</p>
+            <h3>${esc(job.title)}</h3>
+            ${about(job)}
+            ${ticks(job)}
+          </div>
+        </article>`;
+  });
+  const thumbs = jobs.map((job, i) => `<button class="show__thumb" type="button" data-to="${i}"${groupAttr(job.kind)} aria-label="${esc(job.title)}">${pic({ name: imgName(job, 'after'), alt: '', sizes: '112px', focus: FOCUS[job.crop] || FOCUS.low }, R)}</button>`);
+  return section.replace('{{showcase}}', `<div class="show" data-show>
+        <div class="show__slides">
+        ${slides.join('\n        ')}
+        </div>
+        <div class="show__bar" hidden>
+          <div class="show__ctrl">
+            <button class="show__btn" type="button" data-prev aria-label="Previous job">${ICON.prev}</button>
+            <button class="show__btn" type="button" data-play aria-label="Pause">${ICON.pause}${ICON.play}</button>
+            <button class="show__btn" type="button" data-next aria-label="Next job">${ICON.next}</button>
+            <span class="show__count" aria-live="polite"></span>
+          </div>
+          <div class="show__thumbs" data-lenis-prevent-horizontal>${thumbs.join('')}</div>
+        </div>
+      </div>`);
+}
+
+// ------------------------------------------------------------------ videos
+// Cards in a row. Desktop mice get a silent preview on hover; a tap or click
+// plays it full screen with sound (gallery.js). TikTok ones play TikTok's own
+// player, which loads only then.
+const mmss = (n) => `${Math.floor(n / 60)}:${String(n % 60).padStart(2, '0')}`;
+function videoCard(v, R) {
+  const key = videoKey(v);
+  const m = videoManifest[key];
+  const poster = m.poster ? `${R}img/up/${key}-poster.webp` : '';
+  const [w, h] = m.tiktok ? [720, 1280] : [m.w, m.h];
+  const media = m.tiktok
+    ? (poster ? `<img src="${poster}" width="${w}" height="${h}" alt="" loading="lazy" decoding="async">` : '<span class="vid__blank"></span>')
+    : `<video muted playsinline loop preload="${poster ? 'none' : 'metadata'}"${poster ? ` poster="${poster}"` : ''} width="${w}" height="${h}" ${poster ? 'data-src' : 'src'}="${R}img/up/${key}.mp4${poster ? '' : '#t=0.6'}"></video>`;
+  const src = m.tiktok ? m.tiktok : `${R}img/up/${key}.mp4`;
+  return `<li class="vid${h > w ? '' : ' vid--wide'}"${groupAttr(v.kind)}>
+          <button class="vid__open" type="button" data-lb="${m.tiktok ? 'tiktok' : 'video'}" data-src="${src}" data-w="${w}" data-h="${h}"${poster ? ` data-poster="${poster}"` : ''} data-title="${esc(v.title)}" data-line="${esc(v.line || '')}" aria-label="Play the video: ${esc(v.title)}">
+            ${media}
+            <span class="vid__play" aria-hidden="true">${ICON.play}</span>
+            ${m.seconds ? `<span class="vid__len">${mmss(m.seconds)}</span>` : ''}${m.tiktok ? '<span class="vid__len">TikTok</span>' : ''}
+          </button>
+          <p class="vid__t"><b>${esc(v.title)}</b>${v.line ? `<span>${esc(v.line)}</span>` : ''}</p>
+        </li>`;
+}
+
+// The home page shows four: the ones he switched on first, then the newest.
+function videosSection(section, R, home) {
+  const list = home ? [...videos.filter((v) => v.home), ...videos.filter((v) => !v.home)].slice(0, 4) : videos;
+  if (!list.length) return '';
+  return section.replace('{{videos}}', `<ul class="vids" data-lenis-prevent-horizontal>
+        ${list.map((v) => videoCard(v, R)).join('\n        ')}
+      </ul>`);
+}
+
+// Filter buttons for the groups that have something in them. With everything
+// in one group there is nothing to filter, so none.
+function filters() {
+  const count = Object.fromEntries(GROUPS.map(([g]) => [g, 0]));
+  for (const x of [...jobs, ...photos, ...videos]) if (groupOf(x.kind)) count[groupOf(x.kind)]++;
+  const present = GROUPS.filter(([g]) => count[g]);
+  if (present.length < 2) return '';
+  return `<div class="filters" data-filters role="group" aria-label="Show" hidden>
+        <button type="button" data-filter="" aria-pressed="true">All</button>
+        ${present.map(([g, label]) => `<button type="button" data-filter="${g}" aria-pressed="false">${label}</button>`).join('\n        ')}
+      </div>`;
 }
 
 const attrs = (s) => {
@@ -353,10 +454,12 @@ for (const file of walk('pages')) {
   html = html.replace(/<x-pic\s+([^>]*?)\s*\/?>(?:<\/x-pic>)?/g, (_, s) => pic(attrs(s), R));
   html = html.replace(/<x-head\s+([^>]*?)\s*\/?>(?:<\/x-head>)?/g, (_, s) => head(attrs(s), R));
   html = html.replace(/<x-quote\s*\/?>(?:<\/x-quote>)?/g, quote);
-  html = html.replace(/<x-jobs\s*\/?>(?:<\/x-jobs>)?/g, () => jobsList(R));
   html = html.replace(/<x-job\s+slot="feature">([\s\S]*?)<\/x-job>/g, (_, section) => homeFeature(section, R));
   html = html.replace(/<x-job\s+slot="hero"\s*\/?>(?:<\/x-job>)?/g, () => homeHero(R));
   html = html.replace(/<x-photos\s*\/?>(?:<\/x-photos>)?/g, () => photosList(R));
+  html = html.replace(/<x-filters\s*\/?>(?:<\/x-filters>)?/g, () => filters());
+  html = html.replace(/<x-showcase>([\s\S]*?)<\/x-showcase>/g, (_, section) => showcase(section, R));
+  html = html.replace(/<x-videos(\s+home)?>([\s\S]*?)<\/x-videos>/g, (_, home, section) => videosSection(section, R, Boolean(home)));
   html = html.replace(/{{(phone|tel|wa)}}/g, (_, k) => PHONE[k]);
   html = html.replaceAll('{{root}}', R);
   // Cloudflare Pages serves /404.html for any address that does not exist.

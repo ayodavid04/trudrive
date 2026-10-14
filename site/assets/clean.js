@@ -50,6 +50,7 @@
     Array.prototype.forEach.call(btns, function (b) {
       b.addEventListener('click', function () { ba.classList.add('is-ready'); set(b.value); });
     });
+    ba.tdSet = set; // the Our work reel (gallery.js) plays its slides through this
     if (ba.hasAttribute('data-autoplay')) {
       // The one animation: start on the before, then slide it aside into the after.
       if (reduce) { set('after'); return; }

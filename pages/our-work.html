@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en-GB">
 <head>
-<x-head title="Our work | TruDrive Driveways &amp; Patios" desc="Before and after photos of driveways, patios and gardens laid by TruDrive across the North West." path="our-work/"></x-head>
+<x-head title="Our work | TruDrive Driveways &amp; Patios" desc="Before and after photos and videos of driveways, patios and gardens laid by TruDrive across the North West." path="our-work/"></x-head>
 <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap">
 <link rel="stylesheet" href="{{root}}assets/parts.css">
 <link rel="stylesheet" href="{{root}}assets/clean.css">
@@ -13,18 +13,41 @@
   <section class="page-head">
     <div class="wrap">
       <h1>Our work</h1>
-      <p class="lead">Before and afters first, then more finished jobs. Tap before and after on each one to compare.</p>
+      <p class="lead">Every photo and video on this page is one of our jobs. Before and afters first, then videos and more finished jobs.</p>
+      <x-filters></x-filters>
     </div>
   </section>
 
-  <div class="wrap">
-    <x-jobs></x-jobs>
-  </div>
+  <!-- The before and afters as one reel. Left out if there are none. -->
+  <x-showcase>
+  <section class="sec work-sec" aria-labelledby="ba-t" data-gallery-sec>
+    <div class="wrap">
+      <div class="sec__head">
+        <h2 id="ba-t">Before and afters</h2>
+        <p class="muted">Each one starts on the before. Tap Before or After to compare.</p>
+      </div>
+      {{showcase}}
+    </div>
+  </section>
+  </x-showcase>
 
-  <section class="sec sec--paper" aria-labelledby="more-t">
+  <!-- Videos. Left out if there are none. -->
+  <x-videos>
+  <section class="sec sec--paper work-sec" aria-labelledby="vid-t" data-gallery-sec>
+    <div class="wrap">
+      <div class="sec__head">
+        <h2 id="vid-t">Videos</h2>
+        <p class="muted">Short clips from the jobs. Tap one to watch it with sound.</p>
+      </div>
+      {{videos}}
+    </div>
+  </section>
+  </x-videos>
+
+  <section class="sec work-sec" aria-labelledby="more-t" data-gallery-sec>
     <div class="wrap">
       <div class="sec__head"><h2 id="more-t">More finished jobs</h2></div>
-      <div class="gallery">
+      <div class="gallery" data-more="12">
         <x-photos></x-photos>
       </div>
       <p class="muted" style="margin-top:28px">New jobs go up on TikTok first: <a href="https://www.tiktok.com/@tru.drive" rel="noopener">@tru.drive</a></p>
