@@ -29,6 +29,16 @@ const TYPES = {
 
 http.createServer((req, res) => {
   const url = decodeURIComponent(req.url.split("?")[0]);
+
+  // Follow the root _redirects file the way Cloudflare Pages does (exact paths only).
+  const rules = path.join(ROOT, "_redirects");
+  if (fs.existsSync(rules)) {
+    for (const line of fs.readFileSync(rules, "utf8").split("\n")) {
+      const [from, to, code] = line.trim().split(/\s+/);
+      if (from && !from.startsWith("#") && from === url && to) { res.writeHead(parseInt(code || "302", 10), { Location: to }).end(); return; }
+    }
+  }
+
   let file = path.join(ROOT, url === "/" ? "/index.html" : url);
 
   // Refuse to serve outside the root even if the path walks up.

@@ -3,6 +3,8 @@ lab/
 src/tiktok/*.jpg
 .env*
 .netlify/
+# His original photos as they arrive, before they go in through the editor
+incoming/
 
 # Photo sizes made from site/uploads on every build
 site/img/up/

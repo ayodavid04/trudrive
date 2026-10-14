@@ -114,7 +114,18 @@ an owner or manager.
    on Google Maps gives the profile link. Both go into his editor under
    Business details, Google reviews links. Text the review link to every
    customer after a job, and reply to every review.
-9. Never buy reviews, offer anything for them, or only ask happy customers.
+   **You can get both links without him:** once the profile is verified it
+   shows on Maps; Share there gives the profile link, and Google's Place ID
+   Finder gives the place ID for
+   `https://search.google.com/local/writereview?placeid=<id>`.
+9. **QR codes:** once the domain is registered,
+   `node scripts/qr.mjs https://his-domain` writes `qr/review` and `qr/quote`
+   (SVG for printers, PNG for everything else). They hold
+   `his-domain/review` and `his-domain/quote`, not Google's link, so cards
+   never go stale: the build points `/review` at whatever review link is in
+   his editor (and at the reviews page until there is one). Scan both on a
+   phone against the live site before anything is printed.
+10. Never buy reviews, offer anything for them, or only ask happy customers.
    Google removes them and the CMA can fine for fake reviews.
 
 **After the domain is live:** add it to Google Search Console in his Google

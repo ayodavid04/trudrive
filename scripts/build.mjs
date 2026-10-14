@@ -385,6 +385,15 @@ fs.writeFileSync('site/robots.txt', indexable
   ? `User-agent: *\nAllow: /\nDisallow: /admin/\n\nSitemap: ${SITE_URL}/sitemap.xml\n`
   : 'User-agent: *\nDisallow: /\n');
 
+// Short links for printed QR codes (scripts/qr.mjs). The QR holds his own
+// address, so a card printed today still works if the Google link changes:
+// he pastes the new one in his editor and /review follows it. 302, not 301,
+// so phones never remember an old destination. Cloudflare Pages reads this file.
+fs.writeFileSync('site/_redirects', `# Made by scripts/build.mjs from content/google.json. Edits here are overwritten.
+/review ${isUrl(google.review_link) ? clean(google.review_link) : '/reviews/'} 302
+/quote /contact/ 302
+`);
+
 // The quote sheet script carries the number too, for the WhatsApp message it opens.
 const partsPath = 'site/assets/parts.js';
 const parts = fs.readFileSync(partsPath, 'utf8')

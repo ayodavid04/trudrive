@@ -291,7 +291,7 @@ collections:
         fields:
           - name: review_link
             label: Your "leave a review" link
-            hint: In your Google Business Profile, tap "Ask for reviews" and copy the link. It puts a Leave a review button on your website.
+            hint: In your Google Business Profile, tap "Ask for reviews" and copy the link. It puts a Leave a review button on your website, and your review QR code takes customers to it.
             widget: string
             type: url
             required: false
