@@ -1,17 +1,20 @@
 # TruDrive Driveways & Patios
 
-> Driveway and patio installers covering North West England: Greater Manchester, Merseyside, Lancashire, Cheshire and Cumbria. Run by Gaz, over 15 years' experience. Free, no-obligation quotes.
+> Driveway and patio installers based in Wigan, covering Wigan and North West England: Greater Manchester, Merseyside, Lancashire, Cheshire and Cumbria. Run by Gaz, with over 15 years' experience. Free, no-obligation quotes: send photos on WhatsApp or ring.
 
+- Name: TruDrive Driveways & Patios (also written TruDrive or Tru Drive). Not connected to trudrive.com, which is a different business.
 - Phone and WhatsApp: 07923 485811
 - Driveways: block paving, imprinted concrete, tarmac, gravel
 - Patios: porcelain, Indian sandstone, crazy paving
-- Also: paths and steps, fencing, brickwork, turfing
+- Also: paths and steps, fencing, brickwork, turfing and artificial grass
 - TikTok: https://www.tiktok.com/@tru.drive
+- Facebook: https://www.facebook.com/p/Trudrive-61577305847345/
 
 ## Pages
 
 - [Services](http://localhost:4600/services/)
 - [Areas we cover](http://localhost:4600/areas/)
 - [Our work](http://localhost:4600/our-work/): before and after photos and videos
+- [About](http://localhost:4600/about/)
 - [Reviews](http://localhost:4600/reviews/)
 - [Free quote](http://localhost:4600/contact/)

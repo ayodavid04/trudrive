@@ -355,6 +355,7 @@ collections:
             maxlength: 80
           - name: town
             label: Business address, town
+            hint: Until the full address is in, the website says "Based in" this town.
             widget: string
             required: false
             maxlength: 40
@@ -363,6 +364,12 @@ collections:
             widget: string
             required: false
             pattern: ['^[A-Za-z]{1,2}\d[A-Za-z\d]? ?\d[A-Za-z]{2}$', 'A UK postcode, like WN1 1AA']
+          - name: facebook
+            label: Your Facebook page (optional)
+            hint: Open your page on Facebook and copy the link from the address bar. It goes in the footer and tells Google the page is yours.
+            widget: string
+            type: url
+            required: false
       - name: google
         label: Google reviews links
         file: content/google.json

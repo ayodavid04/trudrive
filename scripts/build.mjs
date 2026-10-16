@@ -40,6 +40,8 @@ function siteUrl() {
   return 'http://localhost:4600';
 }
 const SITE_URL = siteUrl().replace(/\/$/, '');
+// The live site is in search results; a local or preview build never is.
+const LIVE = !/localhost|127\.0\.0\.1|vercel\.app/.test(SITE_URL);
 const manifest = JSON.parse(fs.readFileSync('site/img/manifest.json', 'utf8'));
 for (const [name, m] of Object.entries(JSON.parse(fs.readFileSync('site/img/up/manifest.json', 'utf8')))) {
   manifest[name] = { ...m, dir: 'img/up/' };
@@ -102,18 +104,27 @@ const areas = (Array.isArray(business.areas) ? business.areas : String(business.
 const andList = (xs) => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} and ${xs.at(-1)}`);
 const address = [business.street, business.town, clean(business.postcode).toUpperCase()].map(clean).filter(Boolean);
 const hasAddress = Boolean(clean(business.street) && clean(business.town) && clean(business.postcode));
+// The town he works from, shown as "Based in Wigan" until the full address is in.
+const baseTown = clean(business.town);
+const facebook = isUrl(business.facebook) ? clean(business.facebook) : '';
 
-// While something the law or Google needs is missing, a yellow note says what,
-// and the build keeps the whole site out of search results (see `indexable`).
-const note = (text) => `<p class="demo-note"><b>For Gaz:</b> ${text}</p>`;
+// Whatever the law or Google still needs from Gaz is listed in the build log
+// every time. A yellow note says it on a local preview, never on the live site.
+const told = new Set();
+const note = (text) => {
+  if (!told.has(text)) { told.add(text); warn(`for Gaz: ${text}`); }
+  return LIVE ? '' : `<p class="demo-note"><b>For Gaz:</b> ${text}</p>`;
+};
 
 function where(style) {
-  const lines = [`<p>Across the North West${areas.length ? `: ${esc(andList(areas))}.` : '.'}</p>`];
+  const lines = [];
+  if (baseTown && !hasAddress) lines.push(`<p>Based in ${esc(baseTown)}.</p>`);
+  lines.push(`<p>Across the North West${areas.length ? `: ${esc(andList(areas))}.` : '.'}</p>`);
   if (clean(business.hours)) lines.push(`<p>Calls: ${esc(business.hours)}</p>`);
   if (hasAddress) lines.push(`<address>${address.map(esc).join('<br>')}</address>`);
   const missing = [!areas.length && 'the towns you cover', !hasAddress && 'your business address'].filter(Boolean);
   if (missing.length) lines.push(note(`add ${andList(missing)} in your editor, under Business details.`));
-  return lines.join(style === 'contact' ? '' : '\n      ');
+  return lines.filter(Boolean).join(style === 'contact' ? '' : '\n      ');
 }
 
 const STAR = '<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M10 1.5l2.6 5.6 6.1.7-4.5 4.2 1.2 6L10 15l-5.4 3 1.2-6L1.3 7.8l6.1-.7z"/></svg>';
@@ -167,28 +178,43 @@ function aboutPhoto(R) {
   return '<div class="photo photo--todo" style="aspect-ratio: 4 / 3.2"><span>Photo of Gaz, the team or the van</span></div>';
 }
 
-// LocalBusiness data for Google, built only from facts the site states.
-// No review or rating markup: Google ignores self-published reviews of a
-// business on its own site, and it can count against it.
+// LocalBusiness data for Google and AI search tools, built only from facts the
+// site states. No review or rating markup: Google ignores self-published
+// reviews of a business on its own site, and it can count against it.
+// The WebSite part gives Google the name to show above the result, so a
+// search shows "TruDrive Driveways & Patios" rather than a bare address.
+const BUSINESS_ID = () => `${SITE_URL}/#business`;
+const ldScript = (ld) => `<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>`;
 function ldJson() {
-  const ld = {
-    '@context': 'https://schema.org',
+  const biz = {
     '@type': 'HomeAndConstructionBusiness',
+    '@id': BUSINESS_ID(),
     name: 'TruDrive Driveways & Patios',
     alternateName: ['TruDrive', 'Tru Drive', 'Tru Drive Driveways and Patios'],
     url: `${SITE_URL}/`,
     telephone: '+' + intl,
     image: `${SITE_URL}/img/og.jpg`,
     logo: `${SITE_URL}/img/logo.png`,
-    description: 'Driveways and patios: porcelain, block paving, imprinted concrete, tarmac, gravel, Indian sandstone, fencing, brickwork and turfing.',
+    description: `Driveway and patio installers${baseTown ? ` based in ${baseTown}` : ''}, covering the North West: porcelain and Indian sandstone patios, block paving, imprinted concrete, tarmac and gravel driveways, fencing, brickwork and turfing. Over 15 years' experience. Free, no-obligation quotes.`,
     areaServed: [{ '@type': 'AdministrativeArea', name: 'North West England' }, ...areas.map((name) => ({ '@type': 'AdministrativeArea', name }))],
     knowsAbout: ['Driveways', 'Block paving', 'Imprinted concrete', 'Tarmac driveways', 'Gravel driveways', 'Porcelain patios', 'Indian sandstone patios', 'Fencing', 'Brickwork', 'Turfing'],
-    sameAs: ['https://www.tiktok.com/@tru.drive', ...(profileLink ? [profileLink] : [])],
+    sameAs: ['https://www.tiktok.com/@tru.drive', ...(facebook ? [facebook] : []), ...(profileLink ? [profileLink] : [])],
   };
   if (hasAddress) {
-    ld.address = { '@type': 'PostalAddress', streetAddress: clean(business.street), addressLocality: clean(business.town), postalCode: clean(business.postcode).toUpperCase(), addressCountry: 'GB' };
+    biz.address = { '@type': 'PostalAddress', streetAddress: clean(business.street), addressLocality: clean(business.town), postalCode: clean(business.postcode).toUpperCase(), addressCountry: 'GB' };
+  } else if (baseTown) {
+    biz.address = { '@type': 'PostalAddress', addressLocality: baseTown, addressCountry: 'GB' };
   }
-  return `<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>`;
+  const site = {
+    '@type': 'WebSite',
+    '@id': `${SITE_URL}/#website`,
+    url: `${SITE_URL}/`,
+    name: 'TruDrive Driveways & Patios',
+    alternateName: ['TruDrive', 'Tru Drive'],
+    inLanguage: 'en-GB',
+    publisher: { '@id': BUSINESS_ID() },
+  };
+  return ldScript({ '@context': 'https://schema.org', '@graph': [site, biz] });
 }
 // FAQPage data, read from the page's own questions (each <h3> and the <p>
 // after it), so the markup can never say something the page does not.
@@ -196,8 +222,7 @@ function faqJson(html) {
   const text = (s) => s.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
   const qa = [...html.matchAll(/<h3>([\s\S]*?)<\/h3>\s*<p>([\s\S]*?)<\/p>/g)]
     .map(([, q, a]) => ({ '@type': 'Question', name: text(q), acceptedAnswer: { '@type': 'Answer', text: text(a) } }));
-  const ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: qa };
-  return `<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>`;
+  return ldScript({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: qa });
 }
 const FOCUS = { middle: '50 50', low: '50 62', top: '50 30' };
 
@@ -423,6 +448,7 @@ function head(a, R) {
 <meta name="robots" content="${a.noindex ? 'noindex' : '{{robots}}'}">
 <link rel="canonical" href="${url}">
 <meta property="og:type" content="website">
+<meta property="og:locale" content="en_GB">
 <meta property="og:site_name" content="TruDrive Driveways &amp; Patios">
 <meta property="og:title" content="${a.title}">
 <meta property="og:description" content="${a.desc}">
@@ -467,7 +493,9 @@ for (const file of walk('pages')) {
   html = html.replace(/<x-reviews\s*\/?>(?:<\/x-reviews>)?/g, () => reviewsPage());
   html = html.replace(/<x-address\s*\/?>(?:<\/x-address>)?/g, () => (hasAddress
     ? `<address>TruDrive Driveways &amp; Patios<br>${address.map(esc).join('<br>')}</address>`
-    : note('add your business address in your editor, under Business details.')));
+    : `<address>TruDrive Driveways &amp; Patios${baseTown ? `<br>${esc(baseTown)}` : ''}</address>${note('add your business address in your editor, under Business details.')}`));
+  // Links to his pages elsewhere, left out while he has none.
+  html = html.replace(/<li data-facebook>([\s\S]*?)<\/li>/g, (_, inner) => (facebook ? `<li>${inner.replaceAll('{{facebook}}', esc(facebook))}</li>` : ''));
   html = html.replace(/<x-about-text\s*\/?>(?:<\/x-about-text>)?/g, () => aboutText());
   html = html.replace(/<x-about-photo\s*\/?>(?:<\/x-about-photo>)?/g, () => aboutPhoto(R));
   html = html.replaceAll('{{year}}', String(new Date().getFullYear()));
@@ -488,43 +516,70 @@ for (const file of walk('pages')) {
   built.push({ out, html, url: `${SITE_URL}/${outRel ? outRel + '/' : ''}`, listed: rel !== '404' });
 }
 
-// Search engines see the site only once nothing is left for Gaz to fill in:
-// a yellow note anywhere keeps every page out of Google, so a half-finished
-// site can never be indexed by accident.
+// The live site is open to Google, Bing and the AI search tools; a local or
+// preview build is kept out of all of them. Anything Gaz still has to fill in
+// is listed in the log above and shown as a yellow note on the local preview.
 const unfinished = built.filter((b) => b.html.includes('class="demo-note"')).map((b) => b.out);
-const indexable = unfinished.length === 0;
-if (!indexable) warn(`hidden from search engines until the yellow notes are gone: ${unfinished.join(', ')}`);
+if (unfinished.length) warn(`yellow notes for Gaz on the preview: ${unfinished.join(', ')}`);
+const indexable = LIVE;
 for (const b of built) {
   fs.mkdirSync(path.dirname(b.out), { recursive: true });
-  fs.writeFileSync(b.out, b.html.replaceAll('{{robots}}', indexable ? 'index, follow' : 'noindex, nofollow'));
+  fs.writeFileSync(b.out, b.html.replaceAll('{{robots}}', indexable ? 'index, follow, max-image-preview:large' : 'noindex, nofollow'));
   console.log('built', b.out);
 }
 
+// The sitemap lists every page with its photos and videos, so Google Images
+// and video results can find them.
+const xml = (v) => String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const unesc = (v) => String(v ?? '').replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+function sitemapEntry(b) {
+  const main = b.html.split('<main')[1]?.split('</main>')[0] || '';
+  const imgs = [...new Set([...main.matchAll(/<img\b[^>]*?\ssrc="(\/img\/[^"]+)"/g)].map((m) => m[1]))];
+  const vids = [...main.matchAll(/<button class="vid__open"([^>]*)>/g)].map((m) => attrs(m[1])).filter((a) => a['data-lb'] === 'video' && a['data-poster']);
+  const lines = [`  <url>`, `    <loc>${xml(b.url)}</loc>`];
+  for (const src of imgs) lines.push(`    <image:image><image:loc>${xml(SITE_URL + src)}</image:loc></image:image>`);
+  for (const v of vids) {
+    const key = path.basename(v['data-src'], '.mp4');
+    const m = videoManifest[key] || {};
+    const title = unesc(v['data-title']);
+    lines.push('    <video:video>',
+      `      <video:thumbnail_loc>${xml(SITE_URL + v['data-poster'])}</video:thumbnail_loc>`,
+      `      <video:title>${xml(title)}</video:title>`,
+      `      <video:description>${xml(unesc(v['data-line']) || title)}, by TruDrive Driveways &amp; Patios</video:description>`,
+      `      <video:content_loc>${xml(SITE_URL + v['data-src'])}</video:content_loc>`,
+      ...(m.seconds ? [`      <video:duration>${Math.round(m.seconds)}</video:duration>`] : []),
+      '    </video:video>');
+  }
+  lines.push('  </url>');
+  return lines.join('\n');
+}
 fs.writeFileSync('site/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${built.filter((b) => b.listed).map((b) => `  <url><loc>${b.url}</loc></url>`).join('\n')}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+${built.filter((b) => b.listed).map(sitemapEntry).join('\n')}
 </urlset>
 `);
 fs.writeFileSync('site/robots.txt', indexable
-  ? `User-agent: *\nAllow: /\nDisallow: /admin/\n\nSitemap: ${SITE_URL}/sitemap.xml\n`
+  ? `# Search engines and AI search tools are welcome. Only the editor is off limits.\nUser-agent: *\nAllow: /\nDisallow: /admin/\n\nSitemap: ${SITE_URL}/sitemap.xml\n`
   : 'User-agent: *\nDisallow: /\n');
 
 // A plain summary for AI search tools (llms.txt), from the same facts as the pages.
 fs.writeFileSync('site/llms.txt', `# TruDrive Driveways & Patios
 
-> Driveway and patio installers covering North West England: Greater Manchester, Merseyside, Lancashire, Cheshire and Cumbria. Run by Gaz, over 15 years' experience. Free, no-obligation quotes.
+> Driveway and patio installers${baseTown ? ` based in ${baseTown}` : ''}, covering ${baseTown ? `${baseTown} and ` : ''}North West England: Greater Manchester, Merseyside, Lancashire, Cheshire and Cumbria. Run by Gaz, with over 15 years' experience. Free, no-obligation quotes: send photos on WhatsApp or ring.
 
+- Name: TruDrive Driveways & Patios (also written TruDrive or Tru Drive). Not connected to trudrive.com, which is a different business.
 - Phone and WhatsApp: ${business.phone}
-- Driveways: block paving, imprinted concrete, tarmac, gravel
+${hasAddress ? `- Address: ${address.join(', ')}\n` : ''}- Driveways: block paving, imprinted concrete, tarmac, gravel
 - Patios: porcelain, Indian sandstone, crazy paving
-- Also: paths and steps, fencing, brickwork, turfing
+- Also: paths and steps, fencing, brickwork, turfing and artificial grass
 - TikTok: https://www.tiktok.com/@tru.drive
-
+${facebook ? `- Facebook: ${facebook}\n` : ''}
 ## Pages
 
 - [Services](${SITE_URL}/services/)
 - [Areas we cover](${SITE_URL}/areas/)
 - [Our work](${SITE_URL}/our-work/): before and after photos and videos
+- [About](${SITE_URL}/about/)
 - [Reviews](${SITE_URL}/reviews/)
 - [Free quote](${SITE_URL}/contact/)
 `);

@@ -1,11 +1,136 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>http://localhost:4600/about/</loc></url>
-  <url><loc>http://localhost:4600/areas/</loc></url>
-  <url><loc>http://localhost:4600/contact/</loc></url>
-  <url><loc>http://localhost:4600/</loc></url>
-  <url><loc>http://localhost:4600/our-work/</loc></url>
-  <url><loc>http://localhost:4600/privacy/</loc></url>
-  <url><loc>http://localhost:4600/reviews/</loc></url>
-  <url><loc>http://localhost:4600/services/</loc></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+  <url>
+    <loc>http://localhost:4600/about/</loc>
+    <image:image><image:loc>http://localhost:4600/img/j6-path.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>http://localhost:4600/areas/</loc>
+  </url>
+  <url>
+    <loc>http://localhost:4600/contact/</loc>
+  </url>
+  <url>
+    <loc>http://localhost:4600/</loc>
+    <image:image><image:loc>http://localhost:4600/img/up/up-decking-before.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-decking-after.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/g1-drive.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/g2-patio.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/g4-path.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/g5-fence.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/g6-turf.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/j6-steps.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-concrete-before.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-concrete-after.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/g7-front.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/vid-before-and-after-overgrown-garden-poster.webp</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/vid-garden-at-dusk-poster.webp</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/vid-porcelain-path-and-lawn-poster.webp</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/vid-porcelain-patio-drainage-poster.webp</image:loc></image:image>
+    <video:video>
+      <video:thumbnail_loc>http://localhost:4600/img/up/vid-before-and-after-overgrown-garden-poster.webp</video:thumbnail_loc>
+      <video:title>Before and after: overgrown garden</video:title>
+      <video:description>Hedges and an old shed out, porcelain and composite fencing in, by TruDrive Driveways &amp; Patios</video:description>
+      <video:content_loc>http://localhost:4600/img/up/vid-before-and-after-overgrown-garden.mp4</video:content_loc>
+      <video:duration>18</video:duration>
+    </video:video>
+    <video:video>
+      <video:thumbnail_loc>http://localhost:4600/img/up/vid-garden-at-dusk-poster.webp</video:thumbnail_loc>
+      <video:title>Finished garden at dusk</video:title>
+      <video:description>Porcelain and a new lawn, lit up at dusk, by TruDrive Driveways &amp; Patios</video:description>
+      <video:content_loc>http://localhost:4600/img/up/vid-garden-at-dusk.mp4</video:content_loc>
+      <video:duration>14</video:duration>
+    </video:video>
+    <video:video>
+      <video:thumbnail_loc>http://localhost:4600/img/up/vid-porcelain-path-and-lawn-poster.webp</video:thumbnail_loc>
+      <video:title>Porcelain path and new lawn</video:title>
+      <video:description>A dark porcelain edge, new turf and raised beds, by TruDrive Driveways &amp; Patios</video:description>
+      <video:content_loc>http://localhost:4600/img/up/vid-porcelain-path-and-lawn.mp4</video:content_loc>
+      <video:duration>13</video:duration>
+    </video:video>
+    <video:video>
+      <video:thumbnail_loc>http://localhost:4600/img/up/vid-porcelain-patio-drainage-poster.webp</video:thumbnail_loc>
+      <video:title>Porcelain patio</video:title>
+      <video:description>Light porcelain with a drainage channel, by TruDrive Driveways &amp; Patios</video:description>
+      <video:content_loc>http://localhost:4600/img/up/vid-porcelain-patio-drainage.mp4</video:content_loc>
+      <video:duration>19</video:duration>
+    </video:video>
+  </url>
+  <url>
+    <loc>http://localhost:4600/our-work/</loc>
+    <image:image><image:loc>http://localhost:4600/img/up/up-pond-before.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-pond-after.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-decking-before.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-decking-after.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-concrete-before.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-concrete-after.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/vid-before-and-after-overgrown-garden-poster.webp</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/vid-garden-at-dusk-poster.webp</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/vid-porcelain-path-and-lawn-poster.webp</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/vid-porcelain-patio-drainage-poster.webp</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-block-paved-drive-border.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-porcelain-patio-sleepers.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-new-build-garden.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-composite-fencing.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-patio-tiled-threshold.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-path-and-drainage.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-stone-patio-raised-lawn.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-grey-porcelain-patio.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-new-lawn.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-clad-raised-beds.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-slatted-fence-turf.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-front-path.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-imprinted-drive.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-imprinted-drive-street.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-porcelain-garden.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-porcelain-garden-steps.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-block-paved-drive.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-stone-patio-palm.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-front-garden-bungalow.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-back-patio-pergola.jpg</image:loc></image:image>
+    <video:video>
+      <video:thumbnail_loc>http://localhost:4600/img/up/vid-before-and-after-overgrown-garden-poster.webp</video:thumbnail_loc>
+      <video:title>Before and after: overgrown garden</video:title>
+      <video:description>Hedges and an old shed out, porcelain and composite fencing in, by TruDrive Driveways &amp; Patios</video:description>
+      <video:content_loc>http://localhost:4600/img/up/vid-before-and-after-overgrown-garden.mp4</video:content_loc>
+      <video:duration>18</video:duration>
+    </video:video>
+    <video:video>
+      <video:thumbnail_loc>http://localhost:4600/img/up/vid-garden-at-dusk-poster.webp</video:thumbnail_loc>
+      <video:title>Finished garden at dusk</video:title>
+      <video:description>Porcelain and a new lawn, lit up at dusk, by TruDrive Driveways &amp; Patios</video:description>
+      <video:content_loc>http://localhost:4600/img/up/vid-garden-at-dusk.mp4</video:content_loc>
+      <video:duration>14</video:duration>
+    </video:video>
+    <video:video>
+      <video:thumbnail_loc>http://localhost:4600/img/up/vid-porcelain-path-and-lawn-poster.webp</video:thumbnail_loc>
+      <video:title>Porcelain path and new lawn</video:title>
+      <video:description>A dark porcelain edge, new turf and raised beds, by TruDrive Driveways &amp; Patios</video:description>
+      <video:content_loc>http://localhost:4600/img/up/vid-porcelain-path-and-lawn.mp4</video:content_loc>
+      <video:duration>13</video:duration>
+    </video:video>
+    <video:video>
+      <video:thumbnail_loc>http://localhost:4600/img/up/vid-porcelain-patio-drainage-poster.webp</video:thumbnail_loc>
+      <video:title>Porcelain patio</video:title>
+      <video:description>Light porcelain with a drainage channel, by TruDrive Driveways &amp; Patios</video:description>
+      <video:content_loc>http://localhost:4600/img/up/vid-porcelain-patio-drainage.mp4</video:content_loc>
+      <video:duration>19</video:duration>
+    </video:video>
+  </url>
+  <url>
+    <loc>http://localhost:4600/privacy/</loc>
+  </url>
+  <url>
+    <loc>http://localhost:4600/reviews/</loc>
+    <image:image><image:loc>http://localhost:4600/img/j6-lawn.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>http://localhost:4600/services/</loc>
+    <image:image><image:loc>http://localhost:4600/img/g1-drive.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/g3-patio.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/j6-path.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/g5-fence.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/g6-turf.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/j6-steps.jpg</image:loc></image:image>
+  </url>
 </urlset>

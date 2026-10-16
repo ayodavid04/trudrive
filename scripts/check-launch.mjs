@@ -7,7 +7,9 @@ import fs from 'node:fs';
 import { chromium } from 'playwright-core';
 
 const B = 'http://localhost:4600';
-const PAGES = ['/', '/services/', '/areas/', '/our-work/', '/about/', '/reviews/', '/contact/', '/privacy/'];
+// Every page in the sitemap, so a new page is checked without editing a list here.
+const sitemap = fs.readFileSync('site/sitemap.xml', 'utf8');
+const PAGES = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => new URL(m[1]).pathname);
 let fails = 0;
 const out = (tag, msg) => { console.log(`${tag.padEnd(4)} ${msg}`); if (tag === 'FAIL') fails++; };
 const ok = (c, msg) => out(c ? 'PASS' : 'FAIL', msg);
@@ -40,11 +42,16 @@ for (const p of PAGES) {
           imgsNoSize: [...document.images].filter((i) => !i.getAttribute('width') || !i.getAttribute('height')).map((i) => i.src),
           emDash: (document.body.innerText.match(/\u2014/g) || []).length,
           headingsInOrder: [...document.querySelectorAll('h1,h2,h3,h4')].map((x) => +x.tagName[1]).every((n, i, a) => i === 0 || n <= a[i - 1] + 1),
+          canonicals: document.querySelectorAll('link[rel=canonical]').length,
+          ldBad: [...document.querySelectorAll('script[type="application/ld+json"]')].filter((s) => { try { JSON.parse(s.textContent); return false; } catch { return true; } }).length,
         };
       });
       ok(m.h1 === 1, `${p}: exactly one h1 (${m.h1})`);
       ok(m.headingsInOrder, `${p}: headings in order`);
       ok(m.title && m.desc, `${p}: title and description`);
+      ok(m.title.length <= 65, `${p}: title fits in a Google result (${m.title.length} characters)`);
+      ok(m.canonicals === 1, `${p}: one canonical`);
+      ok(m.ldBad === 0, `${p}: structured data parses`);
       ok(m.canonical.endsWith(p), `${p}: canonical ${m.canonical}`);
       ok(m.og.length === 0, `${p}: all og tags ${m.og.join(' ')}`);
       ok(/\.(jpe?g|png)$/.test(m.ogImage), `${p}: og:image is a JPEG or PNG`);
@@ -95,10 +102,9 @@ await browser.close();
 
 // Files Google reads.
 const robots = fs.readFileSync('site/robots.txt', 'utf8');
-const sitemap = fs.readFileSync('site/sitemap.xml', 'utf8');
-ok((sitemap.match(/<loc>/g) || []).length === PAGES.length, `sitemap lists all ${PAGES.length} pages`);
-out(robots.includes('Sitemap:') ? 'PASS' : 'TODO', `robots.txt ${robots.includes('Sitemap:') ? 'allows Google and points at the sitemap' : 'blocks everything until Gaz\'s details are in'}`);
+ok(PAGES.length >= 8, `sitemap lists ${PAGES.length} pages`);
+out(robots.includes('Sitemap:') ? 'PASS' : 'TODO', `robots.txt ${robots.includes('Sitemap:') ? 'allows Google and points at the sitemap' : 'blocks everything: a local build (build with SITE_URL=https://trudrive.co.uk to check the live one)'}`);
 ok(fs.existsSync('site/img/og.jpg'), 'share image site/img/og.jpg exists');
 
-console.log(fails ? `\n${fails} FAILED` : '\nAll checks passed (TODO = waiting on Gaz)');
+console.log(fails ? `\n${fails} FAILED` : '\nAll checks passed (TODO = a local build, kept out of Google)');
 process.exit(fails ? 1 : 0);
