@@ -1,0 +1,13 @@
+// Cloudflare Worker that serves the built site. Every push to GitHub (and
+// every save in /admin) runs `npm run build` and publishes ./site.
+// SITE_URL = https://trudrive.co.uk is set as a build variable in the
+// Cloudflare dashboard (Settings > Build).
+{
+  "name": "trudrive",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./site",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}
