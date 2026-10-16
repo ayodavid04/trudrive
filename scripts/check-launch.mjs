@@ -7,7 +7,7 @@ import fs from 'node:fs';
 import { chromium } from 'playwright-core';
 
 const B = 'http://localhost:4600';
-const PAGES = ['/', '/services/', '/our-work/', '/about/', '/reviews/', '/contact/', '/privacy/'];
+const PAGES = ['/', '/services/', '/areas/', '/our-work/', '/about/', '/reviews/', '/contact/', '/privacy/'];
 let fails = 0;
 const out = (tag, msg) => { console.log(`${tag.padEnd(4)} ${msg}`); if (tag === 'FAIL') fails++; };
 const ok = (c, msg) => out(c ? 'PASS' : 'FAIL', msg);

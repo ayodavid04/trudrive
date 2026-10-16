@@ -175,17 +175,28 @@ function ldJson() {
     '@context': 'https://schema.org',
     '@type': 'HomeAndConstructionBusiness',
     name: 'TruDrive Driveways & Patios',
+    alternateName: ['TruDrive', 'Tru Drive', 'Tru Drive Driveways and Patios'],
     url: `${SITE_URL}/`,
     telephone: '+' + intl,
     image: `${SITE_URL}/img/og.jpg`,
     logo: `${SITE_URL}/img/logo.png`,
     description: 'Driveways and patios: porcelain, block paving, imprinted concrete, tarmac, gravel, Indian sandstone, fencing, brickwork and turfing.',
-    areaServed: areas.length ? areas.map((name) => ({ '@type': 'City', name })) : 'North West England',
+    areaServed: [{ '@type': 'AdministrativeArea', name: 'North West England' }, ...areas.map((name) => ({ '@type': 'AdministrativeArea', name }))],
+    knowsAbout: ['Driveways', 'Block paving', 'Imprinted concrete', 'Tarmac driveways', 'Gravel driveways', 'Porcelain patios', 'Indian sandstone patios', 'Fencing', 'Brickwork', 'Turfing'],
     sameAs: ['https://www.tiktok.com/@tru.drive', ...(profileLink ? [profileLink] : [])],
   };
   if (hasAddress) {
     ld.address = { '@type': 'PostalAddress', streetAddress: clean(business.street), addressLocality: clean(business.town), postalCode: clean(business.postcode).toUpperCase(), addressCountry: 'GB' };
   }
+  return `<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>`;
+}
+// FAQPage data, read from the page's own questions (each <h3> and the <p>
+// after it), so the markup can never say something the page does not.
+function faqJson(html) {
+  const text = (s) => s.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
+  const qa = [...html.matchAll(/<h3>([\s\S]*?)<\/h3>\s*<p>([\s\S]*?)<\/p>/g)]
+    .map(([, q, a]) => ({ '@type': 'Question', name: text(q), acceptedAnswer: { '@type': 'Answer', text: text(a) } }));
+  const ld = { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: qa };
   return `<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>`;
 }
 const FOCUS = { middle: '50 50', low: '50 62', top: '50 30' };
@@ -470,6 +481,7 @@ for (const file of walk('pages')) {
   html = html.replace(/<x-showcase>([\s\S]*?)<\/x-showcase>/g, (_, section) => showcase(section, R));
   html = html.replace(/<x-videos(\s+home)?>([\s\S]*?)<\/x-videos>/g, (_, home, section) => videosSection(section, R, Boolean(home)));
   html = html.replace(/{{(phone|tel|wa)}}/g, (_, k) => PHONE[k]);
+  html = html.replace(/<x-faq-ld\s*\/?>(?:<\/x-faq-ld>)?/g, () => faqJson(html));
   html = html.replaceAll('{{root}}', R);
   // Cloudflare Pages serves /404.html for any address that does not exist.
   const out = rel === '404' ? path.join('site', '404.html') : path.join('site', outRel, 'index.html');
@@ -496,6 +508,26 @@ ${built.filter((b) => b.listed).map((b) => `  <url><loc>${b.url}</loc></url>`).j
 fs.writeFileSync('site/robots.txt', indexable
   ? `User-agent: *\nAllow: /\nDisallow: /admin/\n\nSitemap: ${SITE_URL}/sitemap.xml\n`
   : 'User-agent: *\nDisallow: /\n');
+
+// A plain summary for AI search tools (llms.txt), from the same facts as the pages.
+fs.writeFileSync('site/llms.txt', `# TruDrive Driveways & Patios
+
+> Driveway and patio installers covering North West England: Greater Manchester, Merseyside, Lancashire, Cheshire and Cumbria. Run by Gaz, over 15 years' experience. Free, no-obligation quotes.
+
+- Phone and WhatsApp: ${business.phone}
+- Driveways: block paving, imprinted concrete, tarmac, gravel
+- Patios: porcelain, Indian sandstone, crazy paving
+- Also: paths and steps, fencing, brickwork, turfing
+- TikTok: https://www.tiktok.com/@tru.drive
+
+## Pages
+
+- [Services](${SITE_URL}/services/)
+- [Areas we cover](${SITE_URL}/areas/)
+- [Our work](${SITE_URL}/our-work/): before and after photos and videos
+- [Reviews](${SITE_URL}/reviews/)
+- [Free quote](${SITE_URL}/contact/)
+`);
 
 // Short links for printed QR codes (scripts/qr.mjs). The QR holds his own
 // address, so a card printed today still works if the Google link changes:

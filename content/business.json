@@ -1,6 +1,12 @@
 {
   "phone": "07923 485811",
-  "areas": [],
+  "areas": [
+    "Greater Manchester",
+    "Merseyside",
+    "Lancashire",
+    "Cheshire",
+    "Cumbria"
+  ],
   "hours": "",
   "street": "",
   "town": "",
