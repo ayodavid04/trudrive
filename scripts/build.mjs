@@ -24,6 +24,10 @@
 //   <x-where [contact]></x-where>                  towns, hours and address, from Business details
 //   <x-about-text>, <x-about-photo>                About you
 //   <x-ldjson></x-ldjson>                          LocalBusiness data for Google
+//   <x-page-ld name path [service] [parent parent-name]>   breadcrumb (and Service) data for a page
+//   <x-faq-ld></x-faq-ld>                          FAQPage data from the section marked data-faq
+//   <x-town-cards>, {{homePlaces}}                 the Areas page: towns near Wigan, and Wigan's own districts
+//   pages/_town.html                               one page per town in content/towns.json, at /areas/<slug>/
 //   {{phone}} {{tel}} {{wa}}                       his number as shown, for tel: links, for wa.me
 // Run scripts/content.mjs first (npm run build does): it makes the photo sizes.
 //
@@ -92,6 +96,9 @@ const groupAttr = (kind) => (groupOf(kind) ? ` data-group="${groupOf(kind)}"` : 
 
 // Whatever Gaz types is shown as text, never read as HTML.
 const esc = (v) => String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+// The reverse, for text going into structured data and the sitemap.
+const unesc = (v) => String(v ?? '').replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+const xml = esc;
 const clean = (v) => String(v ?? '').trim();
 const isUrl = (v) => /^https:\/\/\S+$/.test(clean(v));
 // His links from the editor win; otherwise they come from his place ID.
@@ -108,6 +115,25 @@ const hasAddress = Boolean(clean(business.street) && clean(business.town) && cle
 const baseTown = clean(business.town);
 const facebook = isUrl(business.facebook) ? clean(business.facebook) : '';
 
+// Towns near Wigan with a page of their own (content/towns.json), each with how
+// far it is from his base, as the crow flies.
+const townData = readJson('content/towns.json');
+const HOME = townData.home || { name: baseTown, places: [] };
+const COUNCILS = townData.councils || {};
+const milesFrom = (a, b) => {
+  const rad = (d) => (d * Math.PI) / 180;
+  const h = Math.sin(rad(b.lat - a.lat) / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(rad(b.lon - a.lon) / 2) ** 2;
+  return 3958.8 * 2 * Math.asin(Math.sqrt(h));
+};
+const TOWNS = (Array.isArray(townData.towns) ? townData.towns : [])
+  .filter((t) => t.name && t.slug && COUNCILS[t.council])
+  .map((t) => ({ ...t, places: Array.isArray(t.places) && t.places.length ? t.places : [t.name], near: Array.isArray(t.near) ? t.near : [],
+    miles: HOME.lat && t.lat ? Math.max(1, Math.round(milesFrom(HOME, t))) : 0 }));
+const townBySlug = Object.fromEntries(TOWNS.map((t) => [t.slug, t]));
+const byMiles = (a, b) => a.miles - b.miles;
+const ARROW = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const townLink = (t) => `<a class="town" href="/areas/${t.slug}/"><b>${esc(t.name)}</b><span>About ${t.miles} miles from ${esc(HOME.name)}, ${esc(t.postcodes)}</span></a>`;
+
 // Whatever the law or Google still needs from Gaz is listed in the build log
 // every time. A yellow note says it on a local preview, never on the live site.
 const told = new Set();
@@ -119,7 +145,11 @@ const note = (text) => {
 function where(style) {
   const lines = [];
   if (baseTown && !hasAddress) lines.push(`<p>Based in ${esc(baseTown)}.</p>`);
-  lines.push(`<p>Across the North West${areas.length ? `: ${esc(andList(areas))}.` : '.'}</p>`);
+  const near = [...TOWNS].sort(byMiles).slice(0, 8).map((t) => `<a href="/areas/${t.slug}/">${esc(t.name)}</a>`);
+  const wide = areas.length ? `across ${esc(andList(areas))}` : 'across the North West';
+  lines.push(near.length
+    ? `<p>Driveways and patios in ${near.join(', ')}, and ${wide}. <a href="/areas/">All areas</a></p>`
+    : `<p>Across the North West${areas.length ? `: ${esc(andList(areas))}.` : '.'}</p>`);
   if (clean(business.hours)) lines.push(`<p>Calls: ${esc(business.hours)}</p>`);
   if (hasAddress) lines.push(`<address>${address.map(esc).join('<br>')}</address>`);
   const missing = [!areas.length && 'the towns you cover', !hasAddress && 'your business address'].filter(Boolean);
@@ -184,6 +214,8 @@ function aboutPhoto(R) {
 // The WebSite part gives Google the name to show above the result, so a
 // search shows "TruDrive Driveways & Patios" rather than a bare address.
 const BUSINESS_ID = () => `${SITE_URL}/#business`;
+const SERVICES = [['Patio installation', 'patios/'], ['Driveway installation', 'driveways/'], ['Paths and steps', 'services/#paths'],
+  ['Fencing', 'services/#fencing'], ['Turfing and artificial grass', 'services/#turf'], ['Garden walls and brickwork', 'services/#brickwork']];
 const ldScript = (ld) => `<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>`;
 function ldJson() {
   const biz = {
@@ -196,9 +228,14 @@ function ldJson() {
     image: `${SITE_URL}/img/og.jpg`,
     logo: `${SITE_URL}/img/logo.png`,
     description: `Driveway and patio installers${baseTown ? ` based in ${baseTown}` : ''}, covering the North West: porcelain and Indian sandstone patios, block paving, imprinted concrete, tarmac and gravel driveways, fencing, brickwork and turfing. Over 15 years' experience. Free, no-obligation quotes.`,
-    areaServed: [{ '@type': 'AdministrativeArea', name: 'North West England' }, ...areas.map((name) => ({ '@type': 'AdministrativeArea', name }))],
+    areaServed: [...areaServedList(), ...areas.map((name) => ({ '@type': 'AdministrativeArea', name }))],
     knowsAbout: ['Driveways', 'Block paving', 'Imprinted concrete', 'Tarmac driveways', 'Gravel driveways', 'Porcelain patios', 'Indian sandstone patios', 'Fencing', 'Brickwork', 'Turfing'],
     sameAs: ['https://www.tiktok.com/@tru.drive', ...(facebook ? [facebook] : []), ...(profileLink ? [profileLink] : [])],
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'Driveways, patios and gardens',
+      itemListElement: SERVICES.map(([name, page]) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name, url: `${SITE_URL}/${page}` } })),
+    },
   };
   if (hasAddress) {
     biz.address = { '@type': 'PostalAddress', streetAddress: clean(business.street), addressLocality: clean(business.town), postalCode: clean(business.postcode).toUpperCase(), addressCountry: 'GB' };
@@ -217,12 +254,38 @@ function ldJson() {
   return ldScript({ '@context': 'https://schema.org', '@graph': [site, biz] });
 }
 // FAQPage data, read from the page's own questions (each <h3> and the <p>
-// after it), so the markup can never say something the page does not.
+// after it, inside the section marked data-faq), so the markup can never say
+// something the page does not.
 function faqJson(html) {
-  const text = (s) => s.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim();
-  const qa = [...html.matchAll(/<h3>([\s\S]*?)<\/h3>\s*<p>([\s\S]*?)<\/p>/g)]
+  const text = (s) => unesc(s.replace(/<[^>]+>/g, '')).replace(/\s+/g, ' ').trim();
+  const faq = html.match(/<section\b[^>]*\bdata-faq\b[^>]*>([\s\S]*?)<\/section>/)?.[1] || '';
+  const qa = [...faq.matchAll(/<h3>([\s\S]*?)<\/h3>\s*<p>([\s\S]*?)<\/p>/g)]
     .map(([, q, a]) => ({ '@type': 'Question', name: text(q), acceptedAnswer: { '@type': 'Answer', text: text(a) } }));
-  return ldScript({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: qa });
+  return qa.length ? ldScript({ '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: qa }) : '';
+}
+
+// Where the business works, for the Service data on each page: the town he is
+// based in, then the North West.
+const areaServedList = () => [
+  ...(baseTown ? [{ '@type': 'City', name: baseTown }] : []),
+  ...TOWNS.map((t) => ({ '@type': 'City', name: t.name })),
+  { '@type': 'AdministrativeArea', name: 'North West England' },
+];
+
+// The breadcrumb trail for a page, and the Service it is about when it is one.
+//   <x-page-ld name="Patios" [service="Patio installation" [area="Standish"]] path="patios/" [parent="services/" parent-name="Services"]>
+function pageLd(a) {
+  const url = `${SITE_URL}/${a.path || ''}`;
+  const trail = [{ name: 'Home', url: `${SITE_URL}/` }];
+  if (a.parent) trail.push({ name: unesc(a['parent-name']), url: `${SITE_URL}/${a.parent}` });
+  trail.push({ name: unesc(a.name), url });
+  const graph = [{ '@type': 'BreadcrumbList', itemListElement: trail.map((t, i) => ({ '@type': 'ListItem', position: i + 1, name: t.name, item: t.url })) }];
+  if (a.service) {
+    const area = unesc(a.area || '');
+    graph.push({ '@type': 'Service', '@id': `${url}#service`, name: unesc(a.service) + (area ? ` in ${area}` : ''), serviceType: unesc(a.service), url,
+      provider: { '@id': BUSINESS_ID() }, areaServed: area ? [{ '@type': 'City', name: area }] : areaServedList() });
+  }
+  return ldScript({ '@context': 'https://schema.org', '@graph': graph });
 }
 const FOCUS = { middle: '50 50', low: '50 62', top: '50 30' };
 
@@ -303,10 +366,16 @@ const lbAttrs = (name, title, line) => {
   return `data-lb="image" data-srcset="${m.widths.map((w) => `${I}${name}-${w}.webp ${w}w`).join(', ')}" data-w="${m.w}" data-h="${m.h}" data-title="${esc(title)}" data-line="${esc(line || '')}"`;
 };
 
-function photosList(R) {
-  return photos.map((p, i) => `<figure${i < 2 ? ' class="half"' : ''}${groupAttr(p.kind)}>
+// Every photo by default. A page about one thing can ask for just that kind,
+// newest first: <x-photos kind="Patio" limit="6" half> (half: two to a row).
+function photosList(R, { kind = '', limit = 0, half = false } = {}) {
+  return photoFigures(photos.filter((p) => !kind || p.kind === kind).slice(0, limit || undefined), R, half);
+}
+function photoFigures(list, R, half = false) {
+  const big = (i) => half || i < 2;
+  return list.map((p, i) => `<figure${big(i) ? ' class="half"' : ''}${groupAttr(p.kind)}>
           <button class="ph" type="button" ${lbAttrs(upName(p.photo), p.title, p.line)} aria-label="Show bigger: ${esc(p.title)}">
-            <span class="photo">${pic({ name: upName(p.photo), alt: esc(p.alt || p.title), sizes: i < 2 ? '(max-width: 760px) 67vw, (max-width: 960px) 100vw, 560px' : '(max-width: 760px) 67vw, (max-width: 960px) 50vw, 420px', focus: FOCUS[p.crop] || FOCUS.low }, R)}</span>
+            <span class="photo">${pic({ name: upName(p.photo), alt: esc(p.alt || p.title), sizes: big(i) ? '(max-width: 760px) 67vw, (max-width: 960px) 100vw, 560px' : '(max-width: 760px) 67vw, (max-width: 960px) 50vw, 420px', focus: FOCUS[p.crop] || FOCUS.low }, R)}</span>
           </button>
           <figcaption><b>${esc(p.title)}</b>${p.line ? `<span>${esc(p.line)}</span>` : ''}</figcaption>
         </figure>`).join('\n        ');
@@ -474,17 +543,63 @@ function walk(dir) {
     d.isDirectory() ? walk(path.join(dir, d.name)) : [path.join(dir, d.name)]);
 }
 
+// ------------------------------------------------------------------ towns
+// A town page shows the jobs and photos Gaz tagged with that town (or a place
+// in it) first, then a different handful of recent photos on each page.
+function townWork(t, R) {
+  const names = new Set([t.name, ...t.places].map((n) => n.toLowerCase()));
+  const inTown = (x) => names.has(clean(x.town).toLowerCase());
+  const localJobs = jobs.filter(inTown).slice(0, 2);
+  const local = photos.filter(inTown);
+  const rest = photos.filter((p) => !inTown(p));
+  const at = rest.length ? (TOWNS.indexOf(t) * 3) % rest.length : 0;
+  const shown = [...local, ...rest.slice(at), ...rest.slice(0, at)].slice(0, 4);
+  if (!localJobs.length && !shown.length) return '';
+  const here = localJobs.length || local.length;
+  const jobsHtml = localJobs.map((job) => `<div class="split split--wide-img town-job">
+        ${ba(job, R, { sizes: '(max-width: 760px) 67vw, (max-width: 960px) 100vw, 56vw', style: 'aspect-ratio: 4 / 3' })}
+        <div class="split__txt">
+          <p class="kicker">${kicker(job)}</p>
+          <h3>${esc(job.title)}</h3>
+          ${about(job)}
+          ${ticks(job)}
+        </div>
+      </div>`).join('\n      ');
+  return `<section class="sec sec--paper" aria-labelledby="work-t">
+    <div class="wrap">
+      <div class="sec__head sec__head--row">
+        <div style="display:grid;gap:14px;max-width:40rem">
+          <h2 id="work-t">${here ? `Our work in ${esc(t.name)}` : 'Some of our recent work'}</h2>
+          <p class="lead">${here ? 'Jobs we have done here.' : 'Real jobs, laid by us.'} Tap a photo to see it bigger.</p>
+        </div>
+        <a class="link" href="${R}our-work/">All our work ${ARROW}</a>
+      </div>
+      ${jobsHtml}
+      <div class="gallery">
+        ${photoFigures(shown, R, true)}
+      </div>
+    </div>
+  </section>`;
+}
+
+// The Areas page: the towns near Wigan, grouped by council area, nearest first.
+function townCards() {
+  return Object.entries(COUNCILS).map(([key, c]) => {
+    const list = TOWNS.filter((t) => t.council === key).sort(byMiles);
+    return list.length ? `<div class="towns-group">
+        <h3>${esc(c.group || c.name)}</h3>
+        <div class="towns">${list.map(townLink).join('')}</div>
+      </div>` : '';
+  }).filter(Boolean).join('\n      ');
+}
+
 const quote = fs.readFileSync('pages/_quote.html', 'utf8');
 const built = [];
 
-for (const file of walk('pages')) {
-  const base = path.basename(file);
-  if (!base.endsWith('.html') || base.startsWith('_')) continue;
-  const rel = path.relative('pages', file).replace(/\\/g, '/').replace(/\.html$/, '');
-  const outRel = rel === 'index' ? '' : rel.endsWith('/index') ? rel.slice(0, -'/index'.length) : rel;
-  // Links start from the site root, so the 404 page works at any address.
+// Fills in every tag on a page. Links start from the site root, so the 404
+// page works at any address. `town` is set for a town page.
+function render(html, town) {
   const R = '/';
-  let html = fs.readFileSync(file, 'utf8');
   // Partials first, so tags inside the header and footer are filled in too.
   html = html.replace(/<x-include\s+([^>]*?)\s*\/?>(?:<\/x-include>)?/g, (_, s) => include(attrs(s), R));
   html = html.replace(/<x-ldjson\s*\/?>(?:<\/x-ldjson>)?/g, () => ldJson());
@@ -504,16 +619,44 @@ for (const file of walk('pages')) {
   html = html.replace(/<x-quote\s*\/?>(?:<\/x-quote>)?/g, quote);
   html = html.replace(/<x-job\s+slot="feature">([\s\S]*?)<\/x-job>/g, (_, section) => homeFeature(section, R));
   html = html.replace(/<x-job\s+slot="hero"\s*\/?>(?:<\/x-job>)?/g, () => homeHero(R));
-  html = html.replace(/<x-photos\s*\/?>(?:<\/x-photos>)?/g, () => photosList(R));
+  html = html.replace(/<x-photos([^>]*?)\s*\/?>(?:<\/x-photos>)?/g, (_, s) => {
+    const a = attrs(s);
+    return photosList(R, { kind: a.kind || '', limit: Number(a.limit) || 0, half: Boolean(a.half) });
+  });
+  html = html.replace(/<x-page-ld\s+([^>]*?)\s*\/?>(?:<\/x-page-ld>)?/g, (_, s) => pageLd(attrs(s)));
+  html = html.replace(/<x-town-work\s*\/?>(?:<\/x-town-work>)?/g, () => (town ? townWork(town, R) : ''));
+  html = html.replace(/<x-town-cards\s*\/?>(?:<\/x-town-cards>)?/g, () => townCards());
+  html = html.replaceAll('{{homePlaces}}', esc(andList(HOME.places || [])));
   html = html.replace(/<x-filters\s*\/?>(?:<\/x-filters>)?/g, () => filters());
   html = html.replace(/<x-showcase>([\s\S]*?)<\/x-showcase>/g, (_, section) => showcase(section, R));
   html = html.replace(/<x-videos(\s+home)?>([\s\S]*?)<\/x-videos>/g, (_, home, section) => videosSection(section, R, Boolean(home)));
   html = html.replace(/{{(phone|tel|wa)}}/g, (_, k) => PHONE[k]);
   html = html.replace(/<x-faq-ld\s*\/?>(?:<\/x-faq-ld>)?/g, () => faqJson(html));
   html = html.replaceAll('{{root}}', R);
-  // Cloudflare Pages serves /404.html for any address that does not exist.
+  return html;
+}
+
+for (const file of walk('pages')) {
+  const base = path.basename(file);
+  if (!base.endsWith('.html') || base.startsWith('_')) continue;
+  const rel = path.relative('pages', file).replace(/\\/g, '/').replace(/\.html$/, '');
+  const outRel = rel === 'index' ? '' : rel.endsWith('/index') ? rel.slice(0, -'/index'.length) : rel;
+  const html = render(fs.readFileSync(file, 'utf8'));
+  // Cloudflare serves /404.html for any address that does not exist.
   const out = rel === '404' ? path.join('site', '404.html') : path.join('site', outRel, 'index.html');
   built.push({ out, html, url: `${SITE_URL}/${outRel ? outRel + '/' : ''}`, listed: rel !== '404' });
+}
+
+// A page for each town near Wigan: pages/_town.html filled in from content/towns.json.
+const townPage = fs.readFileSync('pages/_town.html', 'utf8');
+for (const t of TOWNS) {
+  const council = COUNCILS[t.council];
+  const fill = { town: t.name, slug: t.slug, intro: t.intro, miles: t.miles, places: andList(t.places), postcodes: t.postcodes,
+    kerb: String(council.kerb || '').replaceAll('{town}', t.name), councilName: council.name, councilUrl: council.url, planning: t.planning };
+  const html = render(townPage
+    .replace(/{{(town|slug|intro|miles|places|postcodes|kerb|councilName|councilUrl|planning)}}/g, (_, k) => esc(fill[k] ?? ''))
+    .replace('{{nearLinks}}', t.near.map((n) => townBySlug[n]).filter(Boolean).map(townLink).join('')), t);
+  built.push({ out: path.join('site', 'areas', t.slug, 'index.html'), html, url: `${SITE_URL}/areas/${t.slug}/`, listed: true });
 }
 
 // The live site is open to Google, Bing and the AI search tools; a local or
@@ -530,8 +673,6 @@ for (const b of built) {
 
 // The sitemap lists every page with its photos and videos, so Google Images
 // and video results can find them.
-const xml = (v) => String(v ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-const unesc = (v) => String(v ?? '').replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
 function sitemapEntry(b) {
   const main = b.html.split('<main')[1]?.split('</main>')[0] || '';
   const imgs = [...new Set([...main.matchAll(/<img\b[^>]*?\ssrc="(\/img\/[^"]+)"/g)].map((m) => m[1]))];
@@ -582,7 +723,11 @@ ${facebook ? `- Facebook: ${facebook}\n` : ''}
 - [About](${SITE_URL}/about/)
 - [Reviews](${SITE_URL}/reviews/)
 - [Free quote](${SITE_URL}/contact/)
-`);
+${TOWNS.length ? `
+## Towns near ${HOME.name}
+
+${[...TOWNS].sort(byMiles).map((t) => `- [Driveways and patios in ${t.name}](${SITE_URL}/areas/${t.slug}/): ${andList(t.places)}, about ${t.miles} miles from ${HOME.name}`).join('\n')}
+` : ''}`);
 
 // Short links for printed QR codes (scripts/qr.mjs). The QR holds his own
 // address, so a card printed today still works if the Google link changes:

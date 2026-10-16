@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<x-head title="Driveways and Patios in {{town}} | TruDrive" desc="Driveway and patio installers covering {{town}}: porcelain and Indian sandstone patios, block paving, imprinted concrete and tarmac drives, fencing and turf. Based in Wigan, free quotes on {{phone}}." path="areas/{{slug}}/"></x-head>
+<link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap">
+<link rel="stylesheet" href="{{root}}assets/parts.css">
+<link rel="stylesheet" href="{{root}}assets/clean.css">
+<x-page-ld name="{{town}}" service="Driveway and patio installation" area="{{town}}" path="areas/{{slug}}/" parent="areas/" parent-name="Areas we cover"></x-page-ld>
+<x-faq-ld></x-faq-ld>
+</head>
+<body>
+<x-include file="_header.html" active="areas"></x-include>
+
+<main id="main">
+  <section class="page-head">
+    <div class="wrap">
+      <p class="kicker">Areas we cover</p>
+      <h1>Driveways and patios in {{town}}</h1>
+      <p class="lead">{{intro}}</p>
+      <div class="hero__btns">
+        <a class="btn" href="{{root}}contact/" data-quote>Get a free quote</a>
+        <a class="btn btn--ghost" href="https://wa.me/{{wa}}">Send photos on WhatsApp</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="lay-t">
+    <div class="wrap">
+      <div class="sec__head">
+        <h2 id="lay-t">What we lay in {{town}}</h2>
+        <p class="lead">From a new drive to a whole garden: the groundwork, the laying and the finish.</p>
+      </div>
+      <div class="tiles">
+        <a class="tile tile--big" href="{{root}}driveways/">
+          <x-pic name="g1-drive" alt="" sizes="(max-width: 760px) 67vw, 600px" focus="50 60"></x-pic>
+          <div class="tile__txt"><h3>Driveways</h3><p>Block paving, imprinted concrete, tarmac and gravel.</p></div>
+        </a>
+        <a class="tile tile--big" href="{{root}}patios/">
+          <x-pic name="g2-patio" alt="" sizes="(max-width: 760px) 67vw, 600px" focus="50 62"></x-pic>
+          <div class="tile__txt"><h3>Patios</h3><p>Porcelain, Indian sandstone and crazy paving.</p></div>
+        </a>
+        <a class="tile" href="{{root}}services/#paths">
+          <x-pic name="g4-path" alt="" sizes="(max-width: 760px) 34vw, 25vw" focus="50 50"></x-pic>
+          <div class="tile__txt"><h3>Paths and steps</h3><p>Porcelain and stone.</p></div>
+        </a>
+        <a class="tile" href="{{root}}services/#fencing">
+          <x-pic name="g5-fence" alt="" sizes="(max-width: 760px) 34vw, 25vw" focus="50 55"></x-pic>
+          <div class="tile__txt"><h3>Fencing</h3><p>Timber, slatted and composite.</p></div>
+        </a>
+        <a class="tile" href="{{root}}services/#turf">
+          <x-pic name="g6-turf" alt="" sizes="(max-width: 760px) 34vw, 25vw" focus="50 65"></x-pic>
+          <div class="tile__txt"><h3>Turfing</h3><p>Real lawns and artificial grass.</p></div>
+        </a>
+        <a class="tile" href="{{root}}services/#brickwork">
+          <x-pic name="j6-steps" alt="" sizes="(max-width: 760px) 34vw, 25vw" focus="50 60"></x-pic>
+          <div class="tile__txt"><h3>Walls and brickwork</h3><p>Raised beds, walls and pillars.</p></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <x-town-work></x-town-work>
+
+  <section class="sec" aria-labelledby="faq-t" data-faq>
+    <div class="wrap prose">
+      <h2 id="faq-t">Questions from {{town}}</h2>
+      <h3>Do you cover {{town}}?</h3>
+      <p>Yes. {{town}} is about {{miles}} miles from our base in Wigan, and we cover {{places}} ({{postcodes}}). Ring Gaz on {{phone}} or send a few photos on WhatsApp.</p>
+      <h3>Do I need a dropped kerb in {{town}}?</h3>
+      <p>{{kerb}} More on <a href="{{councilUrl}}" rel="noopener">{{councilName}}'s dropped kerb page</a>.</p>
+      <h3>Do I need planning permission for a new drive in {{town}}?</h3>
+      <p>Not usually. A new front drive doesn't need planning permission if the surface lets water through, or the rain drains into a lawn or border on your own land. If it's over 5 square metres, solid and drains onto the road, it does, and in {{town}} you'd apply to {{planning}}.</p>
+      <h3>How much does a new driveway or patio cost in {{town}}?</h3>
+      <p>Every job is priced on its size, the material and what has to come up first. Send a few photos on WhatsApp to {{phone}} and Gaz will give you a free price. If it's worth a visit, he'll come out and measure up.</p>
+    </div>
+  </section>
+
+  <section class="sec sec--paper" aria-labelledby="near-t">
+    <div class="wrap">
+      <div class="sec__head">
+        <h2 id="near-t">Near {{town}}</h2>
+      </div>
+      <div class="towns">{{nearLinks}}</div>
+      <p style="margin-top:24px"><a class="link" href="{{root}}areas/">All the areas we cover <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></p>
+    </div>
+  </section>
+</main>
+
+<x-include file="_footer.html"></x-include>
+</body>
+</html>

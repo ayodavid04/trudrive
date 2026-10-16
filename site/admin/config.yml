@@ -105,7 +105,7 @@ collections:
         default: false
       - name: town
         label: Town (optional)
-        hint: Shows as "Back garden in Wigan".
+        hint: Shows as "Back garden in Wigan", and puts the job on that town's page, like Standish or Leigh.
         widget: string
         required: false
         maxlength: 30
@@ -176,6 +176,12 @@ collections:
         widget: select
         options: [Driveway, Back garden, Front garden, Patio, Path and steps, Fencing, Turf]
         default: Patio
+      - name: town
+        label: Town (optional)
+        hint: Where the job was, like Standish or Leigh. It puts the photo on that town's page too.
+        widget: string
+        required: false
+        maxlength: 30
       - name: date
         label: Date
         hint: Newest show first.

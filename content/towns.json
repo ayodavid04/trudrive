@@ -1,0 +1,162 @@
+{
+  "_about": "Towns near Wigan that get their own page at /areas/<slug>/. Built by scripts/build.mjs with pages/_town.html. Dropped kerb facts were read from each council's own page on 16 Oct 2026; check them again if a council changes its process.",
+  "home": {
+    "name": "Wigan",
+    "places": ["Pemberton", "Ince", "Worsley Mesnes", "Beech Hill", "Whelley", "Marsh Green", "Springfield", "Aspull"],
+    "lat": 53.5448,
+    "lon": -2.6318
+  },
+  "councils": {
+    "wigan": {
+      "group": "Wigan borough",
+      "name": "Wigan Council",
+      "url": "https://www.wigan.gov.uk/Resident/Parking-Roads-Travel/Parking/Dropped-kerb.aspx",
+      "kerb": "Yes, if you'll drive over the pavement to get onto the drive, and in {town} that goes through Wigan Council. You apply with their vehicle crossing form and they reply within 20 working days. If it's approved, they take a deposit and build the crossing themselves. On an A, B or C road you need planning permission first, and council tenants need written permission from their estates manager."
+    },
+    "sthelens": {
+      "group": "St Helens",
+      "name": "St Helens Council",
+      "url": "https://www.sthelens.gov.uk/article/3222/Vehicle-crossing-application",
+      "kerb": "Yes, if you'll drive over the pavement to get onto the drive. In {town} you apply to St Helens Council. They assess it and send a free quote, and the crossing can be built by the council or by a contractor. On an A, B or C road you may need planning permission first. It can take a while, so it's worth applying early."
+    },
+    "lancs": {
+      "group": "West Lancashire and Chorley",
+      "name": "Lancashire County Council",
+      "url": "https://www.lancashire.gov.uk/roads-parking-and-travel/roads/vehicle-crossings/",
+      "kerb": "Yes, if you'll drive over the pavement to get onto the drive. {town} is in Lancashire, so it goes through Lancashire County Council rather than the local borough council. You apply online, and if it's approved they send you a list of approved contractors to get prices from. On an A, B or C road you'll need planning permission first."
+    },
+    "bolton": {
+      "group": "Bolton",
+      "name": "Bolton Council",
+      "url": "https://www.bolton.gov.uk/roads-pavements/dropped-kerbs/1",
+      "kerb": "Yes, if you'll drive over the pavement to get onto the drive. In {town} that goes through Bolton Council, which builds every domestic crossing itself, so you contact their highways team rather than booking a contractor. On an A, B or C road you need planning permission first."
+    },
+    "warrington": {
+      "group": "Warrington",
+      "name": "Warrington Borough Council",
+      "url": "https://www.warrington.gov.uk/droppedkerb",
+      "kerb": "Yes, if you'll drive over the pavement to get onto the drive. In Warrington you apply to Warrington Borough Council. They can do the work, or give permission for your own contractor. Your drive needs to be at least 5 metres from the house to the boundary so the car doesn't hang over the pavement, and on an A, B or C road you need planning permission first."
+    }
+  },
+  "towns": [
+    {
+      "name": "Standish", "slug": "standish", "council": "wigan", "planning": "Wigan Council",
+      "lat": 53.5869, "lon": -2.6614, "postcodes": "WN6",
+      "places": ["Standish", "Shevington", "Standish Lower Ground"],
+      "intro": "Standish and Shevington are just up the road from us in Wigan. We lay driveways, patios and fencing right across WN6, from the village centre out to Standish Lower Ground.",
+      "near": ["orrell", "chorley", "horwich"]
+    },
+    {
+      "name": "Orrell", "slug": "orrell", "council": "wigan", "planning": "Wigan Council",
+      "lat": 53.5296, "lon": -2.7097, "postcodes": "WN5",
+      "places": ["Orrell", "Kitt Green"],
+      "intro": "Orrell is on the west side of Wigan, a few minutes from us. We lay drives and patios across Orrell and Kitt Green, and down towards Pemberton.",
+      "near": ["standish", "skelmersdale", "ashton-in-makerfield"]
+    },
+    {
+      "name": "Hindley", "slug": "hindley", "council": "wigan", "planning": "Wigan Council",
+      "lat": 53.5355, "lon": -2.5753, "postcodes": "WN2",
+      "places": ["Hindley", "Hindley Green", "Platt Bridge", "Abram", "Bickershaw"],
+      "intro": "Hindley is just east of Wigan. We lay driveways and patios across Hindley, Hindley Green, Platt Bridge, Abram and Bickershaw.",
+      "near": ["westhoughton", "atherton", "leigh"]
+    },
+    {
+      "name": "Ashton-in-Makerfield", "slug": "ashton-in-makerfield", "council": "wigan", "planning": "Wigan Council",
+      "lat": 53.4870, "lon": -2.6410, "postcodes": "WN4",
+      "places": ["Ashton-in-Makerfield", "Bryn"],
+      "intro": "Ashton-in-Makerfield is a short drive south of Wigan. We lay driveways and patios across Ashton and Bryn.",
+      "near": ["golborne", "newton-le-willows", "st-helens"]
+    },
+    {
+      "name": "Leigh", "slug": "leigh", "council": "wigan", "planning": "Wigan Council",
+      "lat": 53.4975, "lon": -2.5196, "postcodes": "WN7",
+      "places": ["Leigh", "Pennington", "Westleigh", "Bedford"],
+      "intro": "Leigh is in the east of the Wigan borough. We lay driveways and patios across Leigh, Pennington, Westleigh and Bedford.",
+      "near": ["atherton", "tyldesley", "golborne"]
+    },
+    {
+      "name": "Atherton", "slug": "atherton", "council": "wigan", "planning": "Wigan Council",
+      "lat": 53.5236, "lon": -2.4938, "postcodes": "M46",
+      "places": ["Atherton"],
+      "intro": "Atherton sits between Hindley and Tyldesley, on the east side of the Wigan borough. We lay driveways, patios and fencing all over Atherton.",
+      "near": ["tyldesley", "leigh", "hindley"]
+    },
+    {
+      "name": "Tyldesley", "slug": "tyldesley", "council": "wigan", "planning": "Wigan Council",
+      "lat": 53.5139, "lon": -2.4675, "postcodes": "M29",
+      "places": ["Tyldesley", "Astley"],
+      "intro": "Tyldesley and Astley are on the Manchester side of the Wigan borough. We lay driveways and patios across both.",
+      "near": ["atherton", "leigh", "bolton"]
+    },
+    {
+      "name": "Golborne", "slug": "golborne", "council": "wigan", "planning": "Wigan Council",
+      "lat": 53.4770, "lon": -2.5960, "postcodes": "WA3",
+      "places": ["Golborne", "Lowton"],
+      "intro": "Golborne and Lowton are at the south end of the Wigan borough, near the M6. We lay driveways and patios across both.",
+      "near": ["ashton-in-makerfield", "newton-le-willows", "leigh"]
+    },
+    {
+      "name": "Skelmersdale", "slug": "skelmersdale", "council": "lancs", "planning": "West Lancashire Borough Council",
+      "lat": 53.5500, "lon": -2.7760, "postcodes": "WN8",
+      "places": ["Skelmersdale", "Up Holland"],
+      "intro": "Skelmersdale and Up Holland are just over the border in West Lancashire, a short drive from Wigan. We lay driveways and patios all over Skem and Up Holland.",
+      "near": ["orrell", "ormskirk", "st-helens"]
+    },
+    {
+      "name": "Ormskirk", "slug": "ormskirk", "council": "lancs", "planning": "West Lancashire Borough Council",
+      "lat": 53.5667, "lon": -2.8869, "postcodes": "L39 and L40",
+      "places": ["Ormskirk", "Aughton", "Burscough"],
+      "intro": "Ormskirk is out in West Lancashire, west of Wigan. We lay driveways and patios in Ormskirk, Aughton and Burscough.",
+      "near": ["skelmersdale", "st-helens", "chorley"]
+    },
+    {
+      "name": "St Helens", "slug": "st-helens", "council": "sthelens", "planning": "St Helens Council",
+      "lat": 53.4530, "lon": -2.7370, "postcodes": "WA9, WA10 and WA11",
+      "places": ["St Helens", "Haydock", "Rainford", "Billinge", "Thatto Heath"],
+      "intro": "St Helens is south-west of Wigan. We lay driveways and patios across the town and the villages around it, including Haydock, Rainford, Billinge and Thatto Heath.",
+      "near": ["newton-le-willows", "ashton-in-makerfield", "skelmersdale"]
+    },
+    {
+      "name": "Newton-le-Willows", "slug": "newton-le-willows", "council": "sthelens", "planning": "St Helens Council",
+      "lat": 53.4530, "lon": -2.6330, "postcodes": "WA12",
+      "places": ["Newton-le-Willows", "Earlestown"],
+      "intro": "Newton-le-Willows and Earlestown are between Wigan and Warrington. We lay driveways and patios across both.",
+      "near": ["golborne", "st-helens", "warrington"]
+    },
+    {
+      "name": "Chorley", "slug": "chorley", "council": "lancs", "planning": "Chorley Council",
+      "lat": 53.6530, "lon": -2.6320, "postcodes": "PR6 and PR7",
+      "places": ["Chorley", "Adlington", "Coppull", "Euxton"],
+      "intro": "Chorley is north of Wigan, in Lancashire. We lay driveways and patios across Chorley, Adlington, Coppull and Euxton.",
+      "near": ["standish", "horwich", "ormskirk"]
+    },
+    {
+      "name": "Westhoughton", "slug": "westhoughton", "council": "bolton", "planning": "Bolton Council",
+      "lat": 53.5480, "lon": -2.5240, "postcodes": "BL5",
+      "places": ["Westhoughton", "Daisy Hill", "Wingates"],
+      "intro": "Westhoughton is the nearest part of Bolton to us, just east of Wigan. We lay driveways and patios across Westhoughton, Daisy Hill and Wingates.",
+      "near": ["hindley", "horwich", "bolton"]
+    },
+    {
+      "name": "Horwich", "slug": "horwich", "council": "bolton", "planning": "Bolton Council",
+      "lat": 53.6000, "lon": -2.5490, "postcodes": "BL6",
+      "places": ["Horwich", "Blackrod"],
+      "intro": "Horwich and Blackrod sit below Rivington Pike, north-east of Wigan. We lay driveways and patios across both.",
+      "near": ["westhoughton", "bolton", "chorley"]
+    },
+    {
+      "name": "Bolton", "slug": "bolton", "council": "bolton", "planning": "Bolton Council",
+      "lat": 53.5780, "lon": -2.4290, "postcodes": "BL1 to BL4 and BL7",
+      "places": ["Bolton", "Heaton", "Deane", "Harwood", "Breightmet", "Farnworth", "Bromley Cross"],
+      "intro": "Bolton is east of Wigan. We lay driveways and patios across the town, from Heaton and Deane to Harwood, Breightmet, Farnworth and Bromley Cross.",
+      "near": ["westhoughton", "horwich", "tyldesley"]
+    },
+    {
+      "name": "Warrington", "slug": "warrington", "council": "warrington", "planning": "Warrington Borough Council",
+      "lat": 53.3900, "lon": -2.5970, "postcodes": "WA1 to WA5",
+      "places": ["Warrington", "Great Sankey", "Penketh", "Orford", "Birchwood", "Stockton Heath"],
+      "intro": "Warrington is south of Wigan, down the M6. We lay driveways and patios across the town, including Great Sankey, Penketh, Orford, Birchwood and Stockton Heath.",
+      "near": ["newton-le-willows", "golborne", "st-helens"]
+    }
+  ]
+}

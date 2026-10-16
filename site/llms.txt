@@ -18,3 +18,23 @@
 - [About](http://localhost:4600/about/)
 - [Reviews](http://localhost:4600/reviews/)
 - [Free quote](http://localhost:4600/contact/)
+
+## Towns near Wigan
+
+- [Driveways and patios in Hindley](http://localhost:4600/areas/hindley/): Hindley, Hindley Green, Platt Bridge, Abram and Bickershaw, about 2 miles from Wigan
+- [Driveways and patios in Standish](http://localhost:4600/areas/standish/): Standish, Shevington and Standish Lower Ground, about 3 miles from Wigan
+- [Driveways and patios in Orrell](http://localhost:4600/areas/orrell/): Orrell and Kitt Green, about 3 miles from Wigan
+- [Driveways and patios in Ashton-in-Makerfield](http://localhost:4600/areas/ashton-in-makerfield/): Ashton-in-Makerfield and Bryn, about 4 miles from Wigan
+- [Driveways and patios in Westhoughton](http://localhost:4600/areas/westhoughton/): Westhoughton, Daisy Hill and Wingates, about 4 miles from Wigan
+- [Driveways and patios in Golborne](http://localhost:4600/areas/golborne/): Golborne and Lowton, about 5 miles from Wigan
+- [Driveways and patios in Horwich](http://localhost:4600/areas/horwich/): Horwich and Blackrod, about 5 miles from Wigan
+- [Driveways and patios in Leigh](http://localhost:4600/areas/leigh/): Leigh, Pennington, Westleigh and Bedford, about 6 miles from Wigan
+- [Driveways and patios in Atherton](http://localhost:4600/areas/atherton/): Atherton, about 6 miles from Wigan
+- [Driveways and patios in Skelmersdale](http://localhost:4600/areas/skelmersdale/): Skelmersdale and Up Holland, about 6 miles from Wigan
+- [Driveways and patios in Newton-le-Willows](http://localhost:4600/areas/newton-le-willows/): Newton-le-Willows and Earlestown, about 6 miles from Wigan
+- [Driveways and patios in Tyldesley](http://localhost:4600/areas/tyldesley/): Tyldesley and Astley, about 7 miles from Wigan
+- [Driveways and patios in Chorley](http://localhost:4600/areas/chorley/): Chorley, Adlington, Coppull and Euxton, about 7 miles from Wigan
+- [Driveways and patios in St Helens](http://localhost:4600/areas/st-helens/): St Helens, Haydock, Rainford, Billinge and Thatto Heath, about 8 miles from Wigan
+- [Driveways and patios in Bolton](http://localhost:4600/areas/bolton/): Bolton, Heaton, Deane, Harwood, Breightmet, Farnworth and Bromley Cross, about 9 miles from Wigan
+- [Driveways and patios in Ormskirk](http://localhost:4600/areas/ormskirk/): Ormskirk, Aughton and Burscough, about 11 miles from Wigan
+- [Driveways and patios in Warrington](http://localhost:4600/areas/warrington/): Warrington, Great Sankey, Penketh, Orford, Birchwood and Stockton Heath, about 11 miles from Wigan

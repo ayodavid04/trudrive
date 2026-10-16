@@ -90,7 +90,7 @@ p { margin: 0; text-wrap: pretty; }
 .head__logo { flex: none; display: block; }
 .head__logo img { width: 150px; height: auto; }
 .nav { display: flex; gap: 4px; margin-left: auto; }
-.nav a { position: relative; padding: 10px 12px; font-size: 0.98rem; font-weight: 500; color: var(--ink-2); text-decoration: none; border-radius: var(--r); }
+.nav a { position: relative; padding: 10px 12px; font-size: 0.98rem; font-weight: 500; color: var(--ink-2); text-decoration: none; border-radius: var(--r); white-space: nowrap; }
 .nav a:hover { color: var(--ink); background: var(--paper); }
 .nav a[aria-current="page"] { color: var(--ink); font-weight: 700; }
 .nav a[aria-current="page"]::after { content: ""; position: absolute; left: 12px; right: 12px; bottom: 4px; height: 2px; background: var(--blue); border-radius: 2px; }
@@ -101,7 +101,7 @@ p { margin: 0; text-wrap: pretty; }
 .head .btn { min-height: 46px; padding: 0 18px; }
 .head__menu { display: none; }
 
-@media (max-width: 1060px) {
+@media (max-width: 1160px) {
   .head__in { height: 66px; gap: 10px; }
   .head__logo img { width: 124px; }
   .nav, .head__phone span, .head__cta .btn { display: none; }
@@ -492,6 +492,9 @@ p { margin: 0; text-wrap: pretty; }
 .prose ul { padding-left: 1.2em; }
 .prose li { margin-bottom: 6px; }
 .prose b { color: var(--ink); }
+.prose h3 { margin: 26px 0 6px; }
+.prose h2 + h3 { margin-top: 18px; }
+.svc__txt .hero__btns { align-items: center; gap: 12px 22px; }
 address { font-style: normal; }
 
 /* Blocks below the first screen rise into place as they arrive (clean.js).
@@ -511,3 +514,13 @@ address { font-style: normal; }
 /* The cover is a lazy image; the video sits over it, seen only while previewing. */
 .vid__open img.vid__cover + video { visibility: hidden; }
 .vid.is-previewing .vid__open img.vid__cover + video { visibility: visible; }
+
+/* Town links: the Areas page and each town page */
+.towns-group + .towns-group { margin-top: clamp(1.8rem, 3vw, 2.4rem); }
+.towns-group h3 { margin-bottom: 12px; }
+.towns { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 12px; }
+.town { display: grid; gap: 4px; padding: 16px 18px; border: 1px solid var(--line); border-radius: var(--r); background: #fff; color: var(--ink); text-decoration: none; transition: border-color 160ms var(--ease); }
+.town:hover { border-color: var(--blue); }
+.town b { font-size: 1.06rem; }
+.town span { font-size: 0.9rem; color: var(--ink-2); }
+.town-job { margin-bottom: clamp(2rem, 4vw, 3rem); }
