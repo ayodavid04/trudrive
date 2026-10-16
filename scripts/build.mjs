@@ -28,6 +28,7 @@
 //   <x-faq-ld></x-faq-ld>                          FAQPage data from the section marked data-faq
 //   <x-town-cards>, {{homePlaces}}                 the Areas page: towns near Wigan, and Wigan's own districts
 //   pages/_town.html                               one page per town in content/towns.json, at /areas/<slug>/
+//   pages/_job.html                                one page per before and after, at /our-work/<slug>/
 //   {{phone}} {{tel}} {{wa}}                       his number as shown, for tel: links, for wa.me
 // Run scripts/content.mjs first (npm run build does): it makes the photo sizes.
 //
@@ -392,14 +393,19 @@ const ICON = {
   play: '<svg class="i-play" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13a1 1 0 0 0 1.5.86l10.6-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg>',
 };
 const slugOf = (t) => String(t).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'job';
+// Each before and after has its own page at /our-work/<slug>/, named from its title.
+const jobSlugs = new Map();
+for (const [i, job] of jobs.entries()) {
+  let slug = slugOf(job.title);
+  while ([...jobSlugs.values()].includes(slug)) slug += '-' + (i + 1);
+  jobSlugs.set(job, slug);
+}
+const jobUrl = (job) => `/our-work/${jobSlugs.get(job)}/`;
 
 function showcase(section, R) {
   if (!jobs.length) return '';
-  const ids = new Set();
   const slides = jobs.map((job, i) => {
-    let id = 'job-' + slugOf(job.title);
-    while (ids.has(id)) id += '-' + (i + 1);
-    ids.add(id);
+    const id = 'job-' + jobSlugs.get(job);
     return `<article class="show__slide" id="${id}"${groupAttr(job.kind)} aria-label="${esc(job.title)}">
           ${ba(job, R, { show: true, sizes: '(max-width: 760px) 67vw, (max-width: 960px) 100vw, 780px', eager: i === 0 })}
           <div class="show__txt">
@@ -407,6 +413,7 @@ function showcase(section, R) {
             <h3>${esc(job.title)}</h3>
             ${about(job)}
             ${ticks(job)}
+            <a class="link" href="${jobUrl(job)}">This job on its own page ${ARROW}</a>
           </div>
         </article>`;
   });
@@ -522,9 +529,9 @@ function head(a, R) {
 <meta property="og:title" content="${a.title}">
 <meta property="og:description" content="${a.desc}">
 <meta property="og:url" content="${url}">
-<meta property="og:image" content="${SITE_URL}/img/og.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
+<meta property="og:image" content="${SITE_URL}${a.image || '/img/og.jpg'}">
+<meta property="og:image:width" content="${a['image-w'] || 1200}">
+<meta property="og:image:height" content="${a['image-h'] || 630}">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="${R}img/favicon.png">
 <link rel="apple-touch-icon" href="${R}img/apple-touch-icon.png">
@@ -657,6 +664,38 @@ for (const t of TOWNS) {
     .replace(/{{(town|slug|intro|miles|places|postcodes|kerb|councilName|councilUrl|planning)}}/g, (_, k) => esc(fill[k] ?? ''))
     .replace('{{nearLinks}}', t.near.map((n) => townBySlug[n]).filter(Boolean).map(townLink).join('')), t);
   built.push({ out: path.join('site', 'areas', t.slug, 'index.html'), html, url: `${SITE_URL}/areas/${t.slug}/`, listed: true });
+}
+
+// A page for each before and after: pages/_job.html filled in from the job.
+// With a town on the job, the page is about that town too, and links to it.
+const SERVICE_OF = { Driveway: ['driveways/', 'More about driveways'], Fencing: ['services/#fencing', 'More about fencing'],
+  Turf: ['services/#turf', 'More about turfing'], 'Path and steps': ['services/#paths', 'More about paths and steps'] };
+const townOf = (name) => TOWNS.find((t) => [t.name, ...t.places].some((n) => n.toLowerCase() === clean(name).toLowerCase()));
+const jobPage = fs.readFileSync('pages/_job.html', 'utf8');
+for (const job of jobs) {
+  const slug = jobSlugs.get(job);
+  const town = clean(job.town);
+  const heading = esc(job.title) + (town ? ` in ${esc(town)}` : '');
+  const after = manifest[imgName(job, 'after')];
+  const [svcPath, svcLabel] = SERVICE_OF[job.kind] || ['patios/', 'More about patios'];
+  const t = town && townOf(town);
+  const links = [`<a class="link" href="/${svcPath}">${svcLabel} ${ARROW}</a>`,
+    ...(t ? [`<a class="link" href="/areas/${t.slug}/">Driveways and patios in ${esc(t.name)} ${ARROW}</a>`] : [])];
+  const others = jobs.filter((j) => j !== job).slice(0, 3)
+    .map((j) => `<a class="town" href="${jobUrl(j)}"><b>${esc(j.title)}</b><span>${kicker(j)}</span></a>`).join('');
+  const desc = `Before and after: ${job.title}${town ? ` in ${town}` : ''}. ${clean(job.about)} Laid by TruDrive, driveway and patio installers based in Wigan.`.replace(/\s+/g, ' ');
+  const html = render(jobPage
+    .replace(/{{(jobHeading|jobTitle|jobSlug|jobDesc|jobImage|jobImageW|jobImageH)}}/g, (_, k) => ({
+      jobHeading: heading, jobTitle: esc(job.title), jobSlug: slug, jobDesc: esc(desc),
+      jobImage: `/${after.dir || 'img/'}${imgName(job, 'after')}.jpg`, jobImageW: after.w, jobImageH: after.h,
+    })[k])
+    .replace('{{jobKicker}}', kicker(job))
+    .replace('{{jobAbout}}', job.about ? `<p class="lead">${esc(job.about)}</p>` : '')
+    .replace('{{jobBa}}', ba(job, '/', { sizes: '(max-width: 760px) 67vw, (max-width: 960px) 100vw, 56vw', eager: true, style: 'aspect-ratio: 4 / 3' }))
+    .replace('{{jobTicks}}', ticks(job) || '<p class="muted">Ask Gaz about this one: ring or send a message on WhatsApp.</p>')
+    .replace('{{jobLinks}}', links.join(''))
+    .replace('{{otherJobs}}', others));
+  built.push({ out: path.join('site', 'our-work', slug, 'index.html'), html, url: `${SITE_URL}/our-work/${slug}/`, listed: true });
 }
 
 // The live site is open to Google, Bing and the AI search tools; a local or

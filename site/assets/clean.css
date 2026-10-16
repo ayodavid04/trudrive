@@ -524,3 +524,4 @@ address { font-style: normal; }
 .town b { font-size: 1.06rem; }
 .town span { font-size: 0.9rem; color: var(--ink-2); }
 .town-job { margin-bottom: clamp(2rem, 4vw, 3rem); }
+.job-links { display: flex; flex-wrap: wrap; gap: 12px 24px; margin-top: 6px; }

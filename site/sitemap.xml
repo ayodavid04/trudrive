@@ -373,4 +373,19 @@
     <image:image><image:loc>http://localhost:4600/img/up/up-slatted-fence-turf.jpg</image:loc></image:image>
     <image:image><image:loc>http://localhost:4600/img/up/up-front-path.jpg</image:loc></image:image>
   </url>
+  <url>
+    <loc>http://localhost:4600/our-work/pond-garden-cleared-and-paved/</loc>
+    <image:image><image:loc>http://localhost:4600/img/up/up-pond-before.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-pond-after.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>http://localhost:4600/our-work/decking-to-porcelain/</loc>
+    <image:image><image:loc>http://localhost:4600/img/up/up-decking-before.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-decking-after.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>http://localhost:4600/our-work/concrete-to-porcelain-and-turf/</loc>
+    <image:image><image:loc>http://localhost:4600/img/up/up-concrete-before.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-concrete-after.jpg</image:loc></image:image>
+  </url>
 </urlset>
