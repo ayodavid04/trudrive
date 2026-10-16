@@ -27,22 +27,16 @@
 //   {{phone}} {{tel}} {{wa}}                       his number as shown, for tel: links, for wa.me
 // Run scripts/content.mjs first (npm run build does): it makes the photo sizes.
 //
-// SITE_URL sets the absolute URLs share previews need. Set it in the Cloudflare
-// Pages settings once his domain is connected. Until then it follows the
-// deploy host: Cloudflare gives each build a URL like abc123.trudrive.pages.dev,
-// and dropping the first part gives the project's own trudrive.pages.dev.
+// SITE_URL sets the absolute URLs share previews need. A build on Cloudflare
+// (Workers Builds sets CI) uses the live domain unless SITE_URL overrides it;
+// a local build uses the preview server.
 import fs from 'node:fs';
 import path from 'node:path';
 import { videoKey } from './videos.mjs';
 
 function siteUrl() {
   if (process.env.SITE_URL) return process.env.SITE_URL;
-  if (process.env.CF_PAGES_URL) {
-    const u = new URL(process.env.CF_PAGES_URL);
-    const host = process.env.CF_PAGES_BRANCH === 'main' ? u.hostname.split('.').slice(1).join('.') : u.hostname;
-    console.warn(`WARNING: SITE_URL is not set in Cloudflare Pages, using https://${host}`);
-    return `https://${host}`;
-  }
+  if (process.env.CI || process.env.WORKERS_CI || process.env.CF_PAGES) return 'https://trudrive.co.uk';
   return 'http://localhost:4600';
 }
 const SITE_URL = siteUrl().replace(/\/$/, '');
