@@ -17,7 +17,7 @@
 
 backend:
   name: github
-  repo: CHANGE-ME/trudrive # his GitHub username / repo name, set at handover
+  repo: ayodavid04/trudrive
   branch: main
   base_url: https://sveltia-cms-auth.CHANGE-ME.workers.dev # his auth Worker, set at handover
   commit_messages:

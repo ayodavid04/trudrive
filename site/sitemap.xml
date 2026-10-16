@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>http://localhost:4600/about/</loc></url>
-  <url><loc>http://localhost:4600/contact/</loc></url>
-  <url><loc>http://localhost:4600/</loc></url>
-  <url><loc>http://localhost:4600/our-work/</loc></url>
-  <url><loc>http://localhost:4600/privacy/</loc></url>
-  <url><loc>http://localhost:4600/reviews/</loc></url>
-  <url><loc>http://localhost:4600/services/</loc></url>
+  <url><loc>https://trudrive.co.uk/about/</loc></url>
+  <url><loc>https://trudrive.co.uk/contact/</loc></url>
+  <url><loc>https://trudrive.co.uk/</loc></url>
+  <url><loc>https://trudrive.co.uk/our-work/</loc></url>
+  <url><loc>https://trudrive.co.uk/privacy/</loc></url>
+  <url><loc>https://trudrive.co.uk/reviews/</loc></url>
+  <url><loc>https://trudrive.co.uk/services/</loc></url>
 </urlset>
