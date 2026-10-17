@@ -341,6 +341,12 @@ collections:
             hint: Shown on every page, and the WhatsApp buttons use it, so WhatsApp must be on this number.
             widget: string
             pattern: ['^0\d{3,4} ?\d{3} ?\d{3,4}$', 'A UK number starting with 0, like 07923 485811']
+          - name: email
+            label: Email address
+            hint: Shown on the contact page, the footer and the Privacy page. The law wants an email on your website.
+            widget: string
+            required: false
+            pattern: ['^[^\s@]+@[^\s@]+\.[^\s@]+$', 'An email address, like name@outlook.com']
           - name: areas
             label: Towns you cover
             label_singular: town
@@ -355,7 +361,7 @@ collections:
             maxlength: 60
           - name: street
             label: Business address, first line
-            hint: The law says your business address must be on your website. A registered office address is fine if you don't want your home shown.
+            hint: The law says your business address must be on your website. It only shows on the Privacy page; everywhere else just says "Based in" your town. A registered office address is fine if you'd rather not use your home.
             widget: string
             required: false
             maxlength: 80

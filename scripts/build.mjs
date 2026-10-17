@@ -112,6 +112,11 @@ const areas = (Array.isArray(business.areas) ? business.areas : String(business.
 const andList = (xs) => (xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} and ${xs.at(-1)}`);
 const address = [business.street, business.town, clean(business.postcode).toUpperCase()].map(clean).filter(Boolean);
 const hasAddress = Boolean(clean(business.street) && clean(business.town) && clean(business.postcode));
+// His street address goes on the Privacy page only, because the law needs it
+// somewhere easy to find. Everywhere else, and in the data search engines and
+// AI tools read, he is just "based in" his town.
+const hasStreet = Boolean(clean(business.street) && clean(business.town));
+const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean(business.email)) ? clean(business.email) : '';
 // The town he works from, shown as "Based in Wigan" until the full address is in.
 const baseTown = clean(business.town);
 const facebook = isUrl(business.facebook) ? clean(business.facebook) : '';
@@ -145,15 +150,14 @@ const note = (text) => {
 
 function where(style) {
   const lines = [];
-  if (baseTown && !hasAddress) lines.push(`<p>Based in ${esc(baseTown)}.</p>`);
+  if (baseTown) lines.push(`<p>Based in ${esc(baseTown)}.</p>`);
   const near = [...TOWNS].sort(byMiles).slice(0, 8).map((t) => `<a href="/areas/${t.slug}/">${esc(t.name)}</a>`);
   const wide = areas.length ? `across ${esc(andList(areas))}` : 'across the North West';
   lines.push(near.length
     ? `<p>Driveways and patios in ${near.join(', ')}, and ${wide}. <a href="/areas/">All areas</a></p>`
     : `<p>Across the North West${areas.length ? `: ${esc(andList(areas))}.` : '.'}</p>`);
   if (clean(business.hours)) lines.push(`<p>Calls: ${esc(business.hours)}</p>`);
-  if (hasAddress) lines.push(`<address>${address.map(esc).join('<br>')}</address>`);
-  const missing = [!areas.length && 'the towns you cover', !hasAddress && 'your business address'].filter(Boolean);
+  const missing = [!areas.length && 'the towns you cover', !hasAddress && 'your full business address, with the postcode,'].filter(Boolean);
   if (missing.length) lines.push(note(`add ${andList(missing)} in your editor, under Business details.`));
   return lines.filter(Boolean).join(style === 'contact' ? '' : '\n      ');
 }
@@ -238,11 +242,8 @@ function ldJson() {
       itemListElement: SERVICES.map(([name, page]) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name, url: `${SITE_URL}/${page}` } })),
     },
   };
-  if (hasAddress) {
-    biz.address = { '@type': 'PostalAddress', streetAddress: clean(business.street), addressLocality: clean(business.town), postalCode: clean(business.postcode).toUpperCase(), addressCountry: 'GB' };
-  } else if (baseTown) {
-    biz.address = { '@type': 'PostalAddress', addressLocality: baseTown, addressCountry: 'GB' };
-  }
+  if (baseTown) biz.address = { '@type': 'PostalAddress', addressLocality: baseTown, addressCountry: 'GB' };
+  if (email) biz.email = email;
   const site = {
     '@type': 'WebSite',
     '@id': `${SITE_URL}/#website`,
@@ -613,9 +614,9 @@ function render(html, town) {
   html = html.replace(/<x-where\s*(contact)?\s*\/?>(?:<\/x-where>)?/g, (_, style) => where(style));
   html = html.replace(/<x-reviews\s+home>([\s\S]*?)<\/x-reviews>/g, (_, section) => reviewsHome(section));
   html = html.replace(/<x-reviews\s*\/?>(?:<\/x-reviews>)?/g, () => reviewsPage());
-  html = html.replace(/<x-address\s*\/?>(?:<\/x-address>)?/g, () => (hasAddress
-    ? `<address>TruDrive Driveways &amp; Patios<br>${address.map(esc).join('<br>')}</address>`
-    : `<address>TruDrive Driveways &amp; Patios${baseTown ? `<br>${esc(baseTown)}` : ''}</address>${note('add your business address in your editor, under Business details.')}`));
+  html = html.replace(/<x-address\s*\/?>(?:<\/x-address>)?/g, () => `<address>TruDrive Driveways &amp; Patios${(hasStreet ? address : [baseTown].filter(Boolean)).map((l) => `<br>${esc(l)}`).join('')}</address>`
+    + (hasAddress ? '' : note('add your full business address, with the postcode, in your editor, under Business details.')));
+  html = html.replace(/<(li|p|a)\b([^>]*)\sdata-email\b([^>]*)>([\s\S]*?)<\/\1>/g, (_, tag, a1, a2, inner) => (email ? `<${tag}${a1}${a2}>${inner.replaceAll('{{email}}', esc(email))}</${tag}>` : ''));
   // Links to his pages elsewhere, left out while he has none.
   html = html.replace(/<li data-facebook>([\s\S]*?)<\/li>/g, (_, inner) => (facebook ? `<li>${inner.replaceAll('{{facebook}}', esc(facebook))}</li>` : ''));
   html = html.replace(/<x-about-text\s*\/?>(?:<\/x-about-text>)?/g, () => aboutText());
@@ -749,7 +750,7 @@ fs.writeFileSync('site/llms.txt', `# TruDrive Driveways & Patios
 
 - Name: TruDrive Driveways & Patios (also written TruDrive or Tru Drive). Not connected to trudrive.com, which is a different business.
 - Phone and WhatsApp: ${business.phone}
-${hasAddress ? `- Address: ${address.join(', ')}\n` : ''}- Driveways: block paving, imprinted concrete, tarmac, gravel
+${email ? `- Email: ${email}\n` : ''}- Driveways: block paving, imprinted concrete, tarmac, gravel
 - Patios: porcelain, Indian sandstone, crazy paving
 - Also: paths and steps, fencing, brickwork, turfing and artificial grass
 - TikTok: https://www.tiktok.com/@tru.drive

@@ -158,27 +158,20 @@ description on every one.**
 
 **Answers needed from Gaz (one message)**
 
-40. Is 19 Ridyard Street, Wigan (on his Facebook page) the business address to
-    show? And the postcode. The law wants a full address on the site, and the
-    Google profile needs it to verify.
-41. Which email to show: trudrive.landscaping@outlook.com (on Facebook) or
-    truedrive08@gmail.com (the Google account)? The law wants an email on the site
-    too.
-42. His usual price ranges: per square metre for porcelain and sandstone patios
-    and for block paving, tarmac and imprinted drives, plus a typical job size.
-    That becomes a Prices page. People search "patios wigan prices", and AI answers
-    quote real numbers.
-43. The town for each job and photo already on the site. That puts them on the
-    town pages.
-44. A few lines about himself for the About page, the hours he takes calls, and
-    whether Cumbria is real (Carlisle is 100 miles away). If not, it comes off the
-    Areas page.
+40. The postcode for 19 Ridyard Street. The address is on the site already, but
+    only on the Privacy page, because the law needs it somewhere. Everywhere else
+    just says "Based in Wigan". Type the postcode in the editor (Business details).
+41. A few lines about himself for the About page, and the hours he takes calls.
+
+Decided 17 Oct: email is trudrive.landscaping@outlook.com; no prices on the site;
+jobs are not tied to towns (the town pages are for search); he covers the whole
+North West, and Cumbria is part of it, so it stays.
 
 **Check it's working (two weeks after step 10)**
 
-45. Search Console, Performance: look for "patios wigan", "driveways wigan" and
+42. Search Console, Performance: look for "patios wigan", "driveways wigan" and
     "trudrive" in Queries, and which pages they land on.
-46. The Google profile's Performance tab: calls, website clicks and searches.
+43. The Google profile's Performance tab: calls, website clicks and searches.
 
 ## What to expect
 
