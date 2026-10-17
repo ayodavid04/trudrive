@@ -39,6 +39,15 @@ Google profile is live, his name searches are his.
 
 ## Every step left, in order
 
+**Done 17 Oct 2026:** steps 1 to 10. www.trudrive.co.uk redirects to trudrive.co.uk
+(A record 192.0.2.1 proxied, plus the "Redirect from WWW to root" rule), Always Use
+HTTPS is on, Crawler Hints is on, no AI crawler is blocked (all 32 allowed), Search
+Console is verified (domain property), the sitemap reads "Success, 35 pages, 8 videos",
+and indexing was requested for the home page, /patios/, /driveways/, /areas/,
+/porcelain-patios/, /block-paving/, /imprinted-concrete/, /fencing/ and
+/artificial-grass/. Bing has all 35 pages through IndexNow (`node scripts/indexnow.mjs`
+after any change), so steps 11 and 12 are optional now.
+
 **Cloudflare (David, 10 minutes)**
 
 1. Open dash.cloudflare.com and click **trudrive.co.uk**.
