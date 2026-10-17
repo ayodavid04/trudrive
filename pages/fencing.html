@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<x-head title="Fencing in Wigan | Timber, Slatted and Composite | TruDrive" desc="Garden fencing in Wigan and across the North West: timber panels, horizontal slatted fencing and composite fencing that never needs painting. Free quotes on {{phone}}." path="fencing/"></x-head>
+<link rel="stylesheet" href="{{root}}assets/parts.css">
+<link rel="stylesheet" href="{{root}}assets/clean.css">
+<x-page-ld name="Fencing" service="Fencing" path="fencing/" parent="services/" parent-name="Services"></x-page-ld>
+<x-faq-ld></x-faq-ld>
+</head>
+<body>
+<x-include file="_header.html" active="services"></x-include>
+
+<main id="main">
+  <section class="page-head">
+    <div class="wrap">
+      <p class="kicker">Fencing</p>
+      <h1>Fencing in Wigan</h1>
+      <p class="lead">Timber panels, horizontal slatted fencing and composite panels that won't need painting. Fitted on their own, or as part of a new patio or garden, across Wigan and the North West.</p>
+      <div class="hero__btns">
+        <a class="btn" href="{{root}}contact/" data-quote="Fencing">Get a fencing quote</a>
+        <a class="btn btn--ghost" href="https://wa.me/{{wa}}">Send photos on WhatsApp</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <section class="svc" aria-labelledby="get-t">
+      <div class="photo svc__img"><x-pic name="g5-fence" alt="Black composite fence panels above a grey porcelain patio and a chipping border" sizes="(max-width: 760px) 67vw, (max-width: 960px) 100vw, 600px" focus="50 55"></x-pic></div>
+      <div class="svc__txt">
+        <h2 id="get-t">What you get</h2>
+        <p class="lead">A fence that suits the garden, put up straight and solid.</p>
+        <ul class="ticks">
+          <li>Timber, slatted or composite</li>
+          <li>Fitted on its own, or with a new patio or garden</li>
+          <li>A free quote from a few photos</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <section class="sec sec--paper" aria-labelledby="info-t">
+    <div class="wrap prose">
+      <h2 id="info-t">Timber, slatted or composite?</h2>
+      <h3>Timber panels</h3>
+      <p>The standard garden fence: timber panels between posts, usually with gravel boards along the bottom so the panels aren't sat in wet soil. It's the cheapest option, and a coat of treatment every few years keeps it going.</p>
+      <h3>Horizontal slatted</h3>
+      <p>Timber slats run sideways with small gaps between them. It looks modern, lets a bit of light and air through, and suits a new patio.</p>
+      <h3>Composite</h3>
+      <p>Made from wood fibre and plastic, so it won't rot, split or need painting. It costs more up front than timber, but after that it just needs a wipe down now and then.</p>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="recent-t">
+    <div class="wrap">
+      <div class="sec__head sec__head--row">
+        <div style="display:grid;gap:14px;max-width:40rem">
+          <h2 id="recent-t">Recent fencing</h2>
+          <p class="lead">Real jobs, laid by us. Tap one to see it bigger.</p>
+        </div>
+        <a class="link" href="{{root}}our-work/">All our work <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+      <div class="towns job-cards"><x-job-cards match="fenc"></x-job-cards></div>
+      <div class="gallery">
+        <x-photos match="fenc" limit="6" half></x-photos>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec--paper" aria-labelledby="faq-t" data-faq>
+    <div class="wrap prose">
+      <h2 id="faq-t">Questions about fencing</h2>
+      <h3>Do I need planning permission for a new fence?</h3>
+      <p>Not usually, as long as it's no more than 2 metres high. Next to a road used by traffic, or the pavement beside it, the limit is 1 metre. Listed buildings and some estates have their own rules, so check if you're not sure.</p>
+      <h3>Timber or composite fencing?</h3>
+      <p>Timber if you want the lowest price and don't mind treating it every few years. Composite if you never want to paint or treat a fence again.</p>
+      <h3>Can you do the fence with a new patio?</h3>
+      <p>Yes. We lay patios, paths and lawns as well, so a whole garden can be done in one go.</p>
+      <h3>How do I get a quote?</h3>
+      <p>Send a few photos of the fence line on WhatsApp to {{phone}}, or ring Gaz. If it's worth a visit, he'll come out, measure up and give you a price. Quotes are free and there's no obligation.</p>
+      <p><a class="link" href="{{root}}services/">All services <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a> &nbsp; <a class="link" href="{{root}}patios/">Patios <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></p>
+    </div>
+  </section>
+</main>
+
+<x-include file="_footer.html"></x-include>
+</body>
+</html>

@@ -9,6 +9,22 @@
     <image:image><image:loc>http://localhost:4600/img/g2-patio.jpg</image:loc></image:image>
   </url>
   <url>
+    <loc>http://localhost:4600/artificial-grass/</loc>
+    <image:image><image:loc>http://localhost:4600/img/g6-turf.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-porcelain-patio-sleepers.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-new-build-garden.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-path-and-drainage.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-stone-patio-raised-lawn.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-grey-porcelain-patio.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-new-lawn.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>http://localhost:4600/block-paving/</loc>
+    <image:image><image:loc>http://localhost:4600/img/g1-drive.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-block-paved-drive-border.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-block-paved-drive.jpg</image:loc></image:image>
+  </url>
+  <url>
     <loc>http://localhost:4600/contact/</loc>
   </url>
   <url>
@@ -18,6 +34,19 @@
     <image:image><image:loc>http://localhost:4600/img/up/up-imprinted-drive.jpg</image:loc></image:image>
     <image:image><image:loc>http://localhost:4600/img/up/up-imprinted-drive-street.jpg</image:loc></image:image>
     <image:image><image:loc>http://localhost:4600/img/up/up-block-paved-drive.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>http://localhost:4600/fencing/</loc>
+    <image:image><image:loc>http://localhost:4600/img/g5-fence.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-new-build-garden.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-composite-fencing.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-grey-porcelain-patio.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-slatted-fence-turf.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>http://localhost:4600/imprinted-concrete/</loc>
+    <image:image><image:loc>http://localhost:4600/img/up/up-imprinted-drive.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-imprinted-drive-street.jpg</image:loc></image:image>
   </url>
   <url>
     <loc>http://localhost:4600/</loc>
@@ -135,6 +164,16 @@
     <image:image><image:loc>http://localhost:4600/img/up/up-grey-porcelain-patio.jpg</image:loc></image:image>
     <image:image><image:loc>http://localhost:4600/img/up/up-stone-patio-palm.jpg</image:loc></image:image>
     <image:image><image:loc>http://localhost:4600/img/up/up-back-patio-pergola.jpg</image:loc></image:image>
+  </url>
+  <url>
+    <loc>http://localhost:4600/porcelain-patios/</loc>
+    <image:image><image:loc>http://localhost:4600/img/g3-patio.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-porcelain-patio-sleepers.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-new-build-garden.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-composite-fencing.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-patio-tiled-threshold.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-path-and-drainage.jpg</image:loc></image:image>
+    <image:image><image:loc>http://localhost:4600/img/up/up-grey-porcelain-patio.jpg</image:loc></image:image>
   </url>
   <url>
     <loc>http://localhost:4600/privacy/</loc>

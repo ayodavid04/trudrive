@@ -219,8 +219,9 @@ function aboutPhoto(R) {
 // The WebSite part gives Google the name to show above the result, so a
 // search shows "TruDrive Driveways & Patios" rather than a bare address.
 const BUSINESS_ID = () => `${SITE_URL}/#business`;
-const SERVICES = [['Patio installation', 'patios/'], ['Driveway installation', 'driveways/'], ['Paths and steps', 'services/#paths'],
-  ['Fencing', 'services/#fencing'], ['Turfing and artificial grass', 'services/#turf'], ['Garden walls and brickwork', 'services/#brickwork']];
+const SERVICES = [['Patio installation', 'patios/'], ['Porcelain patios', 'porcelain-patios/'], ['Driveway installation', 'driveways/'],
+  ['Block paving', 'block-paving/'], ['Imprinted concrete driveways', 'imprinted-concrete/'], ['Paths and steps', 'services/#paths'],
+  ['Fencing', 'fencing/'], ['Turfing and artificial grass', 'artificial-grass/'], ['Garden walls and brickwork', 'services/#brickwork']];
 const ldScript = (ld) => `<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>`;
 function ldJson() {
   const biz = {
@@ -370,8 +371,16 @@ const lbAttrs = (name, title, line) => {
 
 // Every photo by default. A page about one thing can ask for just that kind,
 // newest first: <x-photos kind="Patio" limit="6" half> (half: two to a row).
-function photosList(R, { kind = '', limit = 0, half = false } = {}) {
-  return photoFigures(photos.filter((p) => !kind || p.kind === kind).slice(0, limit || undefined), R, half);
+// Every photo by default. A page about one thing can ask for just that kind,
+// or for photos whose title, line or description mention a word (match="porcelain").
+const mentions = (x, word) => new RegExp(word, 'i').test([x.title, x.line, x.alt, x.about, ...(Array.isArray(x.work) ? x.work : [])].join(' '));
+function photosList(R, { kind = '', match = '', limit = 0, half = false } = {}) {
+  return photoFigures(photos.filter((p) => (!kind || p.kind === kind) && (!match || mentions(p, match))).slice(0, limit || undefined), R, half);
+}
+// Links to the before and afters that mention a word, as cards.
+function jobCards(match) {
+  return jobs.filter((j) => !match || mentions(j, match))
+    .map((j) => `<a class="town" href="${jobUrl(j)}"><b>${esc(j.title)}</b><span>${kicker(j)}, before and after</span></a>`).join('');
 }
 function photoFigures(list, R, half = false) {
   const big = (i) => half || i < 2;
@@ -536,8 +545,8 @@ function head(a, R) {
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/png" href="${R}img/favicon.png">
 <link rel="apple-touch-icon" href="${R}img/apple-touch-icon.png">
-<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
-<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>`;
+<link rel="preload" href="${R}assets/fonts/satoshi-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="${R}assets/fonts/satoshi-700.woff2" as="font" type="font/woff2" crossorigin>`;
 }
 
 function include(a, R) {
@@ -629,8 +638,9 @@ function render(html, town) {
   html = html.replace(/<x-job\s+slot="hero"\s*\/?>(?:<\/x-job>)?/g, () => homeHero(R));
   html = html.replace(/<x-photos([^>]*?)\s*\/?>(?:<\/x-photos>)?/g, (_, s) => {
     const a = attrs(s);
-    return photosList(R, { kind: a.kind || '', limit: Number(a.limit) || 0, half: Boolean(a.half) });
+    return photosList(R, { kind: a.kind || '', match: a.match || '', limit: Number(a.limit) || 0, half: Boolean(a.half) });
   });
+  html = html.replace(/<x-job-cards([^>]*?)\s*\/?>(?:<\/x-job-cards>)?/g, (_, s) => jobCards(attrs(s).match || ''));
   html = html.replace(/<x-page-ld\s+([^>]*?)\s*\/?>(?:<\/x-page-ld>)?/g, (_, s) => pageLd(attrs(s)));
   html = html.replace(/<x-town-work\s*\/?>(?:<\/x-town-work>)?/g, () => (town ? townWork(town, R) : ''));
   html = html.replace(/<x-town-cards\s*\/?>(?:<\/x-town-cards>)?/g, () => townCards());
@@ -758,6 +768,10 @@ ${facebook ? `- Facebook: ${facebook}\n` : ''}
 ## Pages
 
 - [Services](${SITE_URL}/services/)
+- [Patios](${SITE_URL}/patios/) and [porcelain patios](${SITE_URL}/porcelain-patios/)
+- [Driveways](${SITE_URL}/driveways/), [block paving](${SITE_URL}/block-paving/) and [imprinted concrete](${SITE_URL}/imprinted-concrete/)
+- [Fencing](${SITE_URL}/fencing/)
+- [Turfing and artificial grass](${SITE_URL}/artificial-grass/)
 - [Areas we cover](${SITE_URL}/areas/)
 - [Our work](${SITE_URL}/our-work/): before and after photos and videos
 - [About](${SITE_URL}/about/)

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<x-head title="Artificial Grass and Turfing in Wigan | TruDrive" desc="Artificial grass and real turf laid in Wigan and across the North West, on its own or with a new patio or garden. Free quotes on {{phone}}." path="artificial-grass/"></x-head>
+<link rel="stylesheet" href="{{root}}assets/parts.css">
+<link rel="stylesheet" href="{{root}}assets/clean.css">
+<x-page-ld name="Artificial grass and turfing" service="Artificial grass and turfing" path="artificial-grass/" parent="services/" parent-name="Services"></x-page-ld>
+<x-faq-ld></x-faq-ld>
+</head>
+<body>
+<x-include file="_header.html" active="services"></x-include>
+
+<main id="main">
+  <section class="page-head">
+    <div class="wrap">
+      <p class="kicker">Lawns</p>
+      <h1>Artificial grass and turfing in Wigan</h1>
+      <p class="lead">Real lawns laid fresh, or artificial grass that stays green with nothing to mow. On its own, or as part of a new patio or garden, across Wigan and the North West.</p>
+      <div class="hero__btns">
+        <a class="btn" href="{{root}}contact/" data-quote="Turf or artificial grass">Get a lawn quote</a>
+        <a class="btn btn--ghost" href="https://wa.me/{{wa}}">Send photos on WhatsApp</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <section class="svc" aria-labelledby="get-t">
+      <div class="photo svc__img"><x-pic name="g6-turf" alt="A new lawn in a new build garden, with a porcelain surround and raised timber beds" sizes="(max-width: 760px) 67vw, (max-width: 960px) 100vw, 600px" focus="50 65"></x-pic></div>
+      <div class="svc__txt">
+        <h2 id="get-t">What you get</h2>
+        <p class="lead">A lawn that sits level and drains, real or artificial.</p>
+        <ul class="ticks">
+          <li>Real turf or artificial grass</li>
+          <li>Laid on level, firm ground</li>
+          <li>On its own, or with a new patio or garden</li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <section class="sec sec--paper" aria-labelledby="info-t">
+    <div class="wrap prose">
+      <h2 id="info-t">Real turf or artificial grass?</h2>
+      <h3>Real turf</h3>
+      <p>Rolls of grown lawn laid onto prepared, level soil. It's the cheaper option and it's a proper lawn, but it needs watering for the first few weeks and mowing after that.</p>
+      <h3>Artificial grass</h3>
+      <p>Laid over a compacted, free-draining base with a weed membrane, so it stays flat and rain goes straight through. No mowing and no mud, and it looks the same all year. It costs more up front than real turf.</p>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="recent-t">
+    <div class="wrap">
+      <div class="sec__head sec__head--row">
+        <div style="display:grid;gap:14px;max-width:40rem">
+          <h2 id="recent-t">Recent lawns</h2>
+          <p class="lead">Real jobs, laid by us. Tap one to see it bigger.</p>
+        </div>
+        <a class="link" href="{{root}}our-work/">All our work <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+      <div class="towns job-cards"><x-job-cards match="lawn|turf"></x-job-cards></div>
+      <div class="gallery">
+        <x-photos match="lawn|turf" limit="6" half></x-photos>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec--paper" aria-labelledby="faq-t" data-faq>
+    <div class="wrap prose">
+      <h2 id="faq-t">Questions about artificial grass and turfing</h2>
+      <h3>Should I go for real turf or artificial grass?</h3>
+      <p>Real turf if you want a proper lawn at a lower price and don't mind mowing. Artificial grass if you want it green all year with no mowing and no mud, and are happy to pay more up front.</p>
+      <h3>Does artificial grass drain?</h3>
+      <p>Yes. It has drainage holes and goes down on a free-draining base, so rain soaks through instead of sitting on top.</p>
+      <h3>Can you lay a lawn with a new patio?</h3>
+      <p>Yes. We lay patios, paths and fencing as well, so a whole garden can be done in one go.</p>
+      <h3>How do I get a quote?</h3>
+      <p>Send a few photos of your garden on WhatsApp to {{phone}}, or ring Gaz. If it's worth a visit, he'll come out, measure up and give you a price. Quotes are free and there's no obligation.</p>
+      <p><a class="link" href="{{root}}services/">All services <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a> &nbsp; <a class="link" href="{{root}}patios/">Patios <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></a></p>
+    </div>
+  </section>
+</main>
+
+<x-include file="_footer.html"></x-include>
+</body>
+</html>

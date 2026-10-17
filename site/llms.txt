@@ -14,6 +14,10 @@
 ## Pages
 
 - [Services](http://localhost:4600/services/)
+- [Patios](http://localhost:4600/patios/) and [porcelain patios](http://localhost:4600/porcelain-patios/)
+- [Driveways](http://localhost:4600/driveways/), [block paving](http://localhost:4600/block-paving/) and [imprinted concrete](http://localhost:4600/imprinted-concrete/)
+- [Fencing](http://localhost:4600/fencing/)
+- [Turfing and artificial grass](http://localhost:4600/artificial-grass/)
 - [Areas we cover](http://localhost:4600/areas/)
 - [Our work](http://localhost:4600/our-work/): before and after photos and videos
 - [About](http://localhost:4600/about/)
